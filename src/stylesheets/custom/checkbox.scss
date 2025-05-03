@@ -1,0 +1,10 @@
+.custom-customer-phased-out-checkbox {
+  @media (min-width: 768px) {
+    margin-top: 38px;
+    text-align: center;
+  }
+}
+
+.ant-checkbox-indeterminate .ant-checkbox-inner::after {
+  background-color: #00ada9 !important;
+}

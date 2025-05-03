@@ -1,0 +1,27 @@
+// Fixed Header
+
+.fixed-header {
+  .app-header {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    border-bottom: 1px solid #EAECF0;
+
+    .app-header__logo {
+      visibility: visible;
+    }
+  }
+
+  .app-main {
+    min-height: 100vh;
+    padding-top: $app-header-height;
+  }
+
+  &:not(.fixed-sidebar):not(.closed-sidebar) {
+    .app-sidebar {
+      .app-header__logo {
+        visibility: hidden;
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+.ERP-tree {
+  .ant-tree-treenode {
+    width: 100% !important;
+    border-radius: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-bottom: 0;
+    margin-bottom: 8px;
+
+    &:hover {
+      background-color: #edfffe;
+      color: #00ada9;
+    }
+  }
+
+  .ant-tree-node-content-wrapper {
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  .ant-tree-treenode-motion {
+    width: 100% !important;
+  }
+
+  .ant-tree-switcher-icon {
+    transition: transform 0.3s ease-in-out;
+    width: 20px;
+  }
+
+  .ant-tree-switcher {
+    display: flex;
+    order: 1;
+    margin-left: auto;
+  }
+
+  .ant-tree-switcher:not(.ant-tree-switcher-noop):hover:before {
+    background-color: transparent;
+  }
+
+  .ant-tree-switcher_open {
+    .ant-tree-switcher-icon {
+      transform: rotateZ(180deg) !important;
+    }
+  }
+
+  &.select-all-enabled {
+    .ant-tree-indent .ant-tree-indent-unit:first-child {
+      display: none;
+    }
+    .ant-tree-list-holder-inner {
+      .ant-tree-treenode:first-child {
+        &:hover {
+          background-color: transparent;
+          color: inherit;
+        }
+
+        .ant-tree-node-content-wrapper {
+          cursor: default !important;
+        }
+
+        .ant-tree-switcher {
+          display: none;
+        }
+      }
+    }
+  }
+}

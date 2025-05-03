@@ -1,0 +1,30 @@
+.custom-pagination {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+
+  button, .btn {
+    padding: 10;
+    display: grid;
+    place-items: center;
+    background-color: #FFFFFF !important; 
+    color: #344054 !important;
+    border-radius: 0px;
+    border: 1px solid #D0D5DD !important;
+  }
+
+  .custom-pagination__button-prev {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  
+  .custom-pagination__button-next {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .selected {
+    background: #D0D5DD !important;
+  }
+}

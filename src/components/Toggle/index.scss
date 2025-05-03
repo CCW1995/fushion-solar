@@ -1,0 +1,36 @@
+.ant-switch-checked {
+  background: var(--primary-500, #00ada9) !important;
+}
+
+.toggle-container {
+  display: grid;
+  grid-template-columns: 1fr 80px;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+
+  &-default {
+    padding: 2px 8px;
+  }
+
+  &-highlighted {
+    border-radius: 100px;
+    background-color: var(--primary-50, #edfffe);
+  }
+}
+
+.toggle-label {
+  &-default {
+    color: var(--secondary-black-500, #1c212d);
+    font-weight: 600;
+  }
+
+  &-sub {
+    color: var(--secondary-black-500, #1c212d);
+    font-weight: 400;
+  }
+
+  &-highlighted {
+    color: var(--primary-500, #00ada9) !important;
+  }
+}

@@ -1,0 +1,382 @@
+.dashboard-widget {
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,29,70,0.8) 0%, rgba(0,40,89,0.8) 100%);
+  border: none;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  
+  &.transparent-widget {
+    background: transparent;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .ant-card-body {
+      background: transparent;
+    }
+  }
+  
+  .ant-card-body {
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .widget-title {
+      display: flex;
+      align-items: center;
+      
+      h5.ant-typography {
+        margin: 0;
+        color: #fff;
+        font-weight: 500;
+        font-size: 26px;
+      }
+      
+      .info-icon {
+        margin-left: 8px;
+        cursor: pointer;
+        color: rgba(255, 255, 255, 0.65);
+        
+        &:hover {
+          color: rgba(255, 255, 255, 0.9);
+        }
+      }
+    }
+    
+    .widget-action {
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.65);
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .anticon {
+        font-size: 16px;
+      }
+    }
+  }
+  
+  .widget-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    .widget-value {
+      display: flex;
+      align-items: baseline;
+      
+      h3.ant-typography {
+        margin: 0;
+        color: #fff;
+        font-weight: 600;
+      }
+      
+      .unit {
+        margin-left: 4px;
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 14px;
+      }
+    }
+    
+    .subtitle {
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 14px;
+    }
+  }
+  
+  .widget-chart {
+    flex: 1;
+    position: relative;
+    flex-wrap: wrap;
+    height: calc(100% - 60px);
+    padding-top: 10px;
+    display: flex;
+    
+    .chart-container {
+      flex: 1.2;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      .pie-chart-container {
+        width: 240px;
+        height: 240px;
+        position: relative;
+
+        .g2-tooltip {
+          background-color: white !important;
+          color: #333 !important;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+          border-radius: 4px !important;
+          padding: 6px 8px !important;
+          font-size: 12px !important;
+          z-index: 20 !important;
+          
+          .g2-tooltip-title {
+            font-weight: normal !important;
+          }
+          
+          .g2-tooltip-list {
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+            
+            .g2-tooltip-list-item {
+              display: flex !important;
+              align-items: center !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              
+              .g2-tooltip-marker {
+                width: 6px !important;
+                height: 6px !important;
+                border-radius: 50% !important;
+                margin-right: 6px !important;
+              }
+              
+              .g2-tooltip-name {
+                color: #333 !important;
+                font-weight: normal !important;
+                margin-right: 4px !important;
+                font-size: 12px !important;
+              }
+              
+              .g2-tooltip-value {
+                color: #333 !important;
+                font-weight: normal !important;
+                font-size: 12px !important;
+              }
+            }
+          }
+        }
+        
+        .custom-g2-tooltip {
+          padding: 6px 8px;
+          font-size: 14px;
+          color: #333;
+          display: flex;
+          align-items: center;
+          
+          .tooltip-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+          }
+        }
+        
+        .g2-tooltip-list {
+          margin: 0 !important;
+          padding: 0 !important;
+          list-style: none !important;
+          
+          .g2-tooltip-list-item {
+            margin: 0 !important;
+            padding: 0 !important;
+            
+            .g2-tooltip-name {
+              color: #333 !important;
+              font-weight: normal !important;
+              margin-right: 8px !important;
+            }
+            
+            .g2-tooltip-value {
+              color: #333 !important;
+              font-weight: normal !important;
+            }
+          }
+        }
+        
+        .center-content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          z-index: 10;
+          width: 80%;
+          
+          h2, h3 {
+            font-size: 45px;
+            color: #fff !important;
+            font-weight: 600;
+            line-height: 1.1;
+            margin: 0;
+          }
+          
+          .chart-label {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.65) !important;
+            margin-top: 5px;
+          }
+        }
+        
+        // Custom styles for hover state
+        .g2-element-active {
+          opacity: 1 !important;
+          stroke-width: 8px !important;
+          cursor: pointer;
+        }
+        
+        // Make other segments slightly dimmed when one is hovered
+        &:hover .g2-element:not(.g2-element-active) {
+          opacity: 0.7;
+        }
+      }
+    }
+    
+    .chart-legends {
+      align-self: center;
+      display: flex;
+      margin-left: -10px;
+      flex-direction: column;
+      width: max-content;
+      
+      @media (max-width: 768px) {
+        justify-content: space-between;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        .chart-legend-item {
+          align-items: center;
+        }
+      }
+      
+      .chart-legend-item {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5px;
+        
+        .legend-value {
+          display: flex;
+          align-items: center;
+          
+          .chart-legend-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 4px;
+          }
+          
+          .ant-typography {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+          }
+        }
+        
+        .ant-typography.ant-typography-secondary {
+          color: rgba(255, 255, 255, 0.65);
+          font-size: 12px;
+          margin: 0;
+          
+          @media (min-width: 768px) {
+            padding-left: 8px;
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Override Ant Design charts styles
+.chart-center-content {
+  h2, h3 {
+    font-size: 45px;
+    margin: 0;
+    color: #fff !important;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  
+  .chart-label {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.65) !important;
+    margin-top: 5px;
+  }
+}
+
+// Status colors
+.status-normal {
+  color: #52c41a;
+}
+
+.status-warning {
+  color: #faad14;
+}
+
+.status-alarm, .status-critical {
+  color: #ff4d4f;
+}
+
+.status-offline, .status-disconnected {
+  color: #d9d9d9;
+}
+
+// Custom chart icon styles
+.icon-wrapper {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 8px;
+  
+  &.normal {
+    background-color: rgba(82, 196, 26, 0.2);
+    color: #52c41a;
+  }
+  
+  &.warning {
+    background-color: rgba(250, 173, 20, 0.2);
+    color: #faad14;
+  }
+  
+  &.alarm, &.critical {
+    background-color: rgba(255, 77, 79, 0.2);
+    color: #ff4d4f;
+  }
+  
+  &.offline, &.disconnected {
+    background-color: rgba(217, 217, 217, 0.2);
+    color: #d9d9d9;
+  }
+}
+
+// Override Ant Design tooltip styles to match the screenshot
+.ant-tooltip {
+  .ant-tooltip-inner {
+    background-color: white;
+    color: #333;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .ant-tooltip-arrow {
+    display: none;
+  }
+} 

@@ -1,0 +1,126 @@
+.custom-button {
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px !important;
+  justify-content: center;
+
+  font-size: 14px;
+  padding: 6px 14px;
+
+  // Size variations
+  &.btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  &.btn-lg {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+
+  svg,
+  img {
+    margin-right: 4px;
+    width: 14px;
+    height: 14px;
+  }
+
+  &__primary {
+    color: #ffffff !important;
+    background-color: #00ada9 !important;
+    border: 1px solid #00ada9 !important;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#00ada9, 10%) !important;
+      border-color: darken(#00ada9, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: lighten(#00ada9, 30%);
+      border-color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+
+  &__white {
+    color: #344054 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #d0d5dd !important;
+
+    &:hover:not(:disabled) {
+      background-color: #f9fafb !important;
+    }
+
+    &:disabled {
+      background-color: #f9fafb;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+
+  &__red {
+    color: #ffffff !important;
+    background-color: #d92d20 !important;
+    border: 1px solid #d92d20 !important;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#d92d20, 10%) !important;
+      border-color: darken(#d92d20, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: lighten(#d92d20, 30%);
+      border-color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+
+  &__lightgray {
+    color: #000 !important;
+    background-color: #d3d3d3 !important;
+    border: 1px solid #6c757d !important;
+
+    &:hover:not(:disabled) {
+      background-color: darken(#d3d3d3, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: lighten(#d3d3d3, 10%);
+      cursor: not-allowed;
+    }
+  }
+
+  &__green {
+    color: #ffffff !important;
+    background-color: green !important;
+    border: 1px solid green !important;
+
+    &:hover:not(:disabled) {
+      background-color: darken(green, 10%) !important;
+      border-color: darken(green, 10%) !important;
+    }
+
+    &:disabled {
+      background-color: lighten(green, 30%);
+      border-color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+
+  &__borderless {
+    color: #667085 !important;
+    background-color: transparent !important;
+    border: none !important;
+
+    &:hover:not(:disabled) {
+      color: #00ada9 !important;
+    }
+
+    &:disabled {
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+  }
+}

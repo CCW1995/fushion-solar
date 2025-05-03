@@ -1,0 +1,16 @@
+.not-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.not-found > p.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.not-found > p.subtitle {
+  text-align: center;
+}

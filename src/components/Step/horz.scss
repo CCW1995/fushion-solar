@@ -1,0 +1,37 @@
+.custom-horz-steps {
+  .ant-steps-navigation > .ant-steps-item {
+    padding: 0 15px !important;
+  }
+
+  .ant-steps-navigation
+    > .ant-steps-item
+    > .ant-steps-item-container
+    > .ant-steps-item-icon,
+  .ant-steps-navigation > .ant-steps-item::after {
+    display: none !important;
+
+    color: #00ada9;
+  }
+
+  .ant-steps-navigation
+    > .ant-steps-item-active
+    > .ant-steps-item-container
+    > .ant-steps-item-content
+    > .ant-steps-item-title {
+    color: #00ada9 !important;
+  }
+
+  .ant-steps-navigation > .ant-steps-item > .ant-steps-item-container {
+    padding-bottom: 5px !important;
+  }
+}
+
+.ant-steps-item.ant-steps-item-process.ant-steps-item-active {
+  &:before {
+    background-color: #00ada9 !important;
+  }
+}
+
+.ant-steps-item-icon {
+  display: none !important;
+}

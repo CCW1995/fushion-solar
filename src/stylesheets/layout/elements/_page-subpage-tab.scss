@@ -1,0 +1,13 @@
+//Subpage Tab Container
+
+.page-subpage-tab {
+  background: #F9FAFB;
+  margin: 0px (-$grid-gutter-width);
+  padding: 0px ($grid-gutter-width);
+  font-size: $h5-font-size;
+
+  .custom-tab-section .custom-tab-section-value {
+    display: none;
+  }
+}
+

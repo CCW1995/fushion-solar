@@ -1,0 +1,6 @@
+{
+  "Create": "创建",
+  "pagination": {
+    "showing_results": "显示 {{from}}-{{to}} 条，共 {{totalCount}} 条结果"
+  }
+}

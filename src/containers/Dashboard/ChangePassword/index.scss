@@ -1,0 +1,20 @@
+.change-password-cont {
+  min-width: min-content;
+  max-width: 500px;
+  padding: 16px;
+
+  @media screen and (min-width: 992px) {
+    padding: 24px;
+  }
+  
+  span {
+    display: flex;
+    align-items: center;
+    text-align: left;
+  }
+
+  p {
+    word-break: break-word;
+    text-align: left;
+  }
+}

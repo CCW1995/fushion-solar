@@ -1,0 +1,83 @@
+.custom-search-cont {
+  display: flex;
+  padding: 8px 0px;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #EAECF0;
+  span {
+    color: #676A72;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .custom-search-form-text,
+  .custom-search-form {
+    display: flex;
+    padding: 2px 8px;
+    align-items: center;
+    gap: 4px;
+    color: #1C212D;
+    cursor: pointer;
+    width: fit-content;
+    border-radius: 100px;
+    border: 1px dashed #98A2B3;
+    background: white;
+    font-size: 12px;
+
+    .btn {
+      border: 0px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0px;
+      color: #1C212D !important;
+      background-color: transparent !important;
+    }
+
+    input{
+      outline: none !important;
+    }
+  }
+
+  .custom-search-form-null {
+    background: #EAECF0;
+  }
+
+  .custom-search-form-text input {
+    border: 0px;
+    background: transparent;
+  }
+}
+
+.full-width-container .custom-search-cont{
+  padding: 0 16px 8px;
+}
+
+.custom-calendar .react-datepicker__year-dropdown,
+.custom-calendar .react-datepicker__month-dropdown,
+.custom-calendar .react-datepicker__year-dropdown-container,
+.custom-calendar .react-datepicker__month-dropdown-container,
+.custom-calendar .react-datepicker__year-dropdown-container--select,
+.custom-calendar .react-datepicker__month-dropdown-container--select {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+.custom-calendar .react-datepicker__year-dropdown::after,
+.custom-calendar .react-datepicker__month-dropdown::after,
+.custom-calendar .react-datepicker__year-dropdown::before,
+.custom-calendar .react-datepicker__month-dropdown::before {
+  content: none !important;
+  display: none !important;
+}
+
+.custom-calendar select:focus,
+.custom-calendar select {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}

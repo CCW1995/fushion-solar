@@ -1,0 +1,36 @@
+.custom-tabs {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eaecf0;
+  color: #1c212d;
+  grid-gap: 16px;
+  overflow: auto;
+
+  .custom-tab-section {
+    display: flex;
+    font-size: 14px;
+    cursor: pointer;
+    align-items: center;
+    padding: 4px 0px 6px 0px;
+    min-width: max-content;
+  }
+
+  .custom-tab-selected {
+    color: #00ada9;
+    border-bottom: 2px solid #00ada9;
+  }
+
+  .custom-tab-section-value {
+    display: flex;
+    padding: 0px 4px;
+    color: #00ada9;
+    line-height: 18px;
+    margin-left: 8px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #edfffe;
+    mix-blend-mode: multiply;
+  }
+}

@@ -1,0 +1,44 @@
+.custom-vert-steps {
+	.ant-steps-icon-dot {
+		width: 16px !important;
+		height: 16px !important;
+		background: #667085 !important;
+	}
+	.ant-steps-icon-dot::before {
+		content: "";
+		display: block;
+		position: absolute;
+		width: 8px;
+		height: 8px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: #fff;
+		border-radius: 100%;
+	}
+	.ant-steps-vertical
+		> .ant-steps-item
+		> .ant-steps-item-container
+		> .ant-steps-item-tail {
+		margin-inline: 3px !important;
+	}
+	.ant-steps-dot
+		> .ant-steps-item
+		> .ant-steps-item-container
+		> .ant-steps-item-content
+		> .ant-steps-item-title {
+		font-weight: bold !important;
+	}
+	.ant-steps
+		> .ant-steps-item-wait
+		> .ant-steps-item-container
+		> .ant-steps-item-content
+		> .ant-steps-item-title,
+	.ant-steps
+		> .ant-steps-item-wait
+		> .ant-steps-item-container
+		> .ant-steps-item-content
+		> .ant-steps-item-description {
+		color: #000 !important;
+	}
+}

@@ -1,0 +1,27 @@
+.custom-toast-warning,
+.custom-toast-success {
+  padding: 0px;
+  border-radius: 8px;
+}
+
+.custom-toast-success svg {
+  color: #027A48;
+}
+
+.custom-toast-warning svg {
+  color: #c05a01;
+}
+
+.custom-toast-body {
+  width: 100%;
+  padding: 0px;
+  border-radius: 8px;
+}
+
+.custom-toast-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 18px;
+  height: 18px;
+}

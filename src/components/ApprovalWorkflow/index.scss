@@ -1,0 +1,30 @@
+.item-on-loan__address {
+  margin-bottom: 6px;
+
+  @media screen and ( min-width: 1200px ) {
+    margin-left: -30px;
+  }
+}
+
+.ERP-approval-workflow-component__approval-party {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  gap: 8px;
+  border-radius: 8px;
+  background: #F2F4F7;
+  p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: #1C212D;
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 0px;
+  }
+
+  span {
+    font-weight: 700;
+  }
+}

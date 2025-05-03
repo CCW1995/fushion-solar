@@ -1,0 +1,22 @@
+.ERP-approval-party {
+  display: flex;
+  flex-direction: column;
+  padding: 8px !important;
+  gap: 8px;
+  border-radius: 8px;
+  background: #F2F4F7 !important;
+  p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: #1C212D;
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 0px;
+  }
+
+  span {
+    font-weight: 700;
+  }
+}
