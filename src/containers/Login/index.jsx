@@ -1,18 +1,20 @@
 import React, { useState } from "react"
 import { Button } from "reactstrap"
-import { Row, Col, Input } from "antd"
+import { Input, Form, Divider, Typography } from "antd"
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import _ from "lodash"
 
 import TemplateContainerMain from "components/Template"
 import LoadingOverlay from "components/Indicator/LoadingOverlay"
 
 import WithLogin from "./action"
-import DCHLogo from "assets/dch-logo.svg"
+import LogoImg from "assets/logo.svg"
 import "./index.scss"
 
 const Login = (props) => {
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
+  const { Text } = Typography;
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
@@ -27,72 +29,103 @@ const Login = (props) => {
     }
   }
 
-  return (
-    <TemplateContainerMain>
-      <div className="login-landing-page">
-        <div className="login-input-box">
-          <div className="text-center mb-4">
-            <img src={DCHLogo} alt={"app-logo"} style={{ maxWidth: 200, marginBottom: "24px" }} />
-            <span className="login-input font-weight-semibold text-lg">
-              Welcome Back!
-            </span>
-            <span className="mb-4 text-light-grey font-weight-normal text-sm">
-              Fill in your login credentials to login.
-            </span>
-          </div>
-          <div className="login-input">
-            <span className="text-sm mb-1">User ID</span>
-            <Input
-              style={{ fontSize: "14px", borderRadius: "8px", marginBottom: "16px" }}
-              placeholder="User ID"
-              autoComplete="username"
-              status={username === "" ? "error" : null}
-              onChange={(e) => setUsername(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <span className="text-sm mb-1">Password</span>
-            <Input.Password
-              style={{ fontSize: "14px", borderRadius: "8px" }}
-              placeholder="Password"
-              autoComplete="current-password"
-              status={password === "" ? "error" : null}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-          </div>
-          {props.errorMessage && <span className="text-danger">{props.errorMessage}</span>}
+  const currentYear = new Date().getFullYear();
 
-          <Row className="mx-1 my-4" />
-          <Button
-            className="font-weight-semibold mb-3"
-            color="primary btn-block"
-            size="lg"
-            type="button"
-            disabled={username === null || username === "" || password === null || password === ""}
-            onClick={() => {
-              props.onClickLogin({
-                username: username,
-                password: password
-              })
-            }}
-          >
-            Login
-          </Button>
-          <a
-            className="d-flex justify-content-center align-items-center forget-pw-link"
-            href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              props.history.push("/forgot-password")
-            }}
-          >
-            Forgot Password?
-          </a>
+  return (
+    <div className="fusion-login-page">
+      <div className="fusion-login-content">
+        <div className="logo-container">
+        </div>
+        
+        <div className="login-container">
+          <div className="login-box">
+            <div className="login-form">
+              <Form layout="vertical">
+                <Form.Item>
+                  <Input
+                    prefix={<UserOutlined />}
+                    placeholder="Username"
+                    size="large"
+                    autoComplete="username"
+                    status={username === "" ? "error" : null}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input.Password
+                    prefix={<LockOutlined />}
+                    placeholder="Password"
+                    size="large"
+                    autoComplete="current-password"
+                    status={password === "" ? "error" : null}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                  />
+                </Form.Item>
+                
+                {props.errorMessage && <div className="error-message">{props.errorMessage}</div>}
+                
+                <Form.Item>
+                  <Button
+                    className="login-button"
+                    color="primary"
+                    size="lg"
+                    type="button"
+                    disabled={username === null || username === "" || password === null || password === ""}
+                    onClick={() => {
+                      props.onClickLogin({
+                        username: username,
+                        password: password
+                      })
+                    }}
+                  >
+                    Log In
+                  </Button>
+                </Form.Item>
+              </Form>
+            </div>
+            
+            <div className="login-links">
+              <a className="link-item" href="#" onClick={(e) => {
+                e.preventDefault();
+                props.history.push("/installer-registration");
+              }}>
+                Installer Registration
+              </a>
+              <Divider type="vertical" />
+              <a className="link-item" href="#" onClick={(e) => {
+                e.preventDefault();
+                props.history.push("/forgot-password");
+              }}>
+                Forgot password?
+              </a>
+              <Divider type="vertical" />
+              <a className="link-item" href="#" onClick={(e) => {
+                e.preventDefault();
+                props.history.push("/demo-site");
+              }}>
+                Demo Site
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-      {/* <p className="login-disclaimer">Copyright protected by DC Healthcare</p> */}
+
+      <div className="fusion-footer">
+        <Text className="browser-note">
+          You are advised to use Chrome 79, Firefox ESR 68, or later versions with a resolution of 1920 x 1080 pixels.
+        </Text>
+        <Text className="copyright">
+          Copyright © 2011-{currentYear} Huawei Digital Power Technologies Co., Ltd. All rights reserved.
+        </Text>
+        <div className="policy-links">
+          <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-use">Terms of Use</a> | <a href="/cookies-policy">Cookies Policy</a>
+        </div>
+      </div>
+      
       {props.onLoadLogin && <LoadingOverlay />}
-    </TemplateContainerMain>
+    </div>
   )
 }
 

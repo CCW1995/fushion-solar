@@ -19,30 +19,35 @@ const HOC = (WrappedComponent) => {
     onChangeHOC = (val, context) => this.setState({ [context]: val });
 
     onClickLogin = (dataToSubmit) => {
-      this.setState({ loading: true }, () => {
-        Axios.post(`${getDomainURL()}/api/login/dch`, dataToSubmit)
-          .then((response) => {
-            this.setState({
-              loading: false,
-              requestCount: 0,
-            });
-            this.props.setUserProfile(response.data)
-            clearItem("PERMISSION_ALERT");
-            storeItem("ERP_PERMISSION_TOKEN", response.headers["x-permission-cache-key"])
-            storeItem("ERP_ACCESS_TOKEN", response.data.token);
-            storeItem("ERP_REFRESH_TOKEN", response.data.refreshToken);
-            this.props.history.push("/dashboard/main");
-          })
-          .catch((err) => {
-            this.setState({
-              errorMessage:
-                err.response?.data?.message ??
-                "This combination of username and password is incorrect.",
-              loading: false,
-              requestCount: 0,
-            });
-          });
-      });
+      this.props.history.push("/huawei-dashboard");
+      //this.setState({ loading: true }, () => {
+        //Axios.post(`${getDomainURL()}/api/login/dch`, dataToSubmit)
+          //
+      //});
+      //this.setState({ loading: true }, () => {
+        //Axios.post(`${getDomainURL()}/api/login/dch`, dataToSubmit)
+          //.then((response) => {
+            //this.setState({
+              //loading: false,
+              //requestCount: 0,
+            //});
+            //this.props.setUserProfile(response.data)
+            //clearItem("PERMISSION_ALERT");
+            //storeItem("ERP_PERMISSION_TOKEN", response.headers["x-permission-cache-key"])
+            //storeItem("ERP_ACCESS_TOKEN", response.data.token);
+            //storeItem("ERP_REFRESH_TOKEN", response.data.refreshToken);
+            //this.props.history.push("/dashboard/main");
+          //})
+          //.catch((err) => {
+            //this.setState({
+              //errorMessage:
+                //err.response?.data?.message ??
+                //"This combination of username and password is incorrect.",
+              //loading: false,
+              //requestCount: 0,
+            //});
+          //});
+      //});
     };
 
     render = () => {
