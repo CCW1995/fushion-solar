@@ -19,7 +19,7 @@ const HOC = (WrappedComponent) => {
     onChangeHOC = (val, context) => this.setState({ [context]: val });
 
     onClickLogin = (dataToSubmit) => {
-      this.props.history.push("/huawei-dashboard");
+      this.props.history.push("/dashboard/huawei-dashboard");
       //this.setState({ loading: true }, () => {
         //Axios.post(`${getDomainURL()}/api/login/dch`, dataToSubmit)
           //

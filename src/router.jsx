@@ -8,8 +8,6 @@ import ResetPw from "containers/ResetPw"
 import ForgotPw from "containers/ForgotPw"
 import Dashboard from "containers/Dashboard"
 import Registration from "containers/Registration"
-import HuaweiStyleDashboard from "containers/HuaweiStyleDashboard"
-// import NotFound from "containers/NotFound"
 
 import { getItem } from "utils/tokenStore"
 import { getProfile } from "actions/profile"
@@ -27,16 +25,17 @@ function CustomRouter(props) {
 
   return (
     <Switch>
-      <Route exact path="/login" component={Login} initialPath />
+      {/* Public routes */}
+      <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Registration} />
       <Route exact path="/forgot-password" component={ForgotPw} />
       <Route exact path="/reset-password" component={ResetPw} />
-      <PrivateRoute path="/huawei-dashboard" component={HuaweiStyleDashboard} />
-      <PrivateRoute path="/dashboard" component={Dashboard} />
-      {/* <PrivateRoute path={"/admin-impersonate"} component={Dashboard} /> */}
 
-      <Redirect exact from={"/"} to={"/huawei-dashboard"} />
-      {/* <Route component={NotFound} /> */}
+      {/* Dashboard routes */}
+      <PrivateRoute path="/dashboard" component={Dashboard} />
+
+      {/* Default redirect */}
+      <Redirect exact from="/" to="/login" />
     </Switch>
   )
 }

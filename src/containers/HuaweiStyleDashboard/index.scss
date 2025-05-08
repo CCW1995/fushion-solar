@@ -570,13 +570,18 @@
   color: rgba(0, 0, 0, 0.85);
   
   .plant-list-header {
-    display: flex;
-    flex-wrap: wrap;
+    
+    @media (min-width: 768px) {
+      flex-wrap: wrap;
+    }
     margin-bottom: 16px;
     justify-content: space-between;
     
     .search-filters {
-      display: flex;
+
+      @media (min-width: 768px) {
+        display: flex;
+      }
       flex-wrap: wrap;
       align-items: center;
       flex: 1;
@@ -587,7 +592,10 @@
         align-items: center;
         margin-right: 16px;
         margin-bottom: 8px;
-        width: calc(23% - 12px);
+      
+        @media (min-width: 768px) {
+          width: calc(23% - 12px);
+        }
         
         label {
           margin-bottom: 0;

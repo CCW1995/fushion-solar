@@ -1,0 +1,1059 @@
+.plant-monitoring-container {
+  padding: 16px;
+  background-color: #f0f2f5;
+  min-height: 100%;
+
+  .top-navigation {
+    margin-bottom: 16px;
+    
+    .navigation-menu {
+      background: transparent;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 14px;
+      
+      .ant-menu-item {
+        padding: 0 20px;
+      }
+    }
+  }
+
+  .plant-header {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+    .plant-icon {
+      font-size: 20px;
+      color: #1890ff;
+      margin-right: 12px;
+    }
+
+    .plant-name {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .weather-info {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+
+      .temperature {
+        font-size: 16px;
+        margin-right: 16px;
+        
+        .temp-value {
+          font-weight: 600;
+        }
+
+        .temp-unit {
+          color: #666;
+          margin-left: 2px;
+        }
+      }
+
+      .weather-condition {
+        margin-right: 16px;
+      }
+
+      .weather-dates {
+        display: flex;
+        
+        .date-item {
+          text-align: center;
+          margin-left: 8px;
+          min-width: 60px;
+          
+          .day {
+            font-weight: 600;
+            font-size: 13px;
+          }
+          
+          .date {
+            font-size: 12px;
+            color: #666;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 767px) {
+      .weather-info {
+        justify-content: flex-start;
+        margin-top: 12px;
+        
+        .temperature, .weather-condition {
+          margin-bottom: 8px;
+        }
+        
+        .weather-dates {
+          width: 100%;
+          margin-top: 8px;
+          
+          .date-item {
+            margin-left: 0;
+            margin-right: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  .energy-stats {
+    margin-bottom: 16px;
+
+    .stat-card .ant-card-body {
+      background-color: #fff;
+    }
+
+    .stat-card {
+      position: relative;
+      height: 100%;
+      
+      .ant-statistic {
+        display: flex;
+        flex-direction: column;
+        
+        .ant-statistic-title {
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 8px;
+        }
+        
+        .ant-statistic-content {
+          display: flex;
+          align-items: center;
+          
+          .ant-statistic-content-prefix {
+            margin-right: 12px;
+            
+            .stats-icon {
+              font-size: 24px;
+              color: #1890ff;
+              background-color: rgba(24, 144, 255, 0.1);
+              padding: 8px;
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+          
+          .ant-statistic-content-value {
+            font-size: 24px;
+            font-weight: 600;
+          }
+          
+          .ant-statistic-content-suffix {
+            font-size: 14px;
+            color: #666;
+            margin-left: 4px;
+          }
+        }
+      }
+      
+      .info-icon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: #aaa;
+        font-size: 16px;
+        cursor: pointer;
+        transition: color 0.3s;
+        
+        &:hover {
+          color: #1890ff;
+        }
+      }
+    }
+  }
+
+  .plant-details {
+    .plant-flow-card, .plant-info-card {
+      height: 100%;
+    }
+
+    .energy-flow-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      height: 100%;
+      min-height: 300px;
+
+      .pv-section {
+        text-align: center;
+        margin-bottom: 32px;
+        
+        .energy-node {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          border: 2px solid #1890ff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin: 16px auto;
+          background-color: rgba(24, 144, 255, 0.05);
+          
+          .node-icon {
+            font-size: 24px;
+            color: #1890ff;
+            margin-bottom: 4px;
+          }
+          
+          .node-value, .node-unit {
+            font-size: 12px;
+            line-height: 1.2;
+          }
+        }
+        
+        .flow-lines {
+          position: relative;
+          height: 60px;
+          width: 100%;
+          
+          .vertical-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            height: 30px;
+            width: 2px;
+            background-color: #1890ff;
+          }
+          
+          .horizontal-line {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            width: 40%;
+            height: 2px;
+            background-color: #1890ff;
+            
+            &.right {
+              left: 10%;
+            }
+          }
+        }
+      }
+
+      .grid-load-section {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        
+        .load-node, .grid-node {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          
+          .node-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #1890ff;
+            background-color: rgba(24, 144, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 24px;
+            color: #1890ff;
+          }
+          
+          .node-value, .node-unit {
+            font-size: 12px;
+            line-height: 1.2;
+          }
+          
+          .node-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+          }
+        }
+      }
+    }
+
+    .plant-info-card {
+      .environmental-benefit {
+        .benefit-item {
+          margin-bottom: 16px;
+          
+          .benefit-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            
+            .benefit-icon {
+              width: 32px;
+              height: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 4px;
+              background-color: rgba(24, 144, 255, 0.1);
+              color: #1890ff;
+              font-size: 28px;
+              margin-right: 12px;
+            }
+            
+            .benefit-values {
+              display: flex;
+              align-items: baseline;
+              
+              .value {
+                font-size: 16px;
+                font-weight: 700;
+                margin-right: 4px;
+              }
+              
+              .unit {
+                font-size: 13px;
+              }
+            }
+          }
+          
+          .benefit-label {
+            font-size: 14px;
+            color: #888;
+            font-weight: 400;
+            margin-left: 0;
+          }
+        }
+      }
+
+      .alarm-section {
+        .alarm-header {
+          display: flex;
+          align-items: baseline;
+          margin-bottom: 16px;
+          
+          .alarm-count {
+            font-size: 16px;
+            font-weight: 700;
+            margin-right: 8px;
+          }
+          
+          .alarm-label {
+            font-size: 14px;
+            color: #888;
+            font-weight: 400;
+          }
+        }
+        
+        .alarm-categories {
+          .alarm-category {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            
+            &:last-child {
+              border-bottom: none;
+            }
+            
+            .category-label {
+              font-size: 13px;
+              color: #888;
+            }
+            
+            .category-count {
+              font-size: 14px;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
+      .plant-detail-item {
+        margin-bottom: 16px;
+        
+        .detail-label {
+          display: block;
+          font-size: 13px;
+          color: #666;
+          margin-bottom: 4px;
+        }
+        
+        .detail-value {
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 991px) {
+    .plant-details {
+      .plant-flow-card {
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  @media (max-width: 575px) {
+    padding: 8px;
+    
+    .energy-stats {
+      .ant-col {
+        margin-bottom: 8px;
+      }
+    }
+    
+    .plant-details {
+      .plant-info-card {
+        .environmental-benefit, .alarm-section {
+          margin-bottom: 16px;
+        }
+      }
+    }
+  }
+}
+
+.plant-header-enhanced {
+  //background: #fff;
+  padding: 18px 0px 12px 0px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+
+  .ant-row {
+    width: 100%;
+    align-items: center;
+  }
+
+  .plant-header-left {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    .plant-icon-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      .plant-icon {
+        font-size: 28px;
+        color: #444;
+      }
+      .status-dot {
+        position: absolute;
+        right: -6px;
+        bottom: 2px;
+        width: 10px;
+        height: 10px;
+        background: #2ecc40;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 2px #aaa;
+      }
+    }
+    .plant-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #222;
+      letter-spacing: 0.01em;
+    }
+  }
+
+  .plant-header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    .weather-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      .weather-icon-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        .weather-icon img {
+          width: 22px;
+          height: 22px;
+        }
+        .weather-label {
+          font-size: 14px;
+          color: #444;
+        }
+      }
+      .weather-temp-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        .weather-temp {
+          font-size: 18px;
+          font-weight: 600;
+          color: #222;
+          margin-left: 8px;
+        }
+        .weather-temp-date {
+          font-size: 13px;
+          color: #888;
+          margin-left: 8px;
+          margin-top: 2px;
+          font-weight: 400;
+          letter-spacing: 0.01em;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    padding: 12px 8px 8px 8px;
+    .plant-header-left, .plant-header-right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .plant-header-right {
+      margin-top: 10px;
+      .weather-row {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+    }
+  }
+} 
+
+.weather-day {
+  display: flex;
+  flex-direction: column;
+}
+
+.weather-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.energy-stats-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  padding: 28px 18px 22px 18px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+  .energy-stats-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+
+  .stat-block {
+    flex: 1 1 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 8px;
+    min-width: 0;
+    background: transparent;
+  }
+
+  .stat-icon {
+    margin-right: 10px;
+
+    .stat-svg-icon {
+      width: 35px;
+      height: 35px;
+      display: block;
+      margin: 0 auto;
+      background: none;
+
+      svg {
+        width: 35px;
+        height: 35px;
+      }
+    }
+  }
+
+  .stat-value-row {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0;
+    gap: 5px;
+
+    .stat-icon {
+      margin-bottom: 0;
+      margin-right: 0;
+      .stat-svg-icon {
+        font-size: 40px;
+        color: #222;
+        vertical-align: middle;
+        margin-right: 0;
+      }
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #222;
+    }
+    .stat-unit {
+      font-size: 16px;
+      color: #888;
+      font-weight: 400;
+      margin-right: 0;
+    }
+  }
+
+  .stat-label-row {
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 0;
+      margin-top: 0;
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .stat-info-icon {
+      color: #b0b0b0;
+      font-size: 16px;
+      margin-left: 2px;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+  }
+
+  .stat-divider {
+    position: absolute;
+    right: 0;
+    top: 18%;
+    height: 64%;
+    width: 1px;
+    background: #f0f0f0;
+    z-index: 1;
+    content: '';
+  }
+}
+
+@media (max-width: 991px) {
+  .energy-stats-card .energy-stats-row {
+    flex-direction: column;
+    .stat-block {
+      flex-direction: row;  
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 12px;
+      .stat-divider {
+        display: none;
+      }
+    }
+    .stat-block:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.main-section-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+}
+
+.main-section {
+  width: 100%;
+  margin: 0;
+}
+
+.main-section-left, .main-section-right {
+  padding: 0;
+}
+
+.plant-flow-card {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plant-info-card {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+// Environmental benefits
+.environmental-benefit {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    .benefit-icon {
+      font-size: 40px;
+      color: #888;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .benefit-values {
+      display: flex;
+      align-items: baseline;
+      .value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #222;
+        margin-right: 4px;
+      }
+      .unit {
+        font-size: 13px;
+        color: #888;
+      }
+    }
+    .benefit-label {
+      font-size: 14px;
+      color: #888;
+      font-weight: 400;
+    }
+  }
+}
+
+// Alarm section
+.alarm-section {
+  .alarm-header {
+    display: flex;
+    align-items: baseline;
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 8px;
+    .alarm-count {
+      font-size: 28px;
+      font-weight: 700;
+      margin-right: 8px;
+      color: #222;
+    }
+    .alarm-label {
+      font-size: 15px;
+      color: #888;
+      font-weight: 400;
+    }
+  }
+  .alarm-categories {
+    .alarm-category {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 4px solid #f5f5f5;
+      &:last-child {
+        border-bottom: none;
+      }
+      .category-label {
+        font-size: 14px;
+        color: #888;
+      }
+      .category-count {
+        font-size: 15px;
+        font-weight: 700;
+        color: #222;
+      }
+    }
+  }
+}
+
+// Plant details
+.plant-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .detail-label {
+    font-size: 14px;
+    color: #888;
+    font-weight: 400;
+    flex: 1 1 0;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+  .detail-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    flex: 2 1 0;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 991px) {
+  .main-section-card {
+    padding: 16px 4px 12px 4px;
+  }
+  .plant-info-card {
+    padding: 0;
+  }
+}
+
+.plant-details-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.plant-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .detail-label {
+    font-size: 14px;
+    color: #888;
+    font-weight: 400;
+    flex: 1 1 0;
+    white-space: nowrap;
+    margin-right: 8px;
+  }
+  .detail-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    flex: 2 1 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+}
+
+.energy-management-summary {
+  padding: 18px 18px 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ems-summary-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 18px;
+}
+
+.ems-summary-col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.ems-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.ems-main-unit {
+  font-size: 16px;
+  font-weight: 400;
+  color: #888 !important;
+}
+
+.ems-sub-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2px;
+}
+
+.ems-sub {
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.ems-green {
+  color: #389e0d;
+}
+.ems-light {
+  color: #bfbfbf;
+}
+.ems-orange {
+  color: #fa8c16;
+}
+.ems-yellow {
+  color: #fadb14;
+}
+
+.ems-sub-label {
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+  margin-right: 12px;
+}
+
+.ems-progress-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  height: 22px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.ems-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  padding-left: 10px;
+  white-space: nowrap;
+  transition: width 0.3s;
+}
+.ems-progress-green {
+  background: #389e0d;
+}
+.ems-progress-light {
+  background: #bfbfbf;
+}
+.ems-progress-orange {
+  background: #fa8c16;
+}
+.ems-progress-yellow {
+  background: #fadb14;
+  color: #222;
+}
+
+.ems-progress-group-segmented {
+  background: #f5f5f5;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 22px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.ems-chart-row {
+  margin-top: 18px;
+}
+
+.ems-line-chart-placeholder {
+  width: 100%;
+}
+
+.ems-legend-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+
+.ems-legend {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #222;
+}
+.ems-legend-dot {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.ems-legend-green {
+  background: #389e0d;
+}
+.ems-legend-red {
+  background: #f5222d;
+}
+.ems-legend-blue {
+  background: #1890ff;
+}
+
+@media (max-width: 991px) {
+  .ems-summary-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .ems-summary-col {
+    width: 100%;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .plant-info-card {
+    .ant-row {
+      flex-direction: column !important;
+      gap: 0 !important;
+    }
+    .ant-col {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-bottom: 18px;
+    }
+    .environmental-benefit {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px 12px;
+      .benefit-item {
+        flex: 1 1 45%;
+        min-width: 140px;
+        margin-bottom: 0;
+      }
+    }
+    .alarm-section {
+      margin-bottom: 18px;
+    }
+    .plant-details-vertical {
+      gap: 18px;
+      .plant-detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        .detail-label, .detail-value {
+          text-align: left;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}
