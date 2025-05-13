@@ -1,7 +1,7 @@
 .plant-monitoring-container {
   padding: 16px;
   background-color: #f0f2f5;
-  min-height: 100%;
+  //min-height: 100%;
 
   .top-navigation {
     margin-bottom: 16px;
@@ -416,7 +416,7 @@
       }
     }
   }
-}
+} 
 
 .plant-header-enhanced {
   //background: #fff;
@@ -977,6 +977,7 @@
 
 .ems-legend-row {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   gap: 24px;
@@ -1021,6 +1022,14 @@
 }
 
 @media (max-width: 767px) {
+  html, body, #root, .fusion-layout, .site-layout, .fusion-content, .plant-monitoring-container {
+    height: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .fusion-content, .plant-monitoring-container {
+    overflow-y: auto;
+  }
   .plant-info-card {
     .ant-row {
       flex-direction: column !important;

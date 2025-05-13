@@ -7,12 +7,13 @@ import {
   UserOutlined,
   GlobalOutlined,
   QuestionCircleOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
-const FusionSolarHeader = ({ collapsed, setCollapsed }) => {
+const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) => {
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">
@@ -63,10 +64,20 @@ const FusionSolarHeader = ({ collapsed, setCollapsed }) => {
   return (
     <Header className="fusion-header">
       <div className="header-left">
-        {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-          className: 'trigger',
-          onClick: () => setCollapsed(!collapsed),
-        })}
+        {isMobile ? (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            className="trigger mobile-trigger"
+            onClick={onMenuClick}
+            style={{ fontSize: 22, marginRight: 12 }}
+          />
+        ) : (
+          React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: 'trigger',
+            onClick: () => setCollapsed(!collapsed),
+          })
+        )}
       </div>
       <div className="header-right">
         <div className="header-actions">

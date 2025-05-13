@@ -241,7 +241,7 @@ const HuaweiStyleDashboard = () => {
                 <div className="panel-content">
                   <Row gutter={[16, 12]}>
                     {renderKpi(selectedParameters).map((item, index) => (
-                      <Col span={12} key={index}>
+                      <Col xs={24} md={12} key={index}>
                         <div className="kpi-item">
                           <div className="kpi-icon">
                             {item.icon}

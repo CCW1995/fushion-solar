@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Layout, ConfigProvider } from 'antd';
+import { Layout, ConfigProvider, Drawer, Grid } from 'antd';
 import FusionSolarSider from './FusionSolarSider';
 import FusionSolarHeader from './FusionSolarHeader';
 import './FusionSolarLayout.scss';
 
 const { Content } = Layout;
+const { useBreakpoint } = Grid;
 
 const FusionSolarLayout = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
 
   return (
     <ConfigProvider
@@ -25,9 +29,27 @@ const FusionSolarLayout = ({ children }) => {
       }}
     >
       <Layout className="fusion-layout huawei-layout">
-        <FusionSolarSider collapsed={collapsed} setCollapsed={setCollapsed} />
+        {isMobile ? (
+          <Drawer
+            placement="left"
+            closable={false}
+            onClose={() => setDrawerVisible(false)}
+            open={drawerVisible}
+            bodyStyle={{ padding: 0 }}
+            width={220}
+          >
+            <FusionSolarSider collapsed={false} setCollapsed={() => {}} isMobile onClose={() => setDrawerVisible(false)} />
+          </Drawer>
+        ) : (
+          <FusionSolarSider collapsed={collapsed} setCollapsed={setCollapsed} />
+        )}
         <Layout className="site-layout">
-          <FusionSolarHeader collapsed={collapsed} setCollapsed={setCollapsed} />
+          <FusionSolarHeader
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            isMobile={isMobile}
+            onMenuClick={() => setDrawerVisible(true)}
+          />
           <Content className="fusion-content">
             {children}
           </Content>

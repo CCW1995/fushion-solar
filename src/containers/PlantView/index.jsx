@@ -195,23 +195,6 @@ const PlantMonitoringView = () => {
           </Card>
         </Col>
         <Col xs={24} md={12}>
-        <Card 
-            style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
-            >
-            <YieldStatisticsPanel
-              title={
-                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  Revenue
-                  <Tooltip title="Info about energy management."><InfoCircleOutlined style={{ color: '#b0b0b0', marginLeft: 4 }} /></Tooltip>
-                </span>
-              }
-              selectedPeriod={selectedPeriod}
-              setSelectedPeriod={setSelectedPeriod}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-            >
-            </YieldStatisticsPanel>
-          </Card>
         </Col>
       </Row>
     </div>

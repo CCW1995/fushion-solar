@@ -1,10 +1,9 @@
 import React from 'react';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Button, Divider } from 'antd';
 import {
   HomeOutlined,
   BarChartOutlined,
-  CloudOutlined,
-  SettingOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 
@@ -12,9 +11,11 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import logoFull from '../../assets/logo.svg';
 import logoSmall from '../../assets/logo-small.svg';
 
+import './FusionSolarLayout.scss';
+
 const { Sider } = Layout;
 
-const FusionSolarSider = ({ collapsed, setCollapsed }) => {
+const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -38,6 +39,7 @@ const FusionSolarSider = ({ collapsed, setCollapsed }) => {
       default:
         history.push('/dashboard/huawei-dashboard');
     }
+    if (isMobile && onClose) onClose(); // Close drawer on mobile after click
   };
 
   return (
@@ -45,15 +47,17 @@ const FusionSolarSider = ({ collapsed, setCollapsed }) => {
       trigger={null} 
       collapsible 
       collapsed={collapsed}
-      className="fusion-sider"
+      className={`fusion-sider${isMobile ? ' fusion-sider-mobile' : ''}`}
       width={220}
+      style={isMobile ? { height: '100%', background: '#001529', boxShadow: '2px 0 8px rgba(0,0,0,0.15)' } : {}}
     >
-      <div className="logo">
+      <div className={`logo${isMobile ? ' logo-mobile' : ''}`} style={isMobile ? { padding: '24px 16px 12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' } : {}}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {!collapsed ? (
           <img 
             src={logoFull} 
             alt="FusionSolar Logo" 
-            className="logo-full"
+            className="logo-full d-none d-md-block"
           />
         ) : (
           <img 
@@ -62,24 +66,35 @@ const FusionSolarSider = ({ collapsed, setCollapsed }) => {
             className="logo-small"
           />
         )}
+        </div>
+        {isMobile && (
+          <Button
+            type="text"
+            icon={<CloseOutlined style={{ fontSize: 22, color: '#fff' }} />}
+            onClick={onClose}
+            style={{ position: 'absolute', right: 0, top: 0 }}
+          />
+        )}
       </div>
+      {isMobile && <Divider style={{ margin: '0 0 12px 0', borderColor: '#22304a' }} />}
       <Menu
         theme="dark"
         mode="inline"
         selectedKeys={[getSelectedKey()]}
-        className="fusion-menu"
+        className={`fusion-menu${isMobile ? ' fusion-menu-mobile' : ''}`}
         onClick={handleMenuClick}
+        style={isMobile ? { fontSize: 15, padding: '0 2px' } : {}}
         items={[
           {
             key: '1',
-            icon: <HomeOutlined />,
-            label: 'Dashboard',
+            icon: <HomeOutlined style={isMobile ? { fontSize: 18 } : {}} />,
+            label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Dashboard</span>,
             title: 'Dashboard',
           },
           {
             key: '2',
-            icon: <BarChartOutlined />,
-            label: 'Monitoring',
+            icon: <BarChartOutlined style={isMobile ? { fontSize: 18 } : {}} />,
+            label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Monitoring</span>,
             title: 'Monitoring',
           }
         ]}

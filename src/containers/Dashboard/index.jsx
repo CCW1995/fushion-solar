@@ -33,16 +33,16 @@ class Dashboard extends Component {
     return (
       <DocumentMeta {...meta}>
         <FusionSolarLayout>
-          <SuspenseWrapper key={"SuspenseWrapper"}>
-            <Switch>
+                <SuspenseWrapper key={"SuspenseWrapper"}>
+                  <Switch>
               <Route exact path="/dashboard/huawei-dashboard" component={HuaweiStyleDashboard} />
               <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
               <Redirect exact from="/dashboard" to="/dashboard/huawei-dashboard" />
-              <Route component={NotFound} />
-            </Switch>
-          </SuspenseWrapper>
+                    <Route component={NotFound} />
+                  </Switch>
+                </SuspenseWrapper>
         </FusionSolarLayout>
-        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
+          <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
       </DocumentMeta>
     )
   }

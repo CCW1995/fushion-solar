@@ -34,7 +34,7 @@
     opacity: 0.3;
     z-index: 1;
     pointer-events: none;
-  }
+}
 
   .fusion-header {
     display: flex;
@@ -72,8 +72,8 @@
 
   .fusion-login-content {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
@@ -136,7 +136,7 @@
         }
 
         .login-button {
-          width: 100%;
+  width: 100%;
           height: 42px;
           border-radius: 21px;
           font-size: 15px;
@@ -171,7 +171,7 @@
           text-align: center;
           font-size: 13px;
         }
-      }
+  }
 
       .login-links {
         display: flex;
@@ -195,12 +195,12 @@
           height: 14px;
           background-color: #d9d9d9;
         }
-      }
     }
   }
+}
 
   .fusion-footer {
-    text-align: center;
+  text-align: center;
     padding: 15px 30px;
     color: rgba(255, 255, 255, 0.9);
     position: relative;
@@ -220,13 +220,13 @@
       
       a {
         color: rgba(255, 255, 255, 0.9);
-        text-decoration: none;
+  text-decoration: none;
         transition: color 0.3s ease;
         padding: 0 8px;
-        
-        &:hover {
+
+  &:hover {
           color: white;
-          text-decoration: underline;
+    text-decoration: underline;
         }
       }
     }
@@ -241,9 +241,9 @@
       .qr-code img {
         width: 70px;
         height: 70px;
-      }
     }
-    
+  }
+
     .fusion-login-content {
       .logo-container .fusion-logo {
         width: 200px;
@@ -273,19 +273,19 @@
     .fusion-login-content {
       .logo-container .fusion-logo {
         width: 160px;
-      }
-      
+}
+
       .login-box {
         padding: 15px;
         
         .login-links {
           flex-direction: column;
-          align-items: center;
+  align-items: center;
           
           .link-item {
             margin: 4px 0;
-          }
-          
+}
+
           .ant-divider-vertical {
             display: none;
           }

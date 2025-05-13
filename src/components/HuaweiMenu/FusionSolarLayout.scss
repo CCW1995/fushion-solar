@@ -80,11 +80,19 @@
       .logo-full {
         height: 32px;
         width: auto;
+
+        @media (max-width: 767px) {
+          display: none !important;
+        }
       }
       
       .logo-small {
         height: 32px;
         width: auto;
+
+        @media (max-width: 767px) {
+          height: 24px;
+        }
       }
     }
     
