@@ -10,11 +10,18 @@ import LoadingOverlay from "components/Indicator/LoadingOverlay"
 import WithLogin from "./action"
 import LogoImg from "assets/logo.svg"
 import "./index.scss"
+import { getItem } from "utils/tokenStore"
 
 const Login = (props) => {
   const [username, setUsername] = useState(null)
   const [password, setPassword] = useState(null)
   const { Text } = Typography;
+
+  useEffect(() => {
+    if (getItem("ERP_ACCESS_TOKEN")) {
+      props.history.push("/dashboard/huawei-dashboard");
+    }
+  }, []);
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {

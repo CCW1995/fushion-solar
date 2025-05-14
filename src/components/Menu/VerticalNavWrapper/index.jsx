@@ -98,10 +98,6 @@ class VerticalNavWrapper extends Component {
             if (e.target.innerText === "Logout") {
               Promise.all([
                 clearItem("ERP_ACCESS_TOKEN"),
-                clearItem("ERP_REFRESH_TOKEN"),
-                clearItem("ERP_PERMISSION_TOKEN"),
-                clearItem("ERP_IMPERSONATE_ACCESS_TOKEN"),
-                clearItem("ERP_IMPERSONATE_PERMISSION_TOKEN"),
                 this.props.setUserProfile({}),
               ]).then(() => {
                 this.props.history.push("/login")

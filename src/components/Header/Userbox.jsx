@@ -77,10 +77,6 @@ class Userbox extends Component {
         key: 'w', label: (
           <div onClick={() => Promise.all([
             clearItem("ERP_ACCESS_TOKEN"),
-            clearItem("ERP_REFRESH_TOKEN"),
-            clearItem("ERP_PERMISSION_TOKEN"),
-            clearItem("ERP_IMPERSONATE_ACCESS_TOKEN"),
-            clearItem("ERP_IMPERSONATE_PERMISSION_TOKEN"),
             this.props.setUserProfile({})])
             .then(() => {
               this.props.history.push("/login")

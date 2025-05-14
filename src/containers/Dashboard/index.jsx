@@ -9,8 +9,7 @@ import FusionSolarLayout from 'components/HuaweiMenu/FusionSolarLayout'
 import LoadingOverlay from "components/Indicator/LoadingOverlay"
 import NotFound from "containers/NotFound"
 
-import { getProfile } from "actions/profile"
-import { getItem, clearItem } from "utils/tokenStore"
+import { getItem } from "utils/tokenStore"
 
 // Import your dashboard components here
 import HuaweiStyleDashboard from '../HuaweiStyleDashboard'
@@ -29,6 +28,14 @@ const SuspenseWrapper = ({ children }) => (
 )
 
 class Dashboard extends Component {
+
+  componentDidMount() {
+    if (!getItem("ERP_ACCESS_TOKEN")) {
+      this.props.history.push("/login");
+    } else {
+    }
+  }
+
   render() {
     return (
       <DocumentMeta {...meta}>
@@ -50,6 +57,5 @@ class Dashboard extends Component {
 
 const mapStateToProps = state => ({ data: state })
 export default connect(mapStateToProps, {
-  getProfile,
   withRouter
 })(Dashboard)
