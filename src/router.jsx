@@ -19,7 +19,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 function CustomRouter(props) {
   useEffect(() => {
     if (getItem("ERP_ACCESS_TOKEN")) {
-      props.getProfile()
     }
   }, [])
 

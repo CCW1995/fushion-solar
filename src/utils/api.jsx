@@ -1,3 +1,3 @@
 export default () => {
-  return "https://api.emitsolar.appbaystudio.com";
+  return "http://34.142.145.153";
 };

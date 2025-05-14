@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 import Axios from "axios";
 import { storeItem } from "utils/tokenStore";
-import getDomainURL from "utils/api";
 import { setUserProfile } from "reducers/profile";
 import { setPath } from "actions/path";
 
@@ -19,7 +18,7 @@ const HOC = (WrappedComponent) => {
 
     onClickLogin = (dataToSubmit) => {
       this.setState({ loading: true }, () => {
-        Axios.post(`${getDomainURL()}/api/fusion/login`, dataToSubmit)
+        Axios.post(`https://api.emitsolar.appbaystudio.com/api/fusion/login`, dataToSubmit)
           .then((response) => {
             this.setState({
               loading: false,

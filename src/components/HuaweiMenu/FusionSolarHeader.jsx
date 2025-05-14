@@ -9,11 +9,17 @@ import {
   QuestionCircleOutlined,
   MenuOutlined,
 } from '@ant-design/icons';
+import { clearItem } from 'utils/tokenStore';
 import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
 const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) => {
+  const handleLogout = () => {
+    clearItem('ERP_ACCESS_TOKEN');
+    window.location.href = '/login';
+  };
+
   const userMenu = (
     <Menu>
       <Menu.Item key="profile">
@@ -23,8 +29,8 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
         <Link to="/dashboard/settings">Settings</Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout">
-        <Link to="/login">Logout</Link>
+      <Menu.Item key="logout" onClick={handleLogout}>
+        Logout
       </Menu.Item>
     </Menu>
   );

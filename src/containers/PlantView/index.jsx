@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.scss';
 import { Card, Row, Col, Typography, Tooltip } from 'antd';
 import PlantHeader from './components/PlantHeader';
@@ -9,8 +9,7 @@ import { plantName, weatherData, energyData } from './assets';
 import YieldStatisticsPanel from '../../components/YieldStatisticsPanel';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
-
-const { Title, Text } = Typography;
+import WithPlantView from './action';
 
 const dummyLineData = [
   // PV output (green)
@@ -77,9 +76,13 @@ const lineConfig = {
   padding: [20, 20, 20, 40],
 };
 
-const PlantMonitoringView = () => {
+const PlantMonitoringView = (props) => {
   const [selectedPeriod, setSelectedPeriod] = useState('day');
   const [selectedDate, setSelectedDate] = useState(null);
+
+  useEffect(() => {
+    props.getPlantView();
+  }, []);
 
   return (
     <div className="plant-monitoring-container">
@@ -201,4 +204,4 @@ const PlantMonitoringView = () => {
   );
 };
 
-export default PlantMonitoringView;
+export default WithPlantView(PlantMonitoringView);
