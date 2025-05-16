@@ -17,7 +17,7 @@ const { Header } = Layout;
 const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) => {
   const handleLogout = () => {
     clearItem('ERP_ACCESS_TOKEN');
-    window.location.href = '/login';
+    window.location.href = '/#/login';
   };
 
   const userMenu = (
