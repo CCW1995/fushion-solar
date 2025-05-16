@@ -21,12 +21,12 @@ const HOC = (WrappedComponent) => {
     load = val => this.setState({ loading: val })
 
     getPlantView = () => {
-      Get(
-        `/api/station/overview`,
-        this.getPlantViewSuccess,
-        this.getPlantViewError,
-        this.load
-      )
+      // Get(
+      //   `/api/station/overview`,
+      //   this.getPlantViewSuccess,
+      //   this.getPlantViewError,
+      //   this.load
+      // )
     }
     getPlantViewSuccess = (payload) => this.setState({
       plantViewData: {}
