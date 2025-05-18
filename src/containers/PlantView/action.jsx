@@ -5,15 +5,14 @@ import { requestError } from "utils/requestHandler";
 import { setPath } from "actions/path";
 import { setUserProfile } from "reducers/profile";
 import { Get } from "utils/axios";
-
+import { samplePlantData } from "./assets";
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
       loading: false,
       showPassword: false,
       errorMessage: "",
-      plantViewData: {},
-      plantViewMeta: {},
+      plantData: samplePlantData
     };
 
     onChangeHOC = (val, context) => this.setState({ [context]: val });
@@ -27,9 +26,10 @@ const HOC = (WrappedComponent) => {
       //   this.getPlantViewError,
       //   this.load
       // )
+      this.getPlantViewSuccess()
     }
-    getPlantViewSuccess = (payload) => this.setState({
-      plantViewData: {}
+    getPlantViewSuccess = () => this.setState({
+      plantData: samplePlantData
     })
     getPlantViewError = (error) => requestError(error, "Error")
 

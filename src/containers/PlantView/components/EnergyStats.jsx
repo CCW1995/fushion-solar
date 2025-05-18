@@ -1,35 +1,39 @@
 import React from 'react';
-import { InfoCircleOutlined, SunOutlined, BarChartOutlined, ThunderboltOutlined, NodeIndexOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, ThunderboltOutlined, BarChartOutlined, ThunderboltFilled } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 
 const stats = [
   {
-    key: 'yieldToday',
+    key: 'day_power',
     label: 'Yield today',
-    icon: <SunOutlined className="stat-svg-icon" />,
-    info: false,
-  },
-  {
-    key: 'totalYield',
-    label: 'Total yield',
-    icon: <BarChartOutlined className="stat-svg-icon" />,
-    info: true,
-  },
-  {
-    key: 'consumptionToday',
-    label: 'Consumption today',
     icon: <ThunderboltOutlined className="stat-svg-icon" />,
+    unit: 'kWh',
     info: false,
   },
   {
-    key: 'consumedFromPv',
-    label: 'Consumed from PV',
-    icon: <NodeIndexOutlined className="stat-svg-icon" />,
+    key: 'month_power',
+    label: 'Yield this month',
+    icon: <BarChartOutlined className="stat-svg-icon" />,
+    unit: 'kWh',
+    info: false,
+  },
+  {
+    key: 'total_power',
+    label: 'Total yield',
+    icon: <ThunderboltFilled className="stat-svg-icon" />,
+    unit: 'kWh',
     info: true,
+  },
+  {
+    key: 'capacity',
+    label: 'Capacity',
+    icon: <BarChartOutlined className="stat-svg-icon" />,
+    unit: 'MWp',
+    info: false,
   },
 ];
 
-const EnergyStats = ({ energyData }) => {
+const EnergyStats = ({ plantInfo }) => {
   return (
     <div className="energy-stats-card">
       <div className="energy-stats-row">
@@ -38,15 +42,15 @@ const EnergyStats = ({ energyData }) => {
             <div className="stat-icon">{stat.icon}</div>
             <div>
               <div className="stat-value-row">
-                <span className="stat-value">{energyData[stat.key]}</span>
-                <span className="stat-unit">kWh</span>
+                <span className="stat-value">{plantInfo[stat.key]}</span>
+                <span className="stat-unit">{stat.unit}</span>
               </div>
               <div className="stat-label-row">
                 <span className="stat-label">{stat.label}</span>
                 {stat.info && (
                   <Tooltip title={
                     <>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut optio harum molestiae possimus expedita libero dolorem quos voluptatibus, rerum provident reprehenderit, eum animi nihil fugit suscipit itaque nulla aut, id ex eius. Doloribus magnam dolore doloremque impedit inventore officia ipsam sunt eligendi veritatis quisquam ab, id animi laboriosam eveniet natus?
+                      Total yield is the cumulative energy produced by the plant since commissioning.
                     </>
                   }>
                     <InfoCircleOutlined className="stat-info-icon" />

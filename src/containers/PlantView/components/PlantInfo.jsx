@@ -8,7 +8,7 @@ import {
 
 const { Text } = Typography;
 
-const PlantInfo = ({ energyData }) => {
+const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
   return (
     <Card className="section-card plant-info-card">
       <Row gutter={[30, 16]}>
@@ -20,7 +20,7 @@ const PlantInfo = ({ energyData }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{energyData.standardCoal}</Text>
+                  <Text className="value">{Number(envBenefit.coal_saved).toFixed(2)}</Text>
                   <Text className="unit">(tons)</Text>
                 </div>
                 <Text className="benefit-label">Standard coal saved</Text>
@@ -32,7 +32,7 @@ const PlantInfo = ({ energyData }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{energyData.co2Avoided}</Text>
+                  <Text className="value">{Number(envBenefit.co2_avoided).toFixed(2)}</Text>
                   <Text className="unit">(tons)</Text>
                 </div>
                 <Text className="benefit-label">CO₂ avoided</Text>
@@ -44,7 +44,7 @@ const PlantInfo = ({ energyData }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{energyData.treesPlanted}</Text>
+                  <Text className="value">{Number(envBenefit.trees_planted).toFixed(2)}</Text>
                 </div>
                 <Text className="benefit-label">Equivalent trees planted</Text>
               </div>
@@ -54,25 +54,25 @@ const PlantInfo = ({ energyData }) => {
         <Col xs={24} md={8}>
           <div className="alarm-section">
             <div className="alarm-header">
-              <Text className="alarm-count">{energyData.alarms.total}</Text>
+              <Text className="alarm-count">{alarmCount.total_alarm}</Text>
               <Text className="alarm-label">Alarm</Text>
             </div>
             <div className="alarm-categories">
               <div className="alarm-category">
                 <Text className="category-label">Critical</Text>
-                <Text className="category-count">{energyData.alarms.critical}</Text>
+                <Text className="category-count">{alarmCount.critical}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Major</Text>
-                <Text className="category-count">{energyData.alarms.major}</Text>
+                <Text className="category-count">{alarmCount.major}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Minor</Text>
-                <Text className="category-count">{energyData.alarms.minor}</Text>
+                <Text className="category-count">{alarmCount.minor}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Warning</Text>
-                <Text className="category-count">{energyData.alarms.warning}</Text>
+                <Text className="category-count">{alarmCount.warning}</Text>
               </div>
             </div>
           </div>
@@ -81,19 +81,19 @@ const PlantInfo = ({ energyData }) => {
         <div className="plant-details-vertical">
         <div className="plant-detail-item">
           <Text className="detail-label">Plant name</Text>
-          <Text className="detail-value">{energyData.plantDetails.name}</Text>
+          <Text className="detail-value">{plantInfo.station_name}</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Plant address</Text>
-          <Text className="detail-value">{energyData.plantDetails.address}</Text>
+          <Text className="detail-value">{plantInfo.station_address}</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Total string capacity</Text>
-          <Text className="detail-value">{energyData.plantDetails.capacity}</Text>
+          <Text className="detail-value">{plantInfo.capacity} MWp</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Grid connection date</Text>
-          <Text className="detail-value">{energyData.plantDetails.connectionDate}</Text>
+          <Text className="detail-value">{plantInfo.grid_connection_date?.split('T')[0]}</Text>
         </div>
       </div>
         </Col>

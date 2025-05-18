@@ -1,5 +1,5 @@
 // Mock data for PlantView components
-export const plantName = "LEE6077 – Idzam Bin Hassan";
+export const plantName = "Sample Plant";
 
 export const weatherData = {
   temperature: '24~32',
@@ -11,28 +11,32 @@ export const weatherData = {
   ]
 };
 
-export const energyData = {
-  yieldToday: 13.36,
-  totalYield: 13.36,
-  consumptionToday: 3.55,
-  consumedFromPv: 3.55,
-  pvValue: 1.200,
-  loadValue: 1.261, 
-  gridValue: 0.061,
-  standardCoal: 0.005,
-  co2Avoided: 0.006,
-  treesPlanted: 1,
-  alarms: {
-    total: 0,
-    critical: 0,
-    major: 0,
-    minor: 0,
-    warning: 0
-  },
-  plantDetails: {
-    name: 'LEE6077 – Idzam Bin Ha...',
-    address: 'SelangorCherasCheras38...',
-    capacity: '7.140 kWp',
-    connectionDate: '2025-05-07'
-  }
+export const samplePlantData = {
+  info: [
+    {
+      station_name: "Time Dot Com",
+      station_address: "MalaysiaShah AlamJalan Majistret U1/2614, Jalan Majistret U1/26",
+      capacity: 6.5,
+      grid_connection_date: "2025-01-25T00:00:00.000Z",
+      day_power: 0.36,
+      month_power: 159.39,
+      total_power: 364.62
+    }
+  ],
+  alarmCount: [
+    {
+      total_alarm: "0",
+      critical: "0",
+      major: "0",
+      minor: "0",
+      warning: "0"
+    }
+  ],
+  envBenefit: [
+    {
+      coal_saved: 151.742,
+      co2_avoided: 180.18400000000003,
+      trees_planted: 246.1670000000001
+    }
+  ]
 }; 

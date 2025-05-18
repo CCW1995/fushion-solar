@@ -5,7 +5,7 @@ import PlantHeader from './components/PlantHeader';
 import EnergyStats from './components/EnergyStats';
 import PlantFlow from './components/PlantFlow';
 import PlantInfo from './components/PlantInfo';
-import { plantName, weatherData, energyData } from './assets';
+import { plantName, weatherData } from './assets';
 import YieldStatisticsPanel from '../../components/YieldStatisticsPanel';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
@@ -80,6 +80,8 @@ const PlantMonitoringView = (props) => {
   const [selectedPeriod, setSelectedPeriod] = useState('day');
   const [selectedDate, setSelectedDate] = useState(null);
 
+  const {plantData} = props
+
   useEffect(() => {
     props.getPlantView();
   }, []);
@@ -90,16 +92,20 @@ const PlantMonitoringView = (props) => {
       <PlantHeader plantName={plantName} weatherData={weatherData} />
 
       {/* Stats Row */}
-      <EnergyStats energyData={energyData} />
+      <EnergyStats plantInfo={plantData.info[0]} />
 
       {/* Main Section: Flow (left) + Info (right) */}
       <div className="main-section-card">
         <Row gutter={[0, 0]} className="main-section">
           <Col xs={24} md={6} className="main-section-left">
-            <PlantFlow energyData={energyData} />
+            <PlantFlow energyData={plantData.energyData} />
           </Col> 
           <Col xs={24} md={18} className="main-section-right">
-            <PlantInfo energyData={energyData} />
+            <PlantInfo 
+              plantInfo={plantData.info[0]}
+              alarmCount={plantData.alarmCount[0]}
+              envBenefit={plantData.envBenefit[0]}
+            />
           </Col>
         </Row>
         {/* Energy Management Panel in Card, Col span=12 */}
