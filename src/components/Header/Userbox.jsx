@@ -10,6 +10,7 @@ import ERPButton from "components/Button"
 
 import { getItem, clearItem } from "utils/tokenStore"
 import { setUserProfile } from "reducers/profile"
+import { setStationInfo } from "reducers/station"
 import WithUserbox from "./actions"
 
 import { setLanguage } from "locales/index"
@@ -77,7 +78,8 @@ class Userbox extends Component {
         key: 'w', label: (
           <div onClick={() => Promise.all([
             clearItem("ERP_ACCESS_TOKEN"),
-            this.props.setUserProfile({})])
+            this.props.setUserProfile({}), 
+            this.props.setStationInfo({})])
             .then(() => {
               this.props.history.push("/login")
             })}>
@@ -177,6 +179,6 @@ class Userbox extends Component {
 }
 
 export default compose(
-  connect(null, { setUserProfile }),
+  connect(null, { setUserProfile, setStationInfo }),
   WithUserbox
 )(Userbox)

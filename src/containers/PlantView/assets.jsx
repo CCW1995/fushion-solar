@@ -11,8 +11,15 @@ export const weatherData = {
   ]
 };
 
+export const tabData = [
+  {day:'daily'},
+  {month:'monthly'},
+  {year:'yearly'},
+  {lifetime:'lifetime'},
+]
+
 export const samplePlantData = {
-  info: [
+  stationInfo: [
     {
       station_name: "Time Dot Com",
       station_address: "MalaysiaShah AlamJalan Majistret U1/2614, Jalan Majistret U1/26",
@@ -23,20 +30,16 @@ export const samplePlantData = {
       total_power: 364.62
     }
   ],
-  alarmCount: [
-    {
-      total_alarm: "0",
-      critical: "0",
-      major: "0",
-      minor: "0",
-      warning: "0"
-    }
-  ],
-  envBenefit: [
-    {
-      coal_saved: 151.742,
-      co2_avoided: 180.18400000000003,
-      trees_planted: 246.1670000000001
-    }
-  ]
+  alarmCount: {
+    total_alarm: "0",
+    critical: "0",
+    major: "0",
+    minor: "0",
+    warning: "0"
+  },
+  envBenefit: {
+    coal_saved: 151.742,
+    co2_avoided: 180.18400000000003,
+    trees_planted: 246.1670000000001
+  }
 }; 

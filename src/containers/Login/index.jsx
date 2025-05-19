@@ -19,7 +19,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (getItem("ERP_ACCESS_TOKEN")) {
-      props.history.push("/dashboard/huawei-dashboard");
+      props.history.push("/dashboard/plant-monitoring");
     }
   }, []);
 

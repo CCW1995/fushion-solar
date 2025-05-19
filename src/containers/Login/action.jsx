@@ -25,7 +25,7 @@ const HOC = (WrappedComponent) => {
             });
             this.props.setUserProfile(response.data);
             storeItem("ERP_ACCESS_TOKEN", response.data.token);
-            this.props.history.push("/dashboard/huawei-dashboard");
+            this.props.history.push("/dashboard/plant-monitoring");
           })
           .catch((err) => {
             this.setState({

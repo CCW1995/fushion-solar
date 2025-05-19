@@ -1,9 +1,7 @@
 import React, { Component, Suspense } from "react"
-import { toast, ToastContainer } from "react-toastify"
-import { connect } from "react-redux"
-import { Route, withRouter, Switch, Redirect } from "react-router-dom"
 import DocumentMeta from "react-document-meta"
-import _ from "lodash"
+import { Redirect, Route, Switch } from "react-router-dom"
+import { toast, ToastContainer } from "react-toastify"
 
 import FusionSolarLayout from 'components/HuaweiMenu/FusionSolarLayout'
 import LoadingOverlay from "components/Indicator/LoadingOverlay"
@@ -14,6 +12,7 @@ import { getItem } from "utils/tokenStore"
 // Import your dashboard components here
 import HuaweiStyleDashboard from '../HuaweiStyleDashboard'
 import PlantView from '../PlantView'
+import HOC from './action'
 
 const meta = {
   meta: {
@@ -33,29 +32,34 @@ class Dashboard extends Component {
     if (!getItem("ERP_ACCESS_TOKEN")) {
       this.props.history.push("/login");
     } else {
+      if(this.props.data.ProfileReducer.profile){
+        this.props.getStationInfo(this.props.data.ProfileReducer.profile.uuid)
+      }
     }
   }
 
   render() {
     return (
-      <DocumentMeta {...meta}>
-        <FusionSolarLayout>
-                <SuspenseWrapper key={"SuspenseWrapper"}>
-                  <Switch>
-              <Route exact path="/dashboard/huawei-dashboard" component={HuaweiStyleDashboard} />
-              <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
-              <Redirect exact from="/dashboard" to="/dashboard/huawei-dashboard" />
-                    <Route component={NotFound} />
-                  </Switch>
-                </SuspenseWrapper>
-        </FusionSolarLayout>
-          <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
-      </DocumentMeta>
+      <>
+        <DocumentMeta {...meta}>
+          <FusionSolarLayout>
+                  <SuspenseWrapper key={"SuspenseWrapper"}>
+                    <Switch>
+                <Route exact path="/dashboard/huawei-dashboard" component={HuaweiStyleDashboard} />
+                <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
+                <Redirect exact from="/dashboard" to="/dashboard/huawei-dashboard" />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </SuspenseWrapper>
+          </FusionSolarLayout>
+            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
+        </DocumentMeta>
+        {
+          this.props.onLoadDashboard && <LoadingOverlay />
+        }
+      </>
     )
   }
 }
 
-const mapStateToProps = state => ({ data: state })
-export default connect(mapStateToProps, {
-  withRouter
-})(Dashboard)
+export default HOC(Dashboard)

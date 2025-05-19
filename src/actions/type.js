@@ -5,3 +5,5 @@ export const AJAX_CALL_ERROR = "AJAX_CALL_ERROR";
 export const GET_PROFILE = "GET_PROFILE";
 
 export const SET_PATH = "SET_PATH"
+
+export const SET_STATION_INFO = "SET_STATION_INFO"

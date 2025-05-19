@@ -6,6 +6,7 @@ import { storeItem, clearItem } from "utils/tokenStore";
 import FileSaver from "file-saver";
 
 import { setUserProfile } from "reducers/profile";
+import { setStationInfo } from "reducers/station"
 
 const whiteListAPI = [
   '/verify_registration',
@@ -25,7 +26,7 @@ export const Get = (url, response, error, load) => {
     : "ERP_PERMISSION_TOKEN")
   Axios.defaults.headers = {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
+    // "Access-Control-Allow-Origin": "*",
     Authorization: `Bearer ${token}`,
   };
   Axios.defaults.responseType = "json";
@@ -48,7 +49,8 @@ export const Get = (url, response, error, load) => {
             clearItem("ERP_ACCESS_TOKEN"),
             clearItem("ERP_REFRESH_TOKEN"),
             clearItem("ERP_PERMISSION_TOKEN"),
-            setUserProfile({})
+            setUserProfile({}),
+            setStationInfo({})
           ]).then(() => {
             window.location.reload();
           });

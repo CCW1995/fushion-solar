@@ -30,14 +30,14 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
   // Handle menu item clicks
   const handleMenuClick = ({ key }) => {
     switch (key) {
-      case '1':
-        history.push('/dashboard/huawei-dashboard');
-        break;
+        case '1':
+          history.push('/dashboard/huawei-dashboard');
+          break;
       case '2':
         history.push('/dashboard/plant-monitoring');
         break;
       default:
-        history.push('/dashboard/huawei-dashboard');
+        history.push('/dashboard/plant-monitoring');
     }
     if (isMobile && onClose) onClose(); // Close drawer on mobile after click
   };
@@ -85,12 +85,12 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
         onClick={handleMenuClick}
         style={isMobile ? { fontSize: 15, padding: '0 2px' } : {}}
         items={[
-          {
-            key: '1',
-            icon: <HomeOutlined style={isMobile ? { fontSize: 18 } : {}} />,
-            label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Dashboard</span>,
-            title: 'Dashboard',
-          },
+          // {
+          //   key: '1',
+          //   icon: <HomeOutlined style={isMobile ? { fontSize: 18 } : {}} />,
+          //   label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Dashboard</span>,
+          //   title: 'Dashboard',
+          // },
           {
             key: '2',
             icon: <BarChartOutlined style={isMobile ? { fontSize: 18 } : {}} />,

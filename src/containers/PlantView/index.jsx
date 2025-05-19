@@ -1,98 +1,100 @@
 import React, { useState, useEffect } from 'react';
 import './index.scss';
-import { Card, Row, Col, Typography, Tooltip } from 'antd';
+import { Card, Row, Col, Tooltip } from 'antd';
 import PlantHeader from './components/PlantHeader';
 import EnergyStats from './components/EnergyStats';
 import PlantFlow from './components/PlantFlow';
 import PlantInfo from './components/PlantInfo';
-import { plantName, weatherData } from './assets';
 import YieldStatisticsPanel from '../../components/YieldStatisticsPanel';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
 import WithPlantView from './action';
+import LoadingOverlay from 'components/Indicator/LoadingOverlay';
 
-const dummyLineData = [
-  // PV output (green)
-  { time: '00:00', value: 0.2, type: 'PV output' },
-  { time: '06:00', value: 0.5, type: 'PV output' },
-  { time: '09:00', value: 1.2, type: 'PV output' },
-  { time: '12:00', value: 2.5, type: 'PV output' },
-  { time: '15:00', value: 1.8, type: 'PV output' },
-  { time: '18:00', value: 0.6, type: 'PV output' },
-  { time: '21:00', value: 0.1, type: 'PV output' },
-  // Total consumption (red)
-  { time: '00:00', value: 2.0, type: 'Total consumption' },
-  { time: '06:00', value: 2.2, type: 'Total consumption' },
-  { time: '09:00', value: 2.5, type: 'Total consumption' },
-  { time: '12:00', value: 2.8, type: 'Total consumption' },
-  { time: '15:00', value: 2.3, type: 'Total consumption' },
-  { time: '18:00', value: 1.7, type: 'Total consumption' },
-  { time: '21:00', value: 1.2, type: 'Total consumption' },
-  // Consumed from PV (blue)
-  { time: '00:00', value: 0.1, type: 'Consumed from PV' },
-  { time: '06:00', value: 0.3, type: 'Consumed from PV' },
-  { time: '09:00', value: 0.8, type: 'Consumed from PV' },
-  { time: '12:00', value: 1.7, type: 'Consumed from PV' },
-  { time: '15:00', value: 1.2, type: 'Consumed from PV' },
-  { time: '18:00', value: 0.4, type: 'Consumed from PV' },
-  { time: '21:00', value: 0.05, type: 'Consumed from PV' },
-];
+const renderRevenueLineConfig = graphData => ({
+  data: graphData,
+  xField: 'month',
+  yField: 'power_profit',
+  height: 220,
+  smooth: true,
+  legend: false,
+  // tooltip: {
+  //   showTitle: false,
+  //   formatter: (datum) => ({ name: 'Inverter Power', value: `${datum.inverter_power} kW` }),
+  // },
+  animation: false,
+  padding: [20, 20, 20, 40],
+});
 
-const lineConfig = {
-  data: dummyLineData,
-  xField: 'time',
-  yField: 'value',
-  seriesField: 'type',
-  color: (type) => {
-    if (type === 'PV output') return '#389e0d';
-    if (type === 'Total consumption') return '#f5222d';
-    if (type === 'Consumed from PV') return '#1890ff';
-    return '#888';
-  },
+const renderLineConfig = graphData => ({
+  data: graphData,
+  xField: 'period',
+  yField: 'inverter_power',
   height: 220,
   smooth: true,
   legend: false,
   xAxis: {
     label: {
       style: { fontSize: 12, fill: '#888' },
+      autoHide: true,
+      autoRotate: true,
+      rotate: Math.PI / 4, // 45 degrees
+      formatter: (text) => text, // You can further format if needed
     },
-    tickCount: 7,
+    tickCount: 5,
   },
   yAxis: {
     label: {
       style: { fontSize: 12, fill: '#888' },
     },
     min: 0,
-    max: 3,
     tickCount: 7,
     title: { text: 'kW', style: { fontSize: 14, fill: '#888' } },
     grid: { line: { style: { stroke: '#eee', lineDash: [4, 0] } } },
   },
-  tooltip: {
-    showTitle: false,
-    formatter: (datum) => ({ name: datum.type, value: `${datum.value} kW` }),
-  },
+  // tooltip: {
+  //   showTitle: false,
+  //   formatter: (datum) => ({ name: 'Inverter Power', value: `${datum.inverter_power} kW` }),
+  // },
   animation: false,
   padding: [20, 20, 20, 40],
-};
+});
 
 const PlantMonitoringView = (props) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('day');
+  const [selectedPeriod, setSelectedPeriod] = useState('lifetime');
+  const [selectedPeriodRevenue, setSelectedPeriodRevenue] = useState('lifetime');
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateRevenue, setSelectedDateRevenue] = useState(null);
 
   const {plantData} = props
 
   useEffect(() => {
-    props.getPlantView();
-  }, []);
+    props.getPlantView(props.data.StationReducer.station_name);
+  }, [props.data]);
+
+  useEffect(() => {
+    if (selectedPeriod !== 'lifetime') { 
+      selectedDate && props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+    } else {
+      props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+    }
+  }, [selectedPeriod, selectedDate]);
+
+  useEffect(() => {
+    if (selectedPeriodRevenue !== 'lifetime') { 
+      selectedDateRevenue && props.getPlantRevenue(props.data.StationReducer.station_name, selectedPeriodRevenue, selectedDateRevenue);
+    } else {
+      props.getPlantRevenue(props.data.StationReducer.station_name, selectedPeriodRevenue, selectedDateRevenue);
+    }
+  }, [selectedPeriodRevenue, selectedDateRevenue]);
 
   return (
     <div className="plant-monitoring-container">
       {/* Header */}
-      <PlantHeader plantName={plantName} weatherData={weatherData} />
+      <PlantHeader plantName={plantData?.stationInfo?.[0]?.station_name}/>
 
       {/* Stats Row */}
-      <EnergyStats plantInfo={plantData.info[0]} />
+      <EnergyStats plantInfo={plantData?.stationInfo?.[0]??{}} />
 
       {/* Main Section: Flow (left) + Info (right) */}
       <div className="main-section-card">
@@ -102,9 +104,9 @@ const PlantMonitoringView = (props) => {
           </Col> 
           <Col xs={24} md={18} className="main-section-right">
             <PlantInfo 
-              plantInfo={plantData.info[0]}
-              alarmCount={plantData.alarmCount[0]}
-              envBenefit={plantData.envBenefit[0]}
+              plantInfo={plantData?.stationInfo??{}}
+              alarmCount={plantData?.alarmCount??{}}
+              envBenefit={plantData?.envBenefit??{}}
             />
           </Col>
         </Row>
@@ -132,30 +134,34 @@ const PlantMonitoringView = (props) => {
                   {/* Yield (left) */}
                   <div className="ems-summary-col ems-consumption-col">
                     <div className="d-flex">
-                      <div className="ems-title">Yield: 7.40 <span className="ems-main-unit">kWh</span></div>
+                      <div className="ems-title">Yield: {(props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) || 0} <span className="ems-main-unit">kWh</span></div>
                     </div>
                     <div className="d-flex justify-content-between">
                       <div className="ems-sub-row">
-                        <span className="ems-sub ems-green">7.40</span>
+                        <span className="ems-sub ems-green">{props.plantEnergyData?.totalData?.[0]?.pv_yield || 0}</span>
                         <span className="ems-sub-label">From PV (kWh)</span>
                       </div>
                       <div className="ems-sub-row" style={{ textAlign: 'right' }}>
-                        <span className="ems-sub ems-light">14.93</span>
+                        <span className="ems-sub ems-light">{props.plantEnergyData?.totalData?.[0]?.feed_to_grid || 0}</span>
                         <span className="ems-sub-label">From grid (kWh)</span>
                       </div>
                     </div>
-                    <div className="ems-progress-group">
-                      <div className="ems-progress-bar ems-progress-green" style={{ width: '100%' }}>
-                        <span>100.00%</span>
-                      </div>
-                      <div className="ems-progress-bar ems-progress-light" style={{ width: '0%' }}>
-                        <span>0.00%</span>
-                      </div>
-                    </div>
+                    {
+                      props.plantEnergyData?.totalData?.[0]?.pv_yield && props.plantEnergyData?.totalData?.[0]?.feed_to_grid && (
+                        <div className="ems-progress-group">
+                          <div className="ems-progress-bar ems-progress-green" style={{ width: `${(props.plantEnergyData?.totalData?.[0]?.pv_yield / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%` }}>
+                            <span>{(props.plantEnergyData?.totalData?.[0]?.pv_yield / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%</span>
+                          </div>
+                          <div className="ems-progress-bar ems-progress-light" style={{ width: '0%' }}>
+                            <span>{(props.plantEnergyData?.totalData?.[0]?.feed_to_grid / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%</span>
+                          </div>
+                        </div>
+                      )
+                    }
                   </div>
                   
                   {/* Consumption (right) */}
-                  <div className="ems-summary-col ems-consumption-col">
+                  {/* <div className="ems-summary-col ems-consumption-col">
                     <div className="d-flex">
                       <div className="ems-title">Consumption: 22.33 <span className="ems-main-unit">kWh</span></div>
                     </div>
@@ -177,25 +183,13 @@ const PlantMonitoringView = (props) => {
                         <span>66.86%</span>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 {/* Chart and legend */}
                 <div className="ems-chart-row">
-                  <div className="ems-line-chart-placeholder">
-                    <Line {...lineConfig} />
-                    <div className="ems-legend-row">
-                      <span className="ems-legend">
-                        <span className="ems-legend-dot ems-legend-green"></span>
-                        PV output
-                      </span>
-                      <span className="ems-legend">
-                        <span className="ems-legend-dot ems-legend-red"></span>
-                        Total consumption
-                      </span>
-                      <span className="ems-legend">
-                        <span className="ems-legend-dot ems-legend-blue"></span>
-                        Consumed from PV
-                      </span>
+                  <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
+                    <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.graphData?.length || 0) * 60) }}>
+                      <Line {...renderLineConfig(props.plantEnergyData.graphData)} />
                     </div>
                   </div>
                 </div>
@@ -204,8 +198,47 @@ const PlantMonitoringView = (props) => {
           </Card>
         </Col>
         <Col xs={24} md={12}>
+        <Card 
+            style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
+            >
+            <YieldStatisticsPanel
+              title={
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  Revenue
+                  <Tooltip title="Info about energy management."><InfoCircleOutlined style={{ color: '#b0b0b0', marginLeft: 4 }} /></Tooltip>
+                </span>
+              }
+              hideDay={true}
+              selectedPeriod={selectedPeriodRevenue}
+              setSelectedPeriod={setSelectedPeriodRevenue}
+              selectedDate={selectedDateRevenue}
+              setSelectedDate={setSelectedDateRevenue}
+            >
+              <div className="energy-management-summary">
+                <div className="ems-summary-row">
+                  {/* Yield (left) */}
+                  <div className="ems-summary-col ems-consumption-col">
+                    <div className="d-flex">
+                      <div className="ems-title">Sum: {props.plantRevenue?.sumData?.total || 0} <span className="ems-main-unit">kWh</span></div>
+                    </div>
+                  </div>
+                </div>
+                {/* Chart and legend */}
+                <div className="ems-chart-row">
+                  <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
+                    <div style={{ minWidth: Math.max(500, (props.plantRevenue?.graphData?.length || 0) * 60) }}>
+                      <Line {...renderRevenueLineConfig(props.plantRevenue.graphData)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </YieldStatisticsPanel>
+          </Card>
         </Col>
       </Row>
+      {
+        props.onLoadPlantView && <LoadingOverlay />
+      }
     </div>
   );
 };

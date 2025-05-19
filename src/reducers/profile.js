@@ -1,4 +1,4 @@
-import { GET_PROFILE } from "../actions/type";
+import { GET_PROFILE, SET_STATION_INFO } from "../actions/type";
 import _ from "lodash"
 
 const initialState = {
@@ -16,6 +16,7 @@ const initialState = {
   subModule: [],
   organisations: [],
   branches: [],
+  stationInfo: [],
 };
 
 function buildTree(groupedModule, moduleId) {
@@ -38,9 +39,9 @@ export default (state = initialState, action) => {
         ...state,
         profile: data,
         module: permissions?.modules,
-        groupedModule:  _.groupBy(permissions?.modules.filter(module => module.is_accessible === true), "parent_module_id"),
+        groupedModule: _.groupBy(permissions?.modules.filter(module => module.is_accessible === true), "parent_module_id"),
         parentModule: _.keyBy(permissions?.modules.filter(module => module.parent_module_id === null), 'id'),
-        subModule: buildTree( _.groupBy(permissions?.modules, "parent_module_id"), null),
+        subModule: buildTree(_.groupBy(permissions?.modules, "parent_module_id"), null),
         organisations: _.orderBy(permissions?.organisations, ['name'], ['asc']),
         branches: _.orderBy(_.flatMap(permissions?.organisations, ({ id: orgId, branches }) => _.map(branches, branch => ({ ...branch, orgId }))), ['name'], ['asc'])
       }

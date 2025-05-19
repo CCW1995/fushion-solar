@@ -5,7 +5,6 @@ import _ from "lodash";
 import { Get } from "utils/axios"
 import { convertObjectToBase64 } from "utils/objToBase64"
 import { requestError, requestSuccess } from "utils/requestHandler"
-import { setUserProfile } from "reducers/profile";
 
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
@@ -61,9 +60,7 @@ const HOC = (WrappedComponent) => {
     headerBackgroundColor: state.ThemeOptions.headerBackgroundColor,
     enableMobileMenuSmall: state.ThemeOptions.enableMobileMenuSmall,
   })
-  return connect(mapStateToProps, {
-    setUserProfile
-  })(WithHOC)
+  return connect(mapStateToProps)(WithHOC)
 };
 
 export default HOC;

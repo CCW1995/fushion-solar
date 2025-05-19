@@ -1,38 +1,83 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
-import { requestError } from "utils/requestHandler";
+import Moment from "moment"
 import { setPath } from "actions/path";
-import { setUserProfile } from "reducers/profile";
 import { Get } from "utils/axios";
+import { requestError } from "utils/requestHandler";
 import { samplePlantData } from "./assets";
+
+function getDateFormat(period) {
+  switch (period) {
+    case 'daily':
+      return 'YYYY-MM-DD';
+    case 'monthly':
+      return 'YYYY-MM';
+    case 'yearly':
+      return 'YYYY';
+    default:
+      return 'YYYY-MM-DD';
+  }
+}
+
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
       loading: false,
       showPassword: false,
       errorMessage: "",
-      plantData: samplePlantData
+      plantData: {
+        stationInfo: [],
+        alarmCount: {},
+        envBenefit: {},
+      },
+      plantEnergyData: {},
+      plantRevenue: {}
     };
 
     onChangeHOC = (val, context) => this.setState({ [context]: val });
 
     load = val => this.setState({ loading: val })
 
-    getPlantView = () => {
-      // Get(
-      //   `/api/station/overview`,
-      //   this.getPlantViewSuccess,
-      //   this.getPlantViewError,
-      //   this.load
-      // )
-      this.getPlantViewSuccess()
+    getPlantView = name => {
+      Get(
+        `/station/overview?stationName=${name}`,
+        this.getPlantViewSuccess,
+        this.getPlantViewError,
+        this.load
+      )
+      //this.getPlantViewSuccess()
     }
-    getPlantViewSuccess = () => this.setState({
-      plantData: samplePlantData
-    })
+    getPlantViewSuccess = payload => {
+      this.setState({
+      plantData: payload
+    })}
     getPlantViewError = (error) => requestError(error, "Error")
 
+    getPlantEnergyData = (name, period, date) => {
+      Get(
+        `/station/energy?stationName=${name}&period=${period}${date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : ''}`,
+        this.getPlantEnergyDataSuccess,
+        this.getPlantEnergyDataError,
+        this.load
+      )
+    }
+    getPlantEnergyDataSuccess = payload => this.setState({
+      plantEnergyData: payload
+    })
+    getPlantEnergyDataError = (error) => requestError(error, "Error")
+
+    getPlantRevenue= (name, period, date) => {
+      Get(
+        `/station/revenue?stationName=${name}&period=${period}${date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : ''}`,
+        this.getPlantRevenueSuccess,
+        this.getPlantRevenueError,
+        this.load
+      )
+    }
+    getPlantRevenueSuccess = payload => this.setState({
+      plantRevenue: payload
+    })
+    getPlantRevenueError = (error) => requestError(error, "Error")
 
     render = () => {
       return (
@@ -42,12 +87,14 @@ const HOC = (WrappedComponent) => {
           onLoadPlantView={this.state.loading}
           onChangeHOC={this.onChangeHOC}
           getPlantView={this.getPlantView}
+          getPlantEnergyData={this.getPlantEnergyData}
+          getPlantRevenue={this.getPlantRevenue}
         />
       );
     };
   }
   const mapStateToProps = (state) => ({ data: state });
-  return connect(mapStateToProps, { setUserProfile, setPath })(WithHOC);
+  return connect(mapStateToProps, { setPath })(WithHOC);
 };
 
 export default HOC;
