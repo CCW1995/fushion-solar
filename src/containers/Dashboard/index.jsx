@@ -32,9 +32,15 @@ class Dashboard extends Component {
     if (!getItem("ERP_ACCESS_TOKEN")) {
       this.props.history.push("/login");
     } else {
-      if(this.props.data.ProfileReducer.profile){
+      if(this.props.data.ProfileReducer.profile.uuid){
         this.props.getStationInfo(this.props.data.ProfileReducer.profile.uuid)
       }
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.data.ProfileReducer.profile.uuid !== this.props.data.ProfileReducer.profile.uuid) {
+      this.props.getStationInfo(this.props.data.ProfileReducer.profile.uuid)
     }
   }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import './index.scss';
 import { Card, Row, Col, Tooltip } from 'antd';
 import PlantHeader from './components/PlantHeader';
@@ -13,7 +14,7 @@ import LoadingOverlay from 'components/Indicator/LoadingOverlay';
 
 const renderRevenueLineConfig = graphData => ({
   data: graphData,
-  xField: 'month',
+  xField: 'period',
   yField: 'power_profit',
   height: 220,
   smooth: true,
@@ -26,39 +27,56 @@ const renderRevenueLineConfig = graphData => ({
   padding: [20, 20, 20, 40],
 });
 
-const renderLineConfig = graphData => ({
-  data: graphData,
-  xField: 'period',
-  yField: 'inverter_power',
-  height: 220,
-  smooth: true,
-  legend: false,
-  xAxis: {
-    label: {
-      style: { fontSize: 12, fill: '#888' },
-      autoHide: true,
-      autoRotate: true,
-      rotate: Math.PI / 4, // 45 degrees
-      formatter: (text) => text, // You can further format if needed
+const renderLineConfig = graphData => {
+  // Transform the data to combine from_pv and total_consumption into a format suitable for two lines
+  const transformedData = graphData.map(item => [
+    {
+      period: item.period,
+      value: item.from_pv,
+      type: 'From PV'
     },
-    tickCount: 5,
-  },
-  yAxis: {
-    label: {
-      style: { fontSize: 12, fill: '#888' },
+    {
+      period: item.period,
+      value: item.total_consumption,
+      type: 'Total Consumption'
+    }
+  ]).flat();
+
+  return {
+    data: transformedData,
+    xField: 'period',
+    yField: 'value',
+    seriesField: 'type',
+    height: 220,
+    smooth: true,
+    color: ({ type }) => {
+      if (type === 'From PV') return '#1890ff'; // green
+      if (type === 'Total Consumption') return '#ff4d4f'; // red
+      return '#1890ff'; // fallback
     },
-    min: 0,
-    tickCount: 7,
-    title: { text: 'kW', style: { fontSize: 14, fill: '#888' } },
-    grid: { line: { style: { stroke: '#eee', lineDash: [4, 0] } } },
-  },
-  // tooltip: {
-  //   showTitle: false,
-  //   formatter: (datum) => ({ name: 'Inverter Power', value: `${datum.inverter_power} kW` }),
-  // },
-  animation: false,
-  padding: [20, 20, 20, 40],
-});
+    xAxis: {
+      label: {
+        style: { fontSize: 12, fill: '#888' },
+        autoHide: true,
+        autoRotate: true,
+        rotate: Math.PI / 4,
+        formatter: (text) => text,
+      },
+      tickCount: 5,
+    },
+    yAxis: {
+      label: {
+        style: { fontSize: 12, fill: '#888' },
+      },
+      min: 0,
+      tickCount: 7,
+      title: { text: 'kWh', style: { fontSize: 14, fill: '#888' } },
+      grid: { line: { style: { stroke: '#eee', lineDash: [4, 0] } } },
+    },
+    animation: false,
+    padding: [20, 20, 20, 40],
+  };
+};
 
 const PlantMonitoringView = (props) => {
   const [selectedPeriod, setSelectedPeriod] = useState('lifetime');
@@ -69,14 +87,33 @@ const PlantMonitoringView = (props) => {
   const {plantData} = props
 
   useEffect(() => {
-    props.getPlantView(props.data.StationReducer.station_name);
+    if (selectedPeriod === 'daily') {
+      return setSelectedDate(null);
+    }
+
+    if(selectedPeriod === 'monthly') {
+      return setSelectedDate(null);
+    }
+
+    if(selectedPeriod === 'yearly') {
+      return setSelectedDate(null);
+    }
+
+  }, [selectedPeriod])
+
+  useEffect(() => {
+    if (props.data.StationReducer.station_name) {
+      props.getPlantView(props.data.StationReducer.station_name);
+    }
   }, [props.data]);
 
   useEffect(() => {
-    if (selectedPeriod !== 'lifetime') { 
-      selectedDate && props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
-    } else {
-      props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+    if (props.data.StationReducer.station_name) {
+      if (selectedPeriod !== 'lifetime') { 
+        selectedDate && props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+      } else {
+        props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+      }
     }
   }, [selectedPeriod, selectedDate]);
 
@@ -134,26 +171,26 @@ const PlantMonitoringView = (props) => {
                   {/* Yield (left) */}
                   <div className="ems-summary-col ems-consumption-col">
                     <div className="d-flex">
-                      <div className="ems-title">Yield: {(props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) || 0} <span className="ems-main-unit">kWh</span></div>
+                      <div className="ems-title">Yield: {(props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
                     </div>
                     <div className="d-flex justify-content-between">
                       <div className="ems-sub-row">
-                        <span className="ems-sub ems-green">{props.plantEnergyData?.totalData?.[0]?.pv_yield || 0}</span>
+                        <span className="ems-sub ems-green">{(props.plantEnergyData?.energy?.totalData?.[0]?.consumed || 0).toFixed(2)}</span>
                         <span className="ems-sub-label">From PV (kWh)</span>
                       </div>
                       <div className="ems-sub-row" style={{ textAlign: 'right' }}>
-                        <span className="ems-sub ems-light">{props.plantEnergyData?.totalData?.[0]?.feed_to_grid || 0}</span>
+                        <span className="ems-sub ems-light">{(props.plantEnergyData?.energy?.totalData?.[0]?.feed_to_grid || 0).toFixed(2)}</span>
                         <span className="ems-sub-label">From grid (kWh)</span>
                       </div>
                     </div>
                     {
-                      props.plantEnergyData?.totalData?.[0]?.pv_yield && props.plantEnergyData?.totalData?.[0]?.feed_to_grid && (
+                      props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield && props.plantEnergyData?.energy?.totalData?.[0]?.feed_to_grid && (
                         <div className="ems-progress-group">
-                          <div className="ems-progress-bar ems-progress-green" style={{ width: `${(props.plantEnergyData?.totalData?.[0]?.pv_yield / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%` }}>
-                            <span>{(props.plantEnergyData?.totalData?.[0]?.pv_yield / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%</span>
+                          <div className="ems-progress-bar ems-progress-green" style={{ width: `${(props.plantEnergyData?.energy?.totalData?.[0]?.consumed / (props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
+                            <span>{(props.plantEnergyData?.energy?.totalData?.[0]?.consumed / (props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
                           </div>
-                          <div className="ems-progress-bar ems-progress-light" style={{ width: '0%' }}>
-                            <span>{(props.plantEnergyData?.totalData?.[0]?.feed_to_grid / (props.plantEnergyData?.totalData?.[0]?.pv_yield + props.plantEnergyData?.totalData?.[0]?.feed_to_grid) * 100).toFixed(2)}%</span>
+                          <div className="ems-progress-bar ems-progress-light" style={{ width: `${(props.plantEnergyData?.energy?.totalData?.[0]?.feed_to_grid / (props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
+                            <span>{(props.plantEnergyData?.energy?.totalData?.[0]?.feed_to_grid / (props.plantEnergyData?.energy?.totalData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
                           </div>
                         </div>
                       )
@@ -161,35 +198,43 @@ const PlantMonitoringView = (props) => {
                   </div>
                   
                   {/* Consumption (right) */}
-                  {/* <div className="ems-summary-col ems-consumption-col">
-                    <div className="d-flex">
-                      <div className="ems-title">Consumption: 22.33 <span className="ems-main-unit">kWh</span></div>
-                    </div>
-                    <div className="d-flex justify-content-between">
-                      <div className="ems-sub-row">
-                        <span className="ems-sub ems-orange">7.40</span>
-                        <span className="ems-sub-label">From PV (kWh)</span>
+                  {
+                    props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption && (
+                      <div className="ems-summary-col ems-consumption-col">
+                        <div className="d-flex">
+                          <div className="ems-title">Consumption: {(props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
+                        </div>
+                        <div className="d-flex justify-content-between">
+                          <div className="ems-sub-row">
+                            <span className="ems-sub ems-orange">{(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv || 0).toFixed(2)}</span>
+                            <span className="ems-sub-label">From PV (kWh)</span>
+                          </div>
+                          <div className="ems-sub-row" style={{ textAlign: 'right' }}>
+                            <span className="ems-sub ems-yellow">{(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid || 0).toFixed(2)}</span>
+                            <span className="ems-sub-label">From grid (kWh)</span>
+                          </div>
+                        </div>
+                        <div className="ems-progress-group ems-progress-group-segmented">
+                          <div className="ems-progress-bar ems-progress-orange" style={{ width: `${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
+                            <span>
+                              {`${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%`}
+                            </span>
+                          </div>
+                          <div className="ems-progress-bar ems-progress-yellow" style={{ width: `${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
+                            <span>
+                              {`${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%`}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="ems-sub-row" style={{ textAlign: 'right' }}>
-                        <span className="ems-sub ems-yellow">14.93</span>
-                        <span className="ems-sub-label">From grid (kWh)</span>
-                      </div>
-                    </div>
-                    <div className="ems-progress-group ems-progress-group-segmented">
-                      <div className="ems-progress-bar ems-progress-orange" style={{ width: '33.14%' }}>
-                        <span>33.14%</span>
-                      </div>
-                      <div className="ems-progress-bar ems-progress-yellow" style={{ width: '66.86%' }}>
-                        <span>66.86%</span>
-                      </div>
-                    </div>
-                  </div> */}
+                    )
+                  }
                 </div>
                 {/* Chart and legend */}
                 <div className="ems-chart-row">
                   <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
                     <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.graphData?.length || 0) * 60) }}>
-                      <Line {...renderLineConfig(props.plantEnergyData.graphData)} />
+                      <Line {...renderLineConfig(props.plantEnergyData?.consumption?.graphData??[])} />
                     </div>
                   </div>
                 </div>
