@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import './index.scss';
 import { Card, Row, Col, Tooltip } from 'antd';
 import PlantHeader from './components/PlantHeader';
@@ -12,33 +13,54 @@ import { Line } from '@ant-design/plots';
 import WithPlantView from './action';
 import LoadingOverlay from 'components/Indicator/LoadingOverlay';
 
-const renderRevenueLineConfig = graphData => ({
-  data: graphData,
+const renderRevenueLineConfig = (graphData, period) => ({
+  data: _.map(graphData, item => ({
+    period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      item.period
+    ),
+    "Power Profit": item.power_profit,
+  })),
   xField: 'period',
-  yField: 'power_profit',
+  yField: 'Power Profit',
   height: 220,
   smooth: true,
   legend: false,
-  // tooltip: {
-  //   showTitle: false,
-  //   formatter: (datum) => ({ name: 'Inverter Power', value: `${datum.inverter_power} kW` }),
-  // },
   animation: false,
   padding: [20, 20, 20, 40],
+  color: '#4ECDC4',
+  meta: {
+    power_profit: { alias: 'Power Profit' },
+    period: { alias: 'Date' },
+  }
 });
 
-const renderLineConfig = graphData => {
+const renderLineConfig = (graphData, period) => {
   // Transform the data to combine from_pv and total_consumption into a format suitable for two lines
   const transformedData = graphData.map(item => [
     {
-      period: item.period,
+      period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      item.period
+    ),
       value: item.from_pv,
-      type: 'From PV'
+      type: 'From PV',
+      color: '#FF6B6B',
     },
     {
-      period: item.period,
+      period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      item.period
+    ),
       value: item.total_consumption,
-      type: 'Total Consumption'
+      type: 'Total Consumption',
+      color: '#4ECDC4',
     }
   ]).flat();
 
@@ -49,11 +71,6 @@ const renderLineConfig = graphData => {
     seriesField: 'type',
     height: 220,
     smooth: true,
-    color: ({ type }) => {
-      if (type === 'From PV') return '#1890ff'; // green
-      if (type === 'Total Consumption') return '#ff4d4f'; // red
-      return '#1890ff'; // fallback
-    },
     xAxis: {
       label: {
         style: { fontSize: 12, fill: '#888' },
@@ -75,6 +92,10 @@ const renderLineConfig = graphData => {
     },
     animation: false,
     padding: [20, 20, 20, 40],
+    color: {
+      'from_pv': '#FF6B6B', // red
+      'total_consumption': '#4ECDC4', // green/blue
+    },
   };
 };
 
@@ -233,8 +254,8 @@ const PlantMonitoringView = (props) => {
                 {/* Chart and legend */}
                 <div className="ems-chart-row">
                   <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
-                    <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.graphData?.length || 0) * 60) }}>
-                      <Line {...renderLineConfig(props.plantEnergyData?.consumption?.graphData??[])} />
+                    <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.consumption?.graphData?.length || 0) * 60) }}>
+                      <Line {...renderLineConfig(props.plantEnergyData?.consumption?.graphData??[], selectedPeriod)} />
                     </div>
                   </div>
                 </div>
@@ -272,7 +293,7 @@ const PlantMonitoringView = (props) => {
                 <div className="ems-chart-row">
                   <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
                     <div style={{ minWidth: Math.max(500, (props.plantRevenue?.graphData?.length || 0) * 60) }}>
-                      <Line {...renderRevenueLineConfig(props.plantRevenue.graphData)} />
+                      <Line {...renderRevenueLineConfig(props.plantRevenue.graphData, selectedPeriodRevenue)} />
                     </div>
                   </div>
                 </div>

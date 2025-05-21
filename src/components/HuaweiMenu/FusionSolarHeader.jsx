@@ -22,13 +22,13 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
 
   const userMenu = (
     <Menu>
-      <Menu.Item key="profile">
+      {/* <Menu.Item key="profile">
         <Link to="/dashboard/profile">Profile</Link>
       </Menu.Item>
       <Menu.Item key="settings">
         <Link to="/dashboard/settings">Settings</Link>
       </Menu.Item>
-      <Menu.Divider />
+      <Menu.Divider /> */}
       <Menu.Item key="logout" onClick={handleLogout}>
         Logout
       </Menu.Item>
@@ -70,7 +70,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
   return (
     <Header className="fusion-header">
       <div className="header-left">
-        {isMobile ? (
+        {/* {isMobile ? (
           <Button
             type="text"
             icon={<MenuOutlined />}
@@ -83,11 +83,11 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })
-        )}
+        )} */}
       </div>
       <div className="header-right">
         <div className="header-actions">
-          <Dropdown 
+          {/* <Dropdown 
             overlay={notificationMenu} 
             trigger={['click']}
             placement="bottomRight"
@@ -110,7 +110,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
             type="text" 
             icon={<GlobalOutlined />} 
             className="header-action-button"
-          />
+          /> */}
           <Dropdown 
             overlay={userMenu} 
             trigger={['click']}

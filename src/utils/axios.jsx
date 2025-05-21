@@ -62,7 +62,8 @@ export const Get = (url, response, error, load) => {
     .catch((err) => {
       if (err && err.response) {
         if (err.response.status === 401) {
-          RefreshToken(() => Get(url, response, error, load), error)
+          clearItem('ERP_ACCESS_TOKEN');
+          window.location.href = '/#/login';
         } else if (err.response.status === 500) {
           error(
             "Server encountered issues. Please contact your system admin for assistance."
