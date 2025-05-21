@@ -1,6 +1,9 @@
 import { Column } from '@ant-design/plots';
-import { Button, DatePicker, Typography } from 'antd';
+import { Button, Typography } from 'antd';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
+import moment from 'moment';
 
 const { Title } = Typography;
 
@@ -35,7 +38,7 @@ const YieldStatisticsPanel = ({
           <Title level={4}>{title}</Title>
         </div>
         <div className="panel-actions ml-auto">
-          <div className="period-tabs" style={{ marginLeft: 'auto' }}>
+          <div className="period-tabs d-flex flex-wrap" style={{ marginLeft: 'auto' }}>
             <Button.Group>
               {
                 !hideDay && (
@@ -81,47 +84,36 @@ const YieldStatisticsPanel = ({
             {
               (selectedPeriod === 'yearly' || selectedPeriod === 'lifetime') && (
                 <DatePicker
-                  value={selectedDate || null}
-                  onChange={setSelectedDate}
-                  format={getDateFormat(selectedPeriod)}
-                  picker={'year'}
+                  selected={selectedDate}
+                  onChange={date => setSelectedDate(date)}
+                  showYearPicker
+                  dateFormat="yyyy"
+                  className="form-control"
                   disabled={selectedPeriod === 'lifetime'}
-                  className="date-picker"
-                  suffixIcon={null}
-                  allowClear={true}
-                  superPrevIcon={null}
-                  superNextIcon={null}
+                  maxDate={new Date()}
                 />
               )
             }
             {
               selectedPeriod === 'monthly' && (
                 <DatePicker
-                  value={selectedDate || null}
-                  onChange={setSelectedDate}
-                  format={getDateFormat(selectedPeriod)}
-                  picker={'month'}
-                  className="date-picker"
-                  suffixIcon={null}
-                  allowClear={false}
-                  superPrevIcon={null}
-                  superNextIcon={null}
+                  selected={selectedDate}
+                  onChange={date => setSelectedDate(date)}
+                  showMonthYearPicker
+                  dateFormat="MM/yyyy"
+                  className="form-control"
+                  maxDate={new Date()}
                 />
               )
             }
-
             {
               selectedPeriod === 'daily' && (
                 <DatePicker
-                  value={selectedDate || null}
-                  onChange={setSelectedDate}
-                  format={getDateFormat(selectedPeriod)}
-                  picker={'date'}
-                  className="date-picker"
-                  suffixIcon={null}
-                  allowClear={false}
-                  superPrevIcon={null}
-                  superNextIcon={null}
+                  selected={selectedDate}
+                  onChange={date => setSelectedDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="form-control"
+                  maxDate={new Date()}
                 />
               )
             }

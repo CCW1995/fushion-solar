@@ -108,19 +108,22 @@ const PlantMonitoringView = (props) => {
   const {plantData} = props
 
   useEffect(() => {
-    if (selectedPeriod === 'daily') {
+    if(selectedPeriod === 'lifetime') {
       return setSelectedDate(null);
     }
 
-    if(selectedPeriod === 'monthly') {
-      return setSelectedDate(null);
-    }
-
-    if(selectedPeriod === 'yearly') {
-      return setSelectedDate(null);
-    }
+    return setSelectedDate(new Date());
 
   }, [selectedPeriod])
+
+  useEffect(() => {
+    if(selectedPeriodRevenue === 'lifetime') {
+      return setSelectedDateRevenue(null);
+    }
+
+    return setSelectedDateRevenue(new Date());
+
+  }, [selectedPeriodRevenue])
 
   useEffect(() => {
     if (props.data.StationReducer.station_name) {
