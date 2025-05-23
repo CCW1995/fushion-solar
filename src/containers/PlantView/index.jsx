@@ -288,7 +288,7 @@ const PlantMonitoringView = (props) => {
                   {/* Yield (left) */}
                   <div className="ems-summary-col ems-consumption-col">
                     <div className="d-flex">
-                      <div className="ems-title">Sum: {props.plantRevenue?.sumData?.total || 0} <span className="ems-main-unit">kWh</span></div>
+                      <div className="ems-title">Sum: {props.plantRevenue?.sumData?.[0]?.total || 0} <span className="ems-main-unit">kWh</span></div>
                     </div>
                   </div>
                 </div>
