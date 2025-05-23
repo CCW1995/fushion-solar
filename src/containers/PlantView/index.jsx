@@ -102,27 +102,17 @@ const renderLineConfig = (graphData, period) => {
 const PlantMonitoringView = (props) => {
   const [selectedPeriod, setSelectedPeriod] = useState('lifetime');
   const [selectedPeriodRevenue, setSelectedPeriodRevenue] = useState('lifetime');
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedDateRevenue, setSelectedDateRevenue] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDateRevenue, setSelectedDateRevenue] = useState(new Date());
 
   const {plantData} = props
 
   useEffect(() => {
-    if(selectedPeriod === 'lifetime') {
-      return setSelectedDate(null);
-    }
-
-    return setSelectedDate(new Date());
-
+    setSelectedDate(new Date());
   }, [selectedPeriod])
 
   useEffect(() => {
-    if(selectedPeriodRevenue === 'lifetime') {
-      return setSelectedDateRevenue(null);
-    }
-
-    return setSelectedDateRevenue(new Date());
-
+    setSelectedDateRevenue(new Date());
   }, [selectedPeriodRevenue])
 
   useEffect(() => {
@@ -165,9 +155,9 @@ const PlantMonitoringView = (props) => {
           </Col> 
           <Col xs={24} md={18} className="main-section-right">
             <PlantInfo 
-              plantInfo={plantData?.stationInfo??{}}
-              alarmCount={plantData?.alarmCount??{}}
-              envBenefit={plantData?.envBenefit??{}}
+              plantInfo={plantData?.stationInfo??[]}
+              alarmCount={plantData?.alarmCount??[]}
+              envBenefit={plantData?.envBenefit??[]}
             />
           </Col>
         </Row>

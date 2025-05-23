@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout, Button, Avatar, Dropdown, Badge, Menu } from 'antd';
+import { connect } from 'react-redux';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -14,7 +15,7 @@ import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
-const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) => {
+const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, data }) => {
   const handleLogout = () => {
     clearItem('ERP_ACCESS_TOKEN');
     window.location.href = '/#/login';
@@ -119,7 +120,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
           >
             <div className="user-profile">
               <Avatar icon={<UserOutlined />} />
-              <span className="username">Admin</span>
+              <span className="username">{data.ProfileReducer.profile?.cust_name??''}</span>
             </div>
           </Dropdown>
         </div>
@@ -128,4 +129,5 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick }) =
   );
 };
 
-export default FusionSolarHeader; 
+const mapStateToProps = (state) => ({ data: state });
+export default connect(mapStateToProps)(FusionSolarHeader); 

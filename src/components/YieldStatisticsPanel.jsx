@@ -89,7 +89,6 @@ const YieldStatisticsPanel = ({
                   showYearPicker
                   dateFormat="yyyy"
                   className="form-control"
-                  disabled={selectedPeriod === 'lifetime'}
                   maxDate={new Date()}
                 />
               )

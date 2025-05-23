@@ -12,10 +12,8 @@ function getDateFormat(period) {
       return 'YYYY-MM-DD';
     case 'monthly':
       return 'YYYY-MM';
-    case 'yearly':
-      return 'YYYY';
     default:
-      return 'YYYY-MM-DD';
+      return 'YYYY';
   }
 }
 
@@ -27,8 +25,8 @@ const HOC = (WrappedComponent) => {
       errorMessage: "",
       plantData: {
         stationInfo: [],
-        alarmCount: {},
-        envBenefit: {},
+        alarmCount: [],
+        envBenefit: [],
       },
       plantEnergyData: {},
       plantRevenue: {}
