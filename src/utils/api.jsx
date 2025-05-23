@@ -1,3 +1,3 @@
 export default () => {
-  return "http://34.142.145.153";
+  return "https://dev-api.sapms.appbaystudio.com";
 };
