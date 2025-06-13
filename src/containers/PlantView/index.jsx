@@ -100,8 +100,8 @@ const renderLineConfig = (graphData, period) => {
 };
 
 const PlantMonitoringView = (props) => {
-  const [selectedPeriod, setSelectedPeriod] = useState('lifetime');
-  const [selectedPeriodRevenue, setSelectedPeriodRevenue] = useState('lifetime');
+  const [selectedPeriod, setSelectedPeriod] = useState('monthly');
+  const [selectedPeriodRevenue, setSelectedPeriodRevenue] = useState('monthly');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDateRevenue, setSelectedDateRevenue] = useState(new Date());
 

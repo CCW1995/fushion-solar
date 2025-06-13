@@ -73,8 +73,7 @@ const YieldStatisticsPanel = ({
               </Button>
               <Button 
                 type={selectedPeriod === 'lifetime' ? 'primary' : 'default'}
-                onClick={() => {
-                  setSelectedDate(null);
+                onClick={() => {;
                   setSelectedPeriod('lifetime')
                 }}
               >
