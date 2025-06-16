@@ -29,7 +29,7 @@ const FusionSolarLayout = ({ children }) => {
       }}
     >
       <Layout className="fusion-layout huawei-layout">
-        {/* {isMobile ? (
+        {isMobile ? (
           <Drawer
             placement="left"
             closable={false}
@@ -42,7 +42,7 @@ const FusionSolarLayout = ({ children }) => {
           </Drawer>
         ) : (
           <FusionSolarSider collapsed={collapsed} setCollapsed={setCollapsed} />
-        )} */}
+        )}
         <Layout className="site-layout">
           <FusionSolarHeader
             collapsed={collapsed}

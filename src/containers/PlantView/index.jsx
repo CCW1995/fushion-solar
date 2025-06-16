@@ -116,6 +116,7 @@ const PlantMonitoringView = (props) => {
   }, [selectedPeriodRevenue])
 
   useEffect(() => {
+    //data.SiteReducer.selectedSite
     if (props.data.StationReducer.station_name) {
       props.getPlantView(props.data.StationReducer.station_name);
     }

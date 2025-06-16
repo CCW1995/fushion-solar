@@ -1,3 +1,3 @@
 export default () => {
-  return "https://bayenergy-sapms-api-poc.appbaystudio.com";
+  return "https://bayenergy-db-api-poc.appbaystudio.com";
 };

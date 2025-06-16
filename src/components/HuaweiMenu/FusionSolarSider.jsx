@@ -1,23 +1,35 @@
-import React from 'react';
-import { Layout, Menu, Button, Divider } from 'antd';
 import {
-  HomeOutlined,
   BarChartOutlined,
-  CloseOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Button, Divider, Layout, Menu, Select } from 'antd';
+import React from 'react';
+import { connect, useDispatch } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { setSelectedSite } from '../../reducers/siteSelector';
 
 // Import logos
-import logoFull from '../../assets/logo.svg';
 import logoSmall from '../../assets/logo-small.svg';
+import logoFull from '../../assets/logo.svg';
 
 import './FusionSolarLayout.scss';
 
 const { Sider } = Layout;
 
-const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
+const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data }) => {
+  console.log(data);
   const history = useHistory();
   const location = useLocation();
+
+  const dispatch = useDispatch();
+  const selectedSite = data.SiteReducer.selectedSite
+
+  // Example site options (replace with real data as needed)
+  const siteOptions = [
+    { label: 'Site A', value: 'siteA' },
+    { label: 'Site B', value: 'siteB' },
+    { label: 'Site C', value: 'siteC' },
+  ];
 
   // Determine the currently active menu item based on the current path
   const getSelectedKey = () => {
@@ -76,6 +88,17 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
           />
         )}
       </div>
+      {/* Site Selector Dropdown */}
+      <div style={{ padding: isMobile ? '0 16px 12px 16px' : '5px' }}>
+        <Select
+          value={selectedSite}
+          onChange={value => dispatch(setSelectedSite(value))}
+          options={siteOptions}
+          placeholder="Select Site"
+          style={{ width: '100%' }}
+          allowClear
+        />
+      </div>
       {isMobile && <Divider style={{ margin: '0 0 12px 0', borderColor: '#22304a' }} />}
       <Menu
         theme="dark"
@@ -103,4 +126,9 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
   );
 };
 
-export default FusionSolarSider; 
+
+const mapStateToProps = (state) => ({
+  data: state,
+});
+
+export default connect(mapStateToProps)(FusionSolarSider); 
