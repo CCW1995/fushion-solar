@@ -4,6 +4,7 @@ import AjaxReducer from "./ajax";
 import PathReducer from "./path";
 import ProfileReducer from "./profile";
 import StationReducer from "./station";
+import SiteReducer from "./siteSelector";
 
 export default combineReducers({
   AjaxReducer,
@@ -11,5 +12,6 @@ export default combineReducers({
 
   ProfileReducer,
   PathReducer,
-  StationReducer
+  StationReducer,
+  SiteReducer
 });
