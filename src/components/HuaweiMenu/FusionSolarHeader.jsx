@@ -1,23 +1,20 @@
-import React from 'react';
-import { Layout, Button, Avatar, Dropdown, Badge, Menu } from 'antd';
-import { connect } from 'react-redux';
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  BellOutlined,
-  UserOutlined,
-  GlobalOutlined,
-  QuestionCircleOutlined,
-  MenuOutlined,
+  UserOutlined
 } from '@ant-design/icons';
-import { clearItem } from 'utils/tokenStore';
+import { Avatar, Button, Dropdown, Layout, Menu } from 'antd';
+import React from 'react';
+import { connect, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { clearItem } from 'utils/tokenStore';
+import { setSelectedSite } from '../../reducers/siteSelector';
 
 const { Header } = Layout;
 
 const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, data }) => {
+  const dispatch = useDispatch();
   const handleLogout = () => {
     clearItem('ERP_ACCESS_TOKEN');
+    dispatch(setSelectedSite(null));
     window.location.href = '/#/login';
   };
 
@@ -130,4 +127,4 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
 };
 
 const mapStateToProps = (state) => ({ data: state });
-export default connect(mapStateToProps)(FusionSolarHeader); 
+export default connect(mapStateToProps, { setSelectedSite })(FusionSolarHeader); 

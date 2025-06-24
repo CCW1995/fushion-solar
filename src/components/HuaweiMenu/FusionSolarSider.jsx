@@ -16,7 +16,7 @@ import './FusionSolarLayout.scss';
 
 const { Sider } = Layout;
 
-const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data }) => {
+const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, stationList }) => {
   console.log(data);
   const history = useHistory();
   const location = useLocation();
@@ -93,7 +93,7 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data }) 
         <Select
           value={selectedSite}
           onChange={value => dispatch(setSelectedSite(value))}
-          options={siteOptions}
+          options={_.map(stationList, item => ({ label: item.station_name, value: item.station_name }))}
           placeholder="Select Site"
           style={{ width: '100%' }}
           allowClear

@@ -18,7 +18,7 @@ const HOC = (WrappedComponent) => {
 
     onClickLogin = (dataToSubmit) => {
       this.setState({ loading: true }, () => {
-        Axios.post(`https://bayenergy-db-api-poc.appbaystudio.com/api/fusion/login`, dataToSubmit)
+        Axios.post(`https://bayenergy-sapms-api-poc.appbaystudio.com/api/fusion/login`, dataToSubmit)
           .then((response) => {
             this.setState({
               loading: false,

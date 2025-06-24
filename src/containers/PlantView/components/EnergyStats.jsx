@@ -42,9 +42,6 @@ const EnergyStats = ({ plantInfo, planInfoBasic }) => {
             <div className="stat-icon">{stat.icon}</div>
             <div>
               <div className="stat-value-row">
-                {
-                  console.log(plantInfo)
-                }
                 <span className="stat-value">{stat.key === 'capacity' ? planInfoBasic.capacity : plantInfo[stat.key]}</span>
                 <span className="stat-unit">{stat.unit}</span>
               </div>
