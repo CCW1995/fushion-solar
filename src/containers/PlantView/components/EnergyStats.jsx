@@ -33,7 +33,7 @@ const stats = [
   },
 ];
 
-const EnergyStats = ({ plantInfo }) => {
+const EnergyStats = ({ plantInfo, planInfoBasic }) => {
   return (
     <div className="energy-stats-card">
       <div className="energy-stats-row">
@@ -42,7 +42,10 @@ const EnergyStats = ({ plantInfo }) => {
             <div className="stat-icon">{stat.icon}</div>
             <div>
               <div className="stat-value-row">
-                <span className="stat-value">{plantInfo[stat.key]}</span>
+                {
+                  console.log(plantInfo)
+                }
+                <span className="stat-value">{stat.key === 'capacity' ? planInfoBasic.capacity : plantInfo[stat.key]}</span>
                 <span className="stat-unit">{stat.unit}</span>
               </div>
               <div className="stat-label-row">

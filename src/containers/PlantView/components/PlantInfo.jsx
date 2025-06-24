@@ -20,7 +20,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{Number(envBenefit?.[0]?.coal_saved).toFixed(2)}</Text>
+                  <Text className="value">{Number(envBenefit?.coal_saved).toFixed(2)}</Text>
                   <Text className="unit">(tons)</Text>
                 </div>
                 <Text className="benefit-label">Standard coal saved</Text>
@@ -32,7 +32,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{Number(envBenefit?.[0]?.co2_avoided).toFixed(2)}</Text>
+                  <Text className="value">{Number(envBenefit?.co2_avoided).toFixed(2)}</Text>
                   <Text className="unit">(tons)</Text>
                 </div>
                 <Text className="benefit-label">CO₂ avoided</Text>
@@ -44,7 +44,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
               </div>
               <div>
                 <div className="benefit-values">
-                  <Text className="value">{Number(envBenefit?.[0]?.trees_planted).toFixed(2)}</Text>
+                  <Text className="value">{Number(envBenefit?.trees_planted).toFixed(2)}</Text>
                 </div>
                 <Text className="benefit-label">Equivalent trees planted</Text>
               </div>
@@ -54,25 +54,25 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
         <Col xs={24} md={8}>
           <div className="alarm-section">
             <div className="alarm-header">
-              <Text className="alarm-count">{alarmCount?.[0]?.total_alarm}</Text>
+              <Text className="alarm-count">{alarmCount?.total_alarm}</Text>
               <Text className="alarm-label">Alarm</Text>
             </div>
             <div className="alarm-categories">
               <div className="alarm-category">
                 <Text className="category-label">Critical</Text>
-                <Text className="category-count">{alarmCount?.[0]?.critical}</Text>
+                <Text className="category-count">{alarmCount?.critical}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Major</Text>
-                <Text className="category-count">{alarmCount?.[0]?.major}</Text>
+                <Text className="category-count">{alarmCount?.major}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Minor</Text>
-                <Text className="category-count">{alarmCount?.[0]?.minor}</Text>
+                <Text className="category-count">{alarmCount?.minor}</Text>
               </div>
               <div className="alarm-category">
                 <Text className="category-label">Warning</Text>
-                <Text className="category-count">{alarmCount?.[0]?.warning}</Text>
+                <Text className="category-count">{alarmCount?.warning}</Text>
               </div>
             </div>
           </div>
@@ -81,19 +81,19 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
         <div className="plant-details-vertical">
         <div className="plant-detail-item">
           <Text className="detail-label">Plant name</Text>
-          <Text className="detail-value">{plantInfo?.[0]?.station_name}</Text>
+          <Text className="detail-value">{plantInfo?.station_name}</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Plant address</Text>
-          <Text className="detail-value">{plantInfo?.[0]?.station_address}</Text>
+          <Text className="detail-value">{plantInfo?.station_address}</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Total string capacity</Text>
-          <Text className="detail-value">{plantInfo?.[0]?.capacity} MWp</Text>
+          <Text className="detail-value">{plantInfo?.capacity} MWp</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Grid connection date</Text>
-          <Text className="detail-value">{plantInfo?.[0]?.grid_connection_date?.split('T')[0]}</Text>
+          <Text className="detail-value">{plantInfo?.grid_connection_date?.split('T')[0]}</Text>
         </div>
       </div>
         </Col>
