@@ -2,6 +2,7 @@ import {
   BarChartOutlined,
   CloseOutlined
 } from '@ant-design/icons';
+import _ from 'lodash';
 import { Button, Divider, Layout, Menu, Select } from 'antd';
 import React from 'react';
 import { connect, useDispatch } from 'react-redux';
