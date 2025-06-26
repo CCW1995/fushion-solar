@@ -25,13 +25,6 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
   const dispatch = useDispatch();
   const selectedSite = data.SiteReducer.selectedSite
 
-  // Example site options (replace with real data as needed)
-  const siteOptions = [
-    { label: 'Site A', value: 'siteA' },
-    { label: 'Site B', value: 'siteB' },
-    { label: 'Site C', value: 'siteC' },
-  ];
-
   // Determine the currently active menu item based on the current path
   const getSelectedKey = () => {
     const path = location.pathname;

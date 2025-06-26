@@ -24,7 +24,7 @@ const HOC = (WrappedComponent) => {
     )
    }
    getStationListSuccess = payload => this.setState({
-    stationList: payload
+    stationList: payload.data
    })
    getStationListError = (error) => requestError(error, "Error")
 

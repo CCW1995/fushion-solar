@@ -80,19 +80,8 @@ export const renderLineConfig = (graphData, period) => {
       period === 'yearly' ? moment(item.period).format('MM/YYYY') :
       item.period
     ),
-      value: item.from_pv,
-      type: 'From PV',
-      color: '#FF6B6B',
-    },
-    {
-      period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      item.period
-    ),
-      value: item.total_consumption,
-      type: 'Total Consumption',
+      value: item.inverter_yield,
+      type: 'Inverter Yield',
       color: '#4ECDC4',
     }
   ]).flat();
