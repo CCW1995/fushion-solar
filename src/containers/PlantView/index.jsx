@@ -38,19 +38,19 @@ const PlantMonitoringView = (props) => {
     if (stationVal) {
       props.getPlantView(stationVal);
     }
-  }, [props.data]);
+  }, [stationVal]);
 
   useEffect(() => {
     if (stationVal) {
       props.getPlantEnergyData(stationVal, selectedPeriod, selectedDate);
     }
-  }, [selectedPeriod, selectedDate]);
+  }, [stationVal, selectedPeriod, selectedDate]);
 
   useEffect(() => {
     if (stationVal) {
       props.getPlantRevenue(stationVal, selectedPeriodRevenue, selectedDateRevenue);
     }
-  }, [selectedPeriodRevenue, selectedDateRevenue]);
+  }, [stationVal, selectedPeriodRevenue, selectedDateRevenue]);
 
   return (    
     <>
@@ -65,12 +65,12 @@ const PlantMonitoringView = (props) => {
             {/* Main Section: Flow (left) + Info (right) */}
             <div className="main-section-card">
               <Row gutter={[0, 0]} className="main-section">
-                <Col xs={24} md={6} className="main-section-left">
+                <Col xs={24} sm={24} md={24} lg={6} xl={6} className="main-section-left">
                   <PlantFlow 
                     energyData={plantData.energyData} 
                   />
                 </Col> 
-                <Col xs={24} md={18} className="main-section-right">
+                <Col xs={24} sm={24} md={24} lg={18} xl={18} className="main-section-right">
                   <PlantInfo 
                     plantInfo={plantData?.basicInfo?.[0]??{}}
                     alarmCount={plantData?.alarmCount?.[0]??{}}
@@ -81,9 +81,9 @@ const PlantMonitoringView = (props) => {
               {/* Energy Management Panel in Card, Col span=12 */}
             </div>
             <Row gutter={[24, 24]}>
-              <Col xs={24} md={12}>
+              <Col span={24}>
                 <Card 
-                  style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
+                  style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)', width: '100%', maxWidth: '100%' }}
                   >
                   <YieldStatisticsPanel
                     title={
@@ -92,6 +92,7 @@ const PlantMonitoringView = (props) => {
                         <Tooltip title="Info about energy management."><InfoCircleOutlined style={{ color: '#b0b0b0', marginLeft: 4 }} /></Tooltip>
                       </span>
                     }
+                    hideDay={true}
                     selectedPeriod={selectedPeriod}
                     setSelectedPeriod={setSelectedPeriod}
                     selectedDate={selectedDate}
@@ -104,12 +105,15 @@ const PlantMonitoringView = (props) => {
                           <div className="d-flex">
                             <div className="ems-title">Yield: {(props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
                           </div>
-                          <div className="ems-chart-row">
-                            <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
-                              <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.energy?.detailData?.length || 0) * 60) }}>
-                                <Line {...renderLineConfig(props.plantEnergyData?.energy?.detailData??[], selectedPeriod)} />
-                              </div>
-                            </div>
+                        </div>
+                      </div>
+                      {/* Chart and legend */}
+                      <div className="ems-chart-row">
+                        <div className="ems-line-chart-placeholder" style={{ width: '100%', overflowX: 'auto' }}>
+                          <div 
+                            style={{ minWidth: Math.max(500, (props.plantEnergyData?.energy?.detailData?.length || 0) * 80), width: 'fit-content' }}
+                          >
+                            <Line {...renderLineConfig(props.plantEnergyData?.energy?.detailData??[], selectedPeriod)} />
                           </div>
                         </div>
                       </div>
@@ -117,9 +121,10 @@ const PlantMonitoringView = (props) => {
                   </YieldStatisticsPanel>
                 </Card>
               </Col>
-              <Col xs={24} md={12}>
-              <Card 
-                  style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
+
+              <Col span={24}>
+                <Card 
+                  style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)', width: '100%', maxWidth: '100%' }}
                   >
                   <YieldStatisticsPanel
                     title={
@@ -145,8 +150,10 @@ const PlantMonitoringView = (props) => {
                       </div>
                       {/* Chart and legend */}
                       <div className="ems-chart-row">
-                        <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
-                          <div style={{ minWidth: Math.max(500, (props.plantRevenue?.graphData?.length || 0) * 60) }}>
+                        <div className="ems-line-chart-placeholder" style={{ width: '100%', overflowX: 'auto' }}>
+                          <div 
+                            style={{ minWidth: Math.max(500, (props.plantRevenue?.detailData?.length || 0) * 80), width: 'fit-content' }}
+                          >
                             <Line {...renderRevenueLineConfig(props.plantRevenue.detailData, selectedPeriodRevenue)} />
                           </div>
                         </div>

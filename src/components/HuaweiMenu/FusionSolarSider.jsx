@@ -1,10 +1,12 @@
 import {
   BarChartOutlined,
-  CloseOutlined
+  CloseOutlined,
+  LeftOutlined,
+  RightOutlined
 } from '@ant-design/icons';
 import _ from 'lodash';
-import { Button, Divider, Layout, Menu, Select } from 'antd';
-import React from 'react';
+import { Button, Divider, Layout, Menu, Typography } from 'antd';
+import React, { useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { setSelectedSite } from '../../reducers/siteSelector';
@@ -16,6 +18,7 @@ import logoFull from '../../assets/logo.svg';
 import './FusionSolarLayout.scss';
 
 const { Sider } = Layout;
+const { Text } = Typography;
 
 const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, stationList }) => {
   console.log(data);
@@ -24,6 +27,16 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
 
   const dispatch = useDispatch();
   const selectedSite = data.SiteReducer.selectedSite
+
+  // Pagination state for stations
+  const [stationPage, setStationPage] = useState(0);
+  const stationsPerPage = 15;
+  const totalStations = stationList.length;
+  const totalPages = Math.ceil(totalStations / stationsPerPage);
+  const paginatedStations = stationList.slice(
+    stationPage * stationsPerPage,
+    (stationPage + 1) * stationsPerPage
+  );
 
   // Determine the currently active menu item based on the current path
   const getSelectedKey = () => {
@@ -55,14 +68,23 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
       collapsed={collapsed}
       className={`fusion-sider${isMobile ? ' fusion-sider-mobile' : ''}`}
       width={220}
-      style={isMobile ? { height: '100%', background: '#001529', boxShadow: '2px 0 8px rgba(0,0,0,0.15)' } : {}}
+      style={isMobile
+        ? { height: '100vh', maxHeight: '100vh', background: '#001529', boxShadow: '2px 0 8px rgba(0,0,0,0.15)' }
+        : { height: '100vh', maxHeight: '100vh' }}
     >
       <div className={`logo${isMobile ? ' logo-mobile' : ''}`} style={isMobile ? { padding: '24px 16px 12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' } : {}}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        {!collapsed ? (
           <img 
-            src={logoFull} 
-            alt="FusionSolar Logo" 
+            src={logoSmall} 
+            alt="Logo" 
+            style={{ height: 24, width: 24 }}
+            className="logo-small"
+          />
+          <Text style={{ color: '#fff', fontSize: 16, fontWeight: 600 }}>Bayenergy</Text>
+        {/* {!collapsed ? (
+          <img 
+            src={logoSmall} 
+            alt="Bayenergy Logo" 
             className="logo-full d-none d-md-block"
           />
         ) : (
@@ -71,7 +93,7 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
             alt="Logo" 
             className="logo-small"
           />
-        )}
+        )} */}
         </div>
         {isMobile && (
           <Button
@@ -82,16 +104,56 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
           />
         )}
       </div>
-      {/* Site Selector Dropdown */}
+      {/* Station List with Pagination */}
       <div style={{ padding: isMobile ? '0 16px 12px 16px' : '5px' }}>
-        <Select
-          value={selectedSite}
-          onChange={value => dispatch(setSelectedSite(value))}
-          options={_.map(stationList, item => ({ label: item.station_name, value: item.station_name }))}
-          placeholder="Select Site"
-          style={{ width: '100%' }}
-          allowClear
-        />
+        <div style={{ height: 500, overflowY: 'auto', marginBottom: 8 }}>
+          {paginatedStations.map((item) => (
+            <div
+              key={item.station_name}
+              onClick={() => dispatch(setSelectedSite(item.station_name))}
+              style={{
+                padding: '8px 12px',
+                marginBottom: 4,
+                borderRadius: 6,
+                background: selectedSite === item.station_name ? '#1890ff' : 'transparent',
+                color: selectedSite === item.station_name ? '#fff' : '#d9d9d9',
+                cursor: 'pointer',
+                fontWeight: selectedSite === item.station_name ? 600 : 400,
+                transition: 'background 0.2s',
+                border: selectedSite === item.station_name ? '1px solid #1890ff' : '1px solid transparent',
+                boxShadow: selectedSite === item.station_name ? '0 2px 8px rgba(24,144,255,0.12)' : 'none',
+                userSelect: 'none',
+              }}
+            >
+              {item.station_name}
+            </div>
+          ))}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button
+            size="small"
+            type="text"
+            disabled={stationPage === 0}
+            onClick={() => setStationPage(stationPage - 1)}
+            style={{ minWidth: 32, padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            aria-label="Previous"
+          >
+            <LeftOutlined style={{ color: '#ffff' }}/>
+          </Button>
+          <span style={{ color: '#d9d9d9', fontSize: 13 }}>
+            Page {stationPage + 1} / {totalPages || 1}
+          </span>
+          <Button
+            size="small"
+            type="text"
+            disabled={stationPage >= totalPages - 1}
+            onClick={() => setStationPage(stationPage + 1)}
+            style={{ minWidth: 32, padding: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            aria-label="Next"
+          >
+            <RightOutlined style={{ color: '#ffff' }}/>
+          </Button>
+        </div>
       </div>
       {isMobile && <Divider style={{ margin: '0 0 12px 0', borderColor: '#22304a' }} />}
       <Menu
@@ -108,12 +170,6 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose, data, st
           //   label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Dashboard</span>,
           //   title: 'Dashboard',
           // },
-          {
-            key: '2',
-            icon: <BarChartOutlined style={isMobile ? { fontSize: 18 } : {}} />,
-            label: <span style={isMobile ? { fontWeight: 600, fontSize: 15 } : {}}>Monitoring</span>,
-            title: 'Monitoring',
-          }
         ]}
       />
     </Sider>

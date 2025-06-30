@@ -50,7 +50,7 @@ export const renderRevenueLineConfig = (graphData, period) => ({
   data: _.map(graphData, item => ({
     period: (
       period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
+      period === 'monthly' ? moment(item.period).format('MM/DD') :
       period === 'yearly' ? moment(item.period).format('MM/YYYY') :
       item.period
     ),
@@ -67,6 +67,15 @@ export const renderRevenueLineConfig = (graphData, period) => ({
   meta: {
     power_profit: { alias: 'Power Profit' },
     period: { alias: 'Date' },
+  },
+  xAxis: {
+    label: {
+      style: { fontSize: 12, fill: '#888' },
+      autoHide: false,
+      autoRotate: false,
+      rotate: Math.PI / 2,
+      formatter: (text) => text,
+    },
   }
 });
 
@@ -75,11 +84,11 @@ export const renderLineConfig = (graphData, period) => {
   const transformedData = graphData.map(item => [
     {
       period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      item.period
-    ),
+        period === 'lifetime' ? moment(item.period).format('YYYY') :
+        period === 'monthly' ? moment(item.period).format('MM/DD') :
+        period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+        item.period
+      ),
       value: item.inverter_yield,
       type: 'Inverter Yield',
       color: '#4ECDC4',
@@ -96,12 +105,11 @@ export const renderLineConfig = (graphData, period) => {
     xAxis: {
       label: {
         style: { fontSize: 12, fill: '#888' },
-        autoHide: true,
-        autoRotate: true,
-        rotate: Math.PI / 4,
+        autoHide: false,
+        autoRotate: false,
+        rotate: Math.PI / 2,
         formatter: (text) => text,
       },
-      tickCount: 5,
     },
     yAxis: {
       label: {

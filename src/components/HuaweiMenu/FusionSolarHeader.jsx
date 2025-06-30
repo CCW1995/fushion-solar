@@ -1,5 +1,8 @@
 import {
-  UserOutlined
+  UserOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  MenuOutlined
 } from '@ant-design/icons';
 import { Avatar, Button, Dropdown, Layout, Menu } from 'antd';
 import React from 'react';
@@ -68,7 +71,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
   return (
     <Header className="fusion-header">
       <div className="header-left">
-        {/* {isMobile ? (
+        {isMobile ? (
           <Button
             type="text"
             icon={<MenuOutlined />}
@@ -77,11 +80,8 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
             style={{ fontSize: 22, marginRight: 12 }}
           />
         ) : (
-          React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: () => setCollapsed(!collapsed),
-          })
-        )} */}
+          <></>
+        )}
       </div>
       <div className="header-right">
         <div className="header-actions">

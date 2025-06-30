@@ -17,6 +17,7 @@ const FusionSolarLayout = ({ children, data, stationList, getStationList, onLoad
   const [drawerVisible, setDrawerVisible] = useState(false);
   const screens = useBreakpoint();
   const isMobile = !screens.md;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
