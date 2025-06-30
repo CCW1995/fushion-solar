@@ -17,7 +17,7 @@ const renderRevenueLineConfig = (graphData, period) => ({
   data: _.map(graphData, item => ({
     period: (
       period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
+      period === 'monthly' ? moment(item.period).format('MM/DD') :
       period === 'yearly' ? moment(item.period).format('MM/YYYY') :
       item.period
     ),
@@ -42,22 +42,22 @@ const renderLineConfig = (graphData, period) => {
   const transformedData = graphData.map(item => [
     {
       period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      item.period
-    ),
+        period === 'lifetime' ? moment(item.period).format('YYYY') :
+        period === 'monthly' ? moment(item.period).format('MM/DD') :
+        period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+        item.period
+      ),
       value: item.from_pv,
       type: 'From PV',
       color: '#FF6B6B',
     },
     {
       period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('DD/MM/YYYY') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      item.period
-    ),
+        period === 'lifetime' ? moment(item.period).format('YYYY') :
+        period === 'monthly' ? moment(item.period).format('MM/DD') :
+        period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+        item.period
+      ),
       value: item.total_consumption,
       type: 'Total Consumption',
       color: '#4ECDC4',
@@ -74,12 +74,11 @@ const renderLineConfig = (graphData, period) => {
     xAxis: {
       label: {
         style: { fontSize: 12, fill: '#888' },
-        autoHide: true,
-        autoRotate: true,
-        rotate: Math.PI / 4,
+        autoHide: false,
+        autoRotate: false,
+        rotate: Math.PI / 2,
         formatter: (text) => text,
       },
-      tickCount: 5,
     },
     yAxis: {
       label: {
@@ -149,12 +148,12 @@ const PlantMonitoringView = (props) => {
       {/* Main Section: Flow (left) + Info (right) */}
       <div className="main-section-card">
         <Row gutter={[0, 0]} className="main-section">
-          <Col xs={24} md={6} className="main-section-left">
+          <Col xs={24} md={24} lg={6} xl={6} className="main-section-left">
             <PlantFlow 
               energyData={plantData.energyData} 
             />
           </Col> 
-          <Col xs={24} md={18} className="main-section-right">
+          <Col xs={24} md={24} lg={18} xl={18} className="main-section-right">
             <PlantInfo 
               plantInfo={plantData?.basicInfo?.[0]??{}}
               alarmCount={plantData?.alarmCount?.[0]??{}}
@@ -165,7 +164,7 @@ const PlantMonitoringView = (props) => {
         {/* Energy Management Panel in Card, Col span=12 */}
       </div>
       <Row gutter={[24, 24]}>
-        <Col xs={24} md={12}>
+        <Col span={24}>
           <Card 
             style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
             >
@@ -247,8 +246,19 @@ const PlantMonitoringView = (props) => {
                 </div>
                 {/* Chart and legend */}
                 <div className="ems-chart-row">
-                  <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
-                    <div style={{ minWidth: Math.max(500, (props.plantEnergyData?.consumption?.graphData?.length || 0) * 60) }}>
+                  <div
+                    className="ems-line-chart-placeholder"
+                    style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
+                  >
+                    <div
+                      style={{
+                        minWidth: Math.max(
+                          500,
+                          (props.plantEnergyData?.consumption?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
+                        ),
+                        width: 'fit-content',
+                      }}
+                    >
                       <Line {...renderLineConfig(props.plantEnergyData?.consumption?.detailData??[], selectedPeriod)} />
                     </div>
                   </div>
@@ -257,8 +267,8 @@ const PlantMonitoringView = (props) => {
             </YieldStatisticsPanel>
           </Card>
         </Col>
-        <Col xs={24} md={12}>
-        <Card 
+        <Col span={24}>
+          <Card 
             style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
             >
             <YieldStatisticsPanel
@@ -285,8 +295,19 @@ const PlantMonitoringView = (props) => {
                 </div>
                 {/* Chart and legend */}
                 <div className="ems-chart-row">
-                  <div className="ems-line-chart-placeholder" style={{ overflowX: 'auto', minWidth: 0 }}>
-                    <div style={{ minWidth: Math.max(500, (props.plantRevenue?.graphData?.length || 0) * 60) }}>
+                  <div
+                    className="ems-line-chart-placeholder"
+                    style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
+                  >
+                    <div
+                      style={{
+                        minWidth: Math.max(
+                          500,
+                          (props.plantRevenue?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
+                        ),
+                        width: 'fit-content',
+                      }}
+                    >
                       <Line {...renderRevenueLineConfig(props.plantRevenue.detailData, selectedPeriodRevenue)} />
                     </div>
                   </div>

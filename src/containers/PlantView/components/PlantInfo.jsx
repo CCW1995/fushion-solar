@@ -12,7 +12,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
   return (
     <Card className="section-card plant-info-card">
       <Row gutter={[30, 16]}>
-        <Col xs={24} md={6}>
+        <Col xs={24} md={24} lg={6} xl={6}>
           <div className="environmental-benefit">
             <div className="benefit-item">
               <div className="benefit-header">
@@ -51,7 +51,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
             </div>
           </div>
         </Col>
-        <Col xs={24} md={8}>
+        <Col xs={24} md={24} lg={8} xl={8}>
           <div className="alarm-section">
             <div className="alarm-header">
               <Text className="alarm-count">{alarmCount?.total_alarm}</Text>
@@ -77,7 +77,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
             </div>
           </div>
         </Col>
-        <Col xs={24} md={10}>
+        <Col xs={24} md={24} lg={10} xl={10}>
         <div className="plant-details-vertical">
         <div className="plant-detail-item">
           <Text className="detail-label">Plant name</Text>
