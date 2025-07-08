@@ -20,6 +20,7 @@ function getDateFormat(period) {
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
+      deviceRealTime: null,
       loading: false,
       showPassword: false,
       errorMessage: "",
@@ -77,6 +78,19 @@ const HOC = (WrappedComponent) => {
     })
     getPlantRevenueError = (error) => requestError(error, "Error")
 
+    getdeviceRealTime = (name) => {
+      Get(
+        `/device/realtime?userName=${name}`,
+        this.getdeviceRealTimeSuccess,
+        this.getdeviceRealTimeError,
+        this.load
+      )
+    }
+    getdeviceRealTimeSuccess = payload => this.setState({
+      deviceRealTime: payload?.[0]??null
+    })
+    getdeviceRealTimeError = (error) => requestError(error, "Error")
+
     render = () => {
       return (
         <WrappedComponent
@@ -84,6 +98,7 @@ const HOC = (WrappedComponent) => {
           {...this.state}
           onLoadPlantView={this.state.loading}
           onChangeHOC={this.onChangeHOC}
+          getdeviceRealTime={this.getdeviceRealTime}
           getPlantView={this.getPlantView}
           getPlantEnergyData={this.getPlantEnergyData}
           getPlantRevenue={this.getPlantRevenue}

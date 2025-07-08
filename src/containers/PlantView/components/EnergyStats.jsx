@@ -18,6 +18,13 @@ const stats = [
     info: false,
   },
   {
+    key: 'year_power',
+    label: 'Yield this year',
+    icon: <BarChartOutlined className="stat-svg-icon" />,
+    unit: 'kWh',
+    info: false,
+  },
+  {
     key: 'total_power',
     label: 'Total yield',
     icon: <ThunderboltFilled className="stat-svg-icon" />,
@@ -33,7 +40,8 @@ const stats = [
   },
 ];
 
-const EnergyStats = ({ plantInfo, planInfoBasic }) => {
+const EnergyStats = ({ plantInfo, planInfoBasic, deviceRealTime }) => {
+  console.log(deviceRealTime);
   return (
     <div className="energy-stats-card">
       <div className="energy-stats-row">
@@ -42,9 +50,6 @@ const EnergyStats = ({ plantInfo, planInfoBasic }) => {
             <div className="stat-icon">{stat.icon}</div>
             <div>
               <div className="stat-value-row">
-                {
-                  console.log(plantInfo)
-                }
                 <span className="stat-value">{stat.key === 'capacity' ? planInfoBasic.capacity : plantInfo[stat.key]}</span>
                 <span className="stat-unit">{stat.unit}</span>
               </div>
@@ -64,6 +69,22 @@ const EnergyStats = ({ plantInfo, planInfoBasic }) => {
             </div>
           </div>
         ))}
+        <div className="stat-block">
+          <div className="stat-icon">
+            <BarChartOutlined className="stat-svg-icon" />
+          </div>
+          <div>
+            <div className="stat-value-row">
+              <span className="stat-value">
+                {deviceRealTime} 
+              </span>
+              <span className="stat-unit">kWh</span>
+            </div>
+            <div className="stat-label-row">
+              <span className="stat-label">Active Power</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -117,6 +117,7 @@ const PlantMonitoringView = (props) => {
   useEffect(() => {
     if (props.data.StationReducer.station_name) {
       props.getPlantView(props.data.StationReducer.station_name);
+      props.getdeviceRealTime(props.data.StationReducer.station_name);
     }
   }, [props.data]);
 
@@ -141,10 +142,13 @@ const PlantMonitoringView = (props) => {
   return (
     <div className="plant-monitoring-container">
       {/* Header */}
-      <PlantHeader plantName={plantData?.stationInfo?.[0]?.station_name}/>
+      <PlantHeader plantName={plantData?.stationInfo?.[0]?.station_name} realtimeInfo={plantData?.realtimeInfo?.[0]??{}}/>
 
-      <EnergyStats plantInfo={plantData.realtimeInfo?.[0]??{}} planInfoBasic={plantData?.basicInfo?.[0]??{}}/>
-
+      <EnergyStats 
+        plantInfo={plantData.realtimeInfo?.[0]??{}} 
+        planInfoBasic={plantData?.basicInfo?.[0]??{}}
+        deviceRealTime={props.deviceRealTime?.active_power??''}
+      />
       {/* Main Section: Flow (left) + Info (right) */}
       <div className="main-section-card">
         <Row gutter={[0, 0]} className="main-section">

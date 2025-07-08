@@ -2,15 +2,14 @@ import React from 'react';
 // import { Row, Col } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 
-const PlantHeader = ({ plantName, weatherData }) => {
-  //const currentDay = weatherData.days[0];
+const PlantHeader = ({ plantName, realtimeInfo }) => {
   return (
     <div className="plant-header-enhanced">
       {/* Left: Icon, status dot, plant name */}
       <div className="plant-header-left">
         <span className="plant-icon-wrapper">
           <HomeOutlined className="plant-icon" />
-          <span className="status-dot" />
+          <span className="status-dot" style={{ backgroundColor: realtimeInfo.station_health === 'healthy' ? '#2ecc40' : '#ff4d4f' }}/>
         </span>
         <span className="plant-name">{plantName}</span>
       </div>
