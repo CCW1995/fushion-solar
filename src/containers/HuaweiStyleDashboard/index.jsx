@@ -1,27 +1,28 @@
 import {
-  BarChartOutlined,
   CloseOutlined,
   DownOutlined,
   InfoCircleOutlined,
   RightOutlined,
-  SettingOutlined,
   UpOutlined
 } from '@ant-design/icons';
-import { Button, Checkbox, Col, Popover, Row, Space, Typography } from 'antd';
-import React, { useState } from 'react';
+import { Button, Checkbox, Col, Row, Space, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import DashboardWidget from '../../components/DashboardWidget';
 import GraphContent from './GraphContent';
 import TableContent from './TableContent';
+import HOC from './actions';
 import {
-  alarmStatusData, alarmStatusItems, allParameters,
-  plantStatusData, plantStatusItems, plantTableColumns,
+  allParameters,
+  getPlantTableColumns,
   renderKpi
 } from './assets.jsx';
 import './index.scss';
 
 const { Title, Text } = Typography;
 
-const HuaweiStyleDashboard = () => {
+const HuaweiStyleDashboard = (props) => {
+  const history = useHistory();
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [columnSelectorVisible, setColumnSelectorVisible] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
@@ -44,7 +45,26 @@ const HuaweiStyleDashboard = () => {
     'total_yield',
     'inverter_rated_power'
   ]);
-
+  const [searchName, setSearchName] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  
+  // Get the plant table columns with navigation function
+  const plantTableColumns = getPlantTableColumns(history.push);
+  
+  useEffect(() => {
+    const userProfile = props.data.ProfileReducer.profile;
+    const isAdmin = userProfile?.role?.name === 'Admin';
+    
+    if (isAdmin) {
+      props.getKpi();
+      props.getDeviceAlarm();
+      props.getDeviceStatus();
+      props.getStationList('', 1);  
+    } else {
+      history.push('/dashboard/plant-monitoring');
+    }
+  }, []);
   // State for dashboard panels collapsed state
   const [dashboardCollapsed, setDashboardCollapsed] = useState(false);
   
@@ -156,10 +176,22 @@ const HuaweiStyleDashboard = () => {
     </div>
   );
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const handleTableChange = (pagination) => {
-    setCurrentPage(pagination.current);
+  
+  const handleTableChange = (pagination, filters, sorter) => {
+    const newPage = pagination.current;
+    const newPageSize = pagination.pageSize;
+    
+    // Update state
+    setCurrentPage(newPage);
+    setPageSize(newPageSize);
+    
+    // Call API with new page, page size, and current search name
+    props.getStationList(searchName, newPage, newPageSize);
   };
+
+  useEffect(() => {
+    searchName && props.getStationList(searchName, 1, pageSize);
+  }, [searchName]);
 
   // Columns selection handler
   const handleColumnSelectAll = (e) => {
@@ -185,7 +217,7 @@ const HuaweiStyleDashboard = () => {
 
   return (
     <>
-      <div className="huawei-dashboard">
+      <div className="home">
         <div className="dashboard-controls">
           {/* <div className="nav-button">
             <i className="anticon">
@@ -194,7 +226,7 @@ const HuaweiStyleDashboard = () => {
               </svg>
             </i>
           </div> */}
-          <div 
+          {/* <div 
             className={`nav-button ${viewMode === 'table' ? 'active' : ''}`}
             onClick={() => toggleViewMode('table')}
           >
@@ -209,14 +241,14 @@ const HuaweiStyleDashboard = () => {
             onClick={() => toggleViewMode('graph')}
           >
             <BarChartOutlined />
-          </div>
-          <button 
+          </div> */}
+          {/* <button 
             className="collapse-toggle" 
             onClick={toggleDashboard}
             aria-label={dashboardCollapsed ? "Expand Dashboard" : "Collapse Dashboard"}
           >
             {dashboardCollapsed ? <DownOutlined /> : <UpOutlined />}
-          </button>
+          </button> */}
         </div>
         
         <div className={`dashboard-widgets ${dashboardCollapsed ? 'collapsed' : ''}`}>
@@ -226,7 +258,7 @@ const HuaweiStyleDashboard = () => {
                 <div className="panel-header">
                   <div className="title-with-settings">
                     <Title level={4}>Plant KPIs</Title>
-                    <Popover
+                    {/* <Popover
                       content={parameterSelectionContent}
                       trigger="click"
                       visible={popoverVisible}
@@ -235,12 +267,12 @@ const HuaweiStyleDashboard = () => {
                       overlayClassName="parameter-popover"
                     >
                       <SettingOutlined className="settings-icon" />
-                    </Popover>
+                    </Popover> */}
                   </div>
                 </div>
                 <div className="panel-content">
                   <Row gutter={[16, 12]}>
-                    {renderKpi(selectedParameters).map((item, index) => (
+                    {renderKpi().map((item, index) => (
                       <Col xs={24} md={12} key={index}>
                         <div className="kpi-item">
                           <div className="kpi-icon">
@@ -248,7 +280,7 @@ const HuaweiStyleDashboard = () => {
                           </div>
                           <div className="kpi-data">
                             <div className="kpi-value">
-                              {item.value} <span className="kpi-unit">{item.unit}</span>
+                              {props.kpiData[item.id] || 0} <span className="kpi-unit">{item.unit}</span>
                             </div>
                             <div className="kpi-label">{item.label}</div>
                           </div>
@@ -259,19 +291,18 @@ const HuaweiStyleDashboard = () => {
                 </div>
               </div>
             </Col>
-            
             <Col xs={24} md={8}>
               <DashboardWidget
                 title="Plant Status"
-                chartData={plantStatusData}
+                chartData={props.deviceStatusData}
                 chartColors={['#52c41a', '#ff4d4f', '#d9d9d9']}
                 chartInnerContent={
                   <>
-                    <Title level={2}>316</Title>
+                    <Title level={2}>{props.deviceStatusTotal}</Title>
                     <div className="chart-label">Total plants</div>
                   </>
                 }
-                items={plantStatusItems}
+                items={props.deviceStatusData}
                 onViewMore={() => {}}
                 transparent={true}
                 rightIcon={<RightOutlined />}
@@ -281,46 +312,54 @@ const HuaweiStyleDashboard = () => {
             <Col xs={24} md={8}>
               <DashboardWidget
                 title="Active Alarms"
-                chartData={alarmStatusData}
+                chartData={props.deviceAlarmData}
                 chartColors={['#f5222d', '#fa8c16', '#faad14', '#1890ff']}
                 chartInnerContent={
                   <>
-                    <Title level={2}>13</Title>
+                    <Title level={2}>{props.deviceAlarmTotal}</Title>
                     <div className="chart-label">Total alarms</div>
                   </>
                 }
-                items={alarmStatusItems}
+                items={props.deviceAlarmData}
                 onViewMore={() => {}}
                 transparent={true}
                 rightIcon={<RightOutlined />}
               />
             </Col>
+            <Col xs={24} md={24}>
+            {viewMode === 'table' ? (
+              <TableContent 
+                selectedColumns={selectedColumns}
+                handleColumnSelectAll={handleColumnSelectAll}
+                setSelectedColumns={setSelectedColumns}
+                columnSelectorVisible={columnSelectorVisible}
+                setColumnSelectorVisible={setColumnSelectorVisible}
+                visibleColumns={visibleColumns}
+                currentPage={currentPage}
+                pageSize={pageSize}
+                handleTableChange={handleTableChange}
+                searchName={searchName}
+                setSearchName={setSearchName}
+                getStationList={props.getStationList}
+                stationListData={props.stationListData}
+                stationListMeta={props.stationListMeta}
+                plantTableColumns={plantTableColumns}
+              />
+            ) : (
+              <GraphContent
+                setSelectedPeriod={setSelectedPeriod}
+                selectedPeriod={selectedPeriod}
+                selectedDate={selectedDate}
+                handleColumnSelect={handleColumnSelect}
+                setSelectedDate={setSelectedDate}
+              />
+            )}
+            </Col>
           </Row>
         </div>
-        
-        {viewMode === 'table' ? (
-          <TableContent 
-            selectedColumns={selectedColumns}
-            handleColumnSelectAll={handleColumnSelectAll}
-            setSelectedColumns={setSelectedColumns}
-            columnSelectorVisible={columnSelectorVisible}
-            setColumnSelectorVisible={setColumnSelectorVisible}
-            visibleColumns={visibleColumns}
-            currentPage={currentPage}
-            handleTableChange={handleTableChange}
-          />
-        ) : (
-          <GraphContent
-            setSelectedPeriod={setSelectedPeriod}
-            selectedPeriod={selectedPeriod}
-            selectedDate={selectedDate}
-            handleColumnSelect={handleColumnSelect}
-            setSelectedDate={setSelectedDate}
-          />
-        )}
       </div>
     </>
   );
 };
 
-export default HuaweiStyleDashboard; 
+export default HOC(HuaweiStyleDashboard); 

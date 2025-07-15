@@ -7,89 +7,53 @@ import {
   LineChartOutlined,
   ThunderboltOutlined
 } from '@ant-design/icons';
-import { Space, Tooltip } from 'antd';
-import React from 'react';
+import moment from 'moment';
 
 // Plant List Table Data
-export const plantTableColumns = [
+export const getPlantTableColumns = (navigate) => [
   {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-    width: 80,
     render: status => (
-      <div className={`status-indicator ${status === 'normal' ? 'normal' : status === 'faulty' ? 'faulty' : 'disconnected'}`} />
+      <div className={`status-indicator ${status === 'online' ? 'normal' : status === 'offline' ? 'faulty' : 'disconnected'}`} />
     )
   },
   {
-    title: 'Plant Image',
-    dataIndex: 'image',
-    key: 'image',
-    width: 100,
-    render: imgUrl => <img src={imgUrl} alt="Plant" className="plant-thumbnail" />
-  },
-  {
-    title: 'Plant Name',
-    dataIndex: 'name',
+    title: 'Station Name',
+    dataIndex: 'station_name',
     key: 'name',
-    render: name => <a className="plant-name-link">{name}</a>,
-    sorter: (a, b) => a.name.localeCompare(b.name),
+    render: name => (
+      <a 
+        className="plant-name-link" 
+        onClick={() => navigate(`/dashboard/plant-monitoring?plantName=${encodeURIComponent(name)}`)}
+        style={{ cursor: 'pointer' }}
+      >
+        {name}
+      </a>
+    )
   },
   {
-    title: 'Country/Region',
-    dataIndex: 'region',
-    key: 'region',
-    sorter: (a, b) => a.region.localeCompare(b.region),
+    title: 'Station Code',
+    dataIndex: 'station_code',
+    key: 'station_code',
   },
   {
     title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'station_address',
+    key: 'station_address',
   },
   {
     title: 'Grid Connection Date',
-    dataIndex: 'connectionDate',
-    key: 'connectionDate',
-    sorter: (a, b) => new Date(a.connectionDate) - new Date(b.connectionDate),
+    dataIndex: 'grid_connection_date',
+    key: 'grid_connection_date',
+    render: date => date ? moment(date).format('YYYY-MM-DD') : '-'
   },
   {
     title: 'Total String Capacity (kW)',
-    dataIndex: 'stringCapacity',
-    key: 'stringCapacity',
-    sorter: (a, b) => a.stringCapacity - b.stringCapacity,
-  },
-  {
-    title: 'Current Power (kW)',
-    dataIndex: 'currentPower',
-    key: 'currentPower',
-    sorter: (a, b) => a.currentPower - b.currentPower,
-  },
-  {
-    title: 'Specific Energy (kWh/kWp)',
-    dataIndex: 'specificEnergy',
-    key: 'specificEnergy',
-    sorter: (a, b) => a.specificEnergy - b.specificEnergy,
-  },
-  {
-    title: 'Yield Today (kWh)',
-    dataIndex: 'yieldToday',
-    key: 'yieldToday',
-    sorter: (a, b) => a.yieldToday - b.yieldToday,
-  },
-  {
-    title: 'Total Yield (kWh)',
-    dataIndex: 'totalYield',
-    key: 'totalYield',
-    sorter: (a, b) => a.totalYield - b.totalYield,
-    render: (text) => (
-      <Space>
-        {text}
-        <Tooltip title="Total energy generated since the plant was installed">
-          <InfoCircleOutlined />
-        </Tooltip>
-      </Space>
-    )
-  },
+    dataIndex: 'capacity',
+    key: 'capacity'
+  }
 ];
 
 export const plantTableData = [
@@ -184,40 +148,29 @@ export const allParameters = [
     return  [
       {
         id: 'current_power',
-        value: '0.00',
         unit: 'kW',
         label: 'Current power',
         icon: <LineChartOutlined />,
       },
       {
-        id: 'yield_today',
-        value: '6.58',
+        id: 'today_power',
         unit: 'MWh',
-        label: 'Yield today',
+        label: 'Power today',
         icon: <FieldTimeOutlined />,
       },
       {
-        id: 'revenue_today',
-        value: '21.65K',
+        id: 'today_income',
         unit: '',
         label: 'Revenue today',
         icon: <DollarOutlined />,
       },
       {
-        id: 'total_yield',
-        value: '607.15',
+        id: 'total_power',
         unit: 'MWh',
-        label: 'Total yield',
+        label: 'Total Power',
         icon: <FieldTimeOutlined />,
-      },
-      {
-        id: 'inverter_rated_power',
-        value: '1.89',
-        unit: 'MW',
-        label: 'Inverter rated power',
-        icon: <ThunderboltOutlined />,
       }
-    ].filter(item => selectedParameters.includes(item.id));
+    ];
   }
 
   // Data for Active Alarms widget with all alarm types represented

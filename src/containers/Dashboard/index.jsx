@@ -51,9 +51,9 @@ class Dashboard extends Component {
           <FusionSolarLayout>
                   <SuspenseWrapper key={"SuspenseWrapper"}>
                     <Switch>
-                <Route exact path="/dashboard/huawei-dashboard" component={HuaweiStyleDashboard} />
+                <Route exact path="/dashboard/home" component={HuaweiStyleDashboard} />
                 <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
-                <Redirect exact from="/dashboard" to="/dashboard/huawei-dashboard" />
+                <Redirect exact from="/dashboard" to="/dashboard/home" />
                       <Route component={NotFound} />
                     </Switch>
                   </SuspenseWrapper>

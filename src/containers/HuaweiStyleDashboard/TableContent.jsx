@@ -5,7 +5,6 @@ import {
 } from '@ant-design/icons';
 import { Button, Checkbox, Col, Input, Popover, Row, Select, Space, Table, Typography } from 'antd';
 import React from 'react';
-import { plantTableColumns, plantTableData } from './assets.jsx';
 import './index.scss';
 
 const { Title, Text } = Typography;
@@ -20,8 +19,14 @@ function TableContent({
   visibleColumns,
   currentPage,
   pageSize,
+  stationListData,
   handleColumnSelect,
-  handleTableChange
+  handleTableChange,
+  searchName,
+  setSearchName,
+  getStationList,
+  stationListMeta,
+  plantTableColumns
 }) {
 
   // Column selection content for Popover
@@ -81,9 +86,14 @@ function TableContent({
                   <div className="search-filters">
                     <div className="filter-item">
                       <label>Plant name</label>
-                      <Input placeholder="Plant name" />
+                      <Input 
+                        placeholder="Plant name" 
+                        style={{ width: '100%' }}
+                        value={searchName}
+                        onChange={(e) => setSearchName(e.target.value)}
+                      />
                     </div>
-                    <div className="filter-item">
+                    {/* <div className="filter-item">
                       <label>Country/Region</label>
                       <Input placeholder="Country/Region" />
                     </div>
@@ -98,20 +108,20 @@ function TableContent({
                     <div className="filter-item">
                       <label>Device SN</label>
                       <Input placeholder="Device SN" />
-                    </div>
+                    </div> */}
                   </div>
-                  <div className="action-buttons">
+                  {/* <div className="action-buttons">
                     <div className="expand-button">
                       <Button type="default">Expand</Button>
                     </div>
                     <Button type="primary" icon={<PlusOutlined />}>Add Plant</Button>
-                  </div>
+                  </div> */}
                 </div>
                 
                 <div className="search-actions">
-                  <Button type="primary">Search</Button>
-                  <Button>Reset</Button>
-                  <div className="settings-button">
+                  <Button type="primary" onClick={() => getStationList(searchName, 1)}>Search</Button>
+                  <Button onClick={() => setSearchName('')}>Reset</Button>
+                  {/* <div className="settings-button">
                     <Popover
                       content={columnSelectionContent}
                       trigger="click"
@@ -122,20 +132,20 @@ function TableContent({
                     >
                       <SettingFilled />
                     </Popover>
-                  </div>
+                  </div> */}
                 </div>
                 
                 <Table 
-                  columns={visibleColumns} 
-                  dataSource={plantTableData}
+                  columns={plantTableColumns} 
+                  dataSource={stationListData}
                   pagination={{
                     current: currentPage,
                     pageSize: pageSize,
-                    total: 316,
+                    total: stationListMeta?.itemCount || 0,
                     showQuickJumper: true,
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '20', '50', '100'],
-                    showTotal: (total) => `Total records: ${total}`
+                    showTotal: (total) => `Total records: ${stationListMeta?.itemCount || 0}`
                   }}
                   onChange={handleTableChange}
                   scroll={{ x: 'max-content' }}

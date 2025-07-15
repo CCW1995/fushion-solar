@@ -25,7 +25,11 @@ const HOC = (WrappedComponent) => {
             });
             this.props.setUserProfile(response.data);
             storeItem("ERP_ACCESS_TOKEN", response.data.token);
-            this.props.history.push("/dashboard/plant-monitoring");
+            if(response.data.role === 'admin'){
+              this.props.history.push("/dashboard/home");
+            } else {
+              this.props.history.push("/dashboard/plant-monitoring");
+            }
           })
           .catch((err) => {
             this.setState({

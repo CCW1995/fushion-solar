@@ -3,6 +3,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import './index.scss';
 import { Card, Row, Col, Tooltip } from 'antd';
+import { useLocation, useHistory } from 'react-router-dom';
 import PlantHeader from './components/PlantHeader';
 import EnergyStats from './components/EnergyStats';
 import PlantFlow from './components/PlantFlow';
@@ -104,7 +105,43 @@ const PlantMonitoringView = (props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDateRevenue, setSelectedDateRevenue] = useState(new Date());
 
-  const {plantData} = props
+  const {plantData} = props;
+  const location = useLocation();
+  const history = useHistory();
+  
+  // Extract plantName from URL parameters
+  const getPlantNameFromURL = () => {
+    const searchParams = new URLSearchParams(location.search);
+    return searchParams.get('plantName');
+  };
+
+  // Determine which plant name to use based on user role
+  const getPlantNameToUse = () => {
+    const userProfile = props.data.ProfileReducer.profile;
+    const isAdmin = userProfile?.role?.name === 'Admin';
+    const plantNameFromURL = getPlantNameFromURL();
+    
+    // If user is admin and plantName is in URL, use it
+    if (isAdmin && plantNameFromURL) {
+      return plantNameFromURL;
+    }
+    
+    // Otherwise use the station name from props (admin or no URL parameter)
+    return props.data.StationReducer.station_name;
+  };
+
+  const plantNameToUse = getPlantNameToUse();
+
+  // Redirect admin users back to dashboard if no plantName in URL
+  useEffect(() => {
+    const userProfile = props.data.ProfileReducer.profile;
+    const isAdmin = userProfile?.role?.name === 'Admin';
+    const plantNameFromURL = getPlantNameFromURL();
+    
+    if (isAdmin && !plantNameFromURL) {
+      history.push('/dashboard/home');
+    }
+  }, [props.data.ProfileReducer.profile]);
 
   useEffect(() => {
     setSelectedDate(new Date());
@@ -115,29 +152,31 @@ const PlantMonitoringView = (props) => {
   }, [selectedPeriodRevenue])
 
   useEffect(() => {
-    if (props.data.StationReducer.station_name) {
-      props.getPlantView(props.data.StationReducer.station_name);
-      props.getdeviceRealTime(props.data.StationReducer.station_name);
+    if (plantNameToUse) {
+      props.getPlantView(plantNameToUse);
+      props.getdeviceRealTime(plantNameToUse);
     }
-  }, [props.data]);
+  }, [plantNameToUse]);
 
   useEffect(() => {
-    if (props.data.StationReducer.station_name) {
+    if (plantNameToUse) {
       if (selectedPeriod !== 'lifetime') { 
-        selectedDate && props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+        selectedDate && props.getPlantEnergyData(plantNameToUse, selectedPeriod, selectedDate);
       } else {
-        props.getPlantEnergyData(props.data.StationReducer.station_name, selectedPeriod, selectedDate);
+        props.getPlantEnergyData(plantNameToUse, selectedPeriod, selectedDate);
       }
     }
-  }, [selectedPeriod, selectedDate]);
+  }, [selectedPeriod, selectedDate, plantNameToUse]);
 
   useEffect(() => {
-    if (selectedPeriodRevenue !== 'lifetime') { 
-      selectedDateRevenue && props.getPlantRevenue(props.data.StationReducer.station_name, selectedPeriodRevenue, selectedDateRevenue);
-    } else {
-      props.getPlantRevenue(props.data.StationReducer.station_name, selectedPeriodRevenue, selectedDateRevenue);
+    if (plantNameToUse) {
+      if (selectedPeriodRevenue !== 'lifetime') { 
+        selectedDateRevenue && props.getPlantRevenue(plantNameToUse, selectedPeriodRevenue, selectedDateRevenue);
+      } else {
+        props.getPlantRevenue(plantNameToUse, selectedPeriodRevenue, selectedDateRevenue);
+      }
     }
-  }, [selectedPeriodRevenue, selectedDateRevenue]);
+  }, [selectedPeriodRevenue, selectedDateRevenue, plantNameToUse]);
 
   return (
     <div className="plant-monitoring-container">

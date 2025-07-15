@@ -132,7 +132,7 @@ const DashboardWidget = ({
                       style={{ backgroundColor: chartColors?.[index] }}
                     ></span>
                   )}
-                  <Text>{item.count}</Text>
+                  <Text>{item.value}</Text>
                 </div>
                 <Text type="secondary">{item.label}</Text>
               </div>

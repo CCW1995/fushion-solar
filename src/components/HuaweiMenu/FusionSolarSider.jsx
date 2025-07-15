@@ -22,7 +22,7 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
   // Determine the currently active menu item based on the current path
   const getSelectedKey = () => {
     const path = location.pathname;
-    if (path.includes('/dashboard/huawei-dashboard')) return '1';
+    if (path.includes('/dashboard/home')) return '1';
     if (path.includes('/dashboard/plant-monitoring')) return '2';
     return '1'; // Default to dashboard
   };
@@ -31,7 +31,7 @@ const FusionSolarSider = ({ collapsed, setCollapsed, isMobile, onClose }) => {
   const handleMenuClick = ({ key }) => {
     switch (key) {
         case '1':
-          history.push('/dashboard/huawei-dashboard');
+          history.push('/dashboard/home');
           break;
       case '2':
         history.push('/dashboard/plant-monitoring');

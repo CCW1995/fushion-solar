@@ -41,7 +41,6 @@ const stats = [
 ];
 
 const EnergyStats = ({ plantInfo, planInfoBasic, deviceRealTime }) => {
-  console.log(deviceRealTime);
   return (
     <div className="energy-stats-card">
       <div className="energy-stats-row">

@@ -1,4 +1,4 @@
-.huawei-dashboard {
+.home {
   padding: 16px;
   min-height: calc(100vh - 64px);
   background: url('../../assets/background.svg') no-repeat center center;
@@ -357,7 +357,6 @@
   }
   
   .dashboard-widgets {
-    max-height: 500px;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease-in-out;
     opacity: 1;
@@ -592,10 +591,7 @@
         align-items: center;
         margin-right: 16px;
         margin-bottom: 8px;
-      
-        @media (min-width: 768px) {
-          width: calc(23% - 12px);
-        }
+        width: 100%;
         
         label {
           margin-bottom: 0;
