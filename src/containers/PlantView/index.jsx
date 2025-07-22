@@ -166,7 +166,7 @@ const PlantMonitoringView = (props) => {
       <EnergyStats 
         plantInfo={plantData.realtimeInfo?.[0]??{}} 
         planInfoBasic={plantData?.basicInfo?.[0]??{}}
-        deviceRealTime={props.deviceRealTime?.active_power??''}
+        deviceRealTime={props.deviceRealTime?.active_power??'0'}
       />
       {/* Main Section: Flow (left) + Info (right) */}
       <div className="main-section-card">

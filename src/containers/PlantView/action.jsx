@@ -20,7 +20,7 @@ function getDateFormat(period) {
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
-      deviceRealTime: null,
+      deviceRealTime: "0",
       loading: false,
       showPassword: false,
       errorMessage: "",
@@ -87,7 +87,7 @@ const HOC = (WrappedComponent) => {
       )
     }
     getdeviceRealTimeSuccess = payload => this.setState({
-      deviceRealTime: payload?.[0]??null
+      deviceRealTime: payload?.[0]??"0"
     })
     getdeviceRealTimeError = (error) => requestError(error, "Error")
 

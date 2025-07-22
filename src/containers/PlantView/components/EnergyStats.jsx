@@ -49,7 +49,7 @@ const EnergyStats = ({ plantInfo, planInfoBasic, deviceRealTime }) => {
             <div className="stat-icon">{stat.icon}</div>
             <div>
               <div className="stat-value-row">
-                <span className="stat-value">{stat.key === 'capacity' ? planInfoBasic.capacity : plantInfo[stat.key]}</span>
+                <span className="stat-value">{(stat.key === 'capacity' ? planInfoBasic.capacity : plantInfo[stat.key] ) || 0}</span>
                 <span className="stat-unit">{stat.unit}</span>
               </div>
               <div className="stat-label-row">
