@@ -38,42 +38,54 @@ const renderRevenueLineConfig = (graphData, period) => ({
   }
 });
 
-const renderLineConfig = (graphData, period) => {
-  // Transform the data to combine from_pv and total_consumption into a format suitable for two lines
-  const transformedData = graphData.map(item => [
-    {
-      period: (
-        period === 'lifetime' ? moment(item.period).format('YYYY') :
-        period === 'monthly' ? moment(item.period).format('MM/DD') :
-        period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-        item.period
-      ),
-      value: item.from_pv,
-      type: 'From PV',
-      color: '#FF6B6B',
-    },
-    {
-      period: (
-        period === 'lifetime' ? moment(item.period).format('YYYY') :
-        period === 'monthly' ? moment(item.period).format('MM/DD') :
-        period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-        item.period
-      ),
-      value: item.total_consumption,
-      type: 'Total Consumption',
-      color: '#4ECDC4',
-    }
-  ]).flat();
+const renderCombinedLineConfig = (energyData, consumptionData, period) => {
+  // Map energy data (e.g., From PV)
+  const energyLine = (energyData ?? []).map(item => ({
+    period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('MM/DD') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
+    ),
+    value: item.inverter_power,
+    type: 'Inverter Power',
+  }));
+
+  // Map consumption data (e.g., Total Consumption)
+  const consumptionLine = (consumptionData ?? []).map(item => ({
+    period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('MM/DD') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
+    ),
+    value: item.total_consumption,
+    type: 'Total Consumption',
+  }));
+
+  const fromPV = (consumptionData ?? []).map(item => ({
+    period: (
+      period === 'lifetime' ? moment(item.period).format('YYYY') :
+      period === 'monthly' ? moment(item.period).format('MM/DD') :
+      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
+      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
+    ),
+    value: item.from_pv,
+    type: 'From PV',
+  }));
+  
+  // Combine both lines
+  const combinedData = [...energyLine, ...consumptionLine, ... fromPV];
 
   return {
-    data: transformedData,
+    data: combinedData,
     xField: 'period',
     yField: 'value',
     seriesField: 'type',
     height: 220,
     smooth: true,
     xAxis: {
-      label: {
+      label:  period === 'daily' ? null : {
         style: { fontSize: 12, fill: '#888' },
         autoHide: false,
         autoRotate: false,
@@ -92,10 +104,7 @@ const renderLineConfig = (graphData, period) => {
     },
     animation: false,
     padding: [20, 20, 20, 40],
-    color: {
-      'from_pv': '#FF6B6B', // red
-      'total_consumption': '#4ECDC4', // green/blue
-    },
+    color: ['#FF6B6B', '#4ECDC4'],
   };
 };
 
@@ -297,12 +306,16 @@ const PlantMonitoringView = (props) => {
                       style={{
                         minWidth: Math.max(
                           500,
-                          (props.plantEnergyData?.consumption?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
+                          (props.plantEnergyData?.energy?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
                         ),
                         width: 'fit-content',
                       }}
                     >
-                      <Line {...renderLineConfig(props.plantEnergyData?.consumption?.detailData??[], selectedPeriod)} />
+                      <Line {...renderCombinedLineConfig(
+                        props.plantEnergyData?.energy?.detailData ?? [],
+                        props.plantEnergyData?.consumption?.detailData ?? [],
+                        selectedPeriod
+                      )} />
                     </div>
                   </div>
                 </div>
