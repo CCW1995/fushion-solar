@@ -5,6 +5,7 @@ import { withRouter } from "react-router-dom"
 import { setPath } from "actions/path";
 import { Get } from "utils/axios";
 import { setStationInfo } from "reducers/station"
+import { requestError, requestSuccess } from "utils/requestHandler"
 
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
@@ -20,7 +21,7 @@ const HOC = (WrappedComponent) => {
 
     getStationInfo = (id) => {
       Get(
-        `/station/info?userId=${id}`, 
+        `/user/${id}`, 
         this.getStationInfoSuccess, 
         this.getStationInfoError, 
         this.load
