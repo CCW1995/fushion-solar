@@ -1065,3 +1065,9 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .responsive-chart-container {
+    margin-left: -20px;
+  }
+}

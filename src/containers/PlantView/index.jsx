@@ -10,101 +10,65 @@ import PlantFlow from './components/PlantFlow';
 import PlantInfo from './components/PlantInfo';
 import YieldStatisticsPanel from '../../components/YieldStatisticsPanel';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { Line } from '@ant-design/plots';
 import WithPlantView from './action';
 import LoadingOverlay from 'components/Indicator/LoadingOverlay';
+import {
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer
+} from 'recharts';
 
-const renderRevenueLineConfig = (graphData, period) => ({
-  data: _.map(graphData, item => ({
-    period: (
-      period === 'monthly' ? moment(item.period).format('MM/DD') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      item.period
-    ),
-    "Power Profit": item.power_profit,
-  })),
-  xField: 'period',
-  yField: 'Power Profit',
-  height: 220,
-  smooth: true,
-  legend: false,
-  animation: false,
-  padding: [20, 20, 20, 40],
-  color: '#4ECDC4',
-  meta: {
-    power_profit: { alias: 'Power Profit' },
-    period: { alias: 'Date' },
+// Helper to process revenue data for recharts
+const getRevenueChartData = (plantRevenue, selectedPeriodRevenue) => {
+  if (selectedPeriodRevenue === 'lifetime') {
+    return [
+      {
+        period: 'From the beginning',
+        power_profit: plantRevenue.sumData?.[0]?.total ?? 0,
+      },
+    ];
   }
-});
-
-const renderCombinedLineConfig = (energyData, consumptionData, period) => {
-  // Map energy data (e.g., From PV)
-  const energyLine = (energyData ?? []).map(item => ({
-    period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('MM/DD') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
-    ),
-    value: item.inverter_power,
-    type: 'Inverter Power',
+  return (plantRevenue.detailData || []).map(item => ({
+    period:
+      selectedPeriodRevenue === 'monthly'
+        ? moment(item.period).format('MM/DD')
+        : selectedPeriodRevenue === 'yearly'
+        ? moment(item.period).format('MM/YYYY')
+        : item.period,
+    power_profit: item.power_profit,
   }));
+};
 
-  // Map consumption data (e.g., Total Consumption)
-  const consumptionLine = (consumptionData ?? []).map(item => ({
-    period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('MM/DD') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
-    ),
-    value: item.total_consumption,
-    type: 'Total Consumption',
-  }));
-
-  const fromPV = (consumptionData ?? []).map(item => ({
-    period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
-      period === 'monthly' ? moment(item.period).format('MM/DD') :
-      period === 'yearly' ? moment(item.period).format('MM/YYYY') :
-      period === 'daily' ? moment(item.period).format('HH:mm') : moment(item.period).toString()
-    ),
-    value: item.from_pv,
-    type: 'From PV',
-  }));
-  
-  // Combine both lines
-  const combinedData = [...energyLine, ...consumptionLine, ... fromPV];
-
-  return {
-    data: combinedData,
-    xField: 'period',
-    yField: 'value',
-    seriesField: 'type',
-    height: 220,
-    smooth: true,
-    xAxis: {
-      label:  period === 'daily' ? null : {
-        style: { fontSize: 12, fill: '#888' },
-        autoHide: false,
-        autoRotate: false,
-        rotate: Math.PI / 2,
-        formatter: (text) => text,
-      },
-    },
-    yAxis: {
-      label: {
-        style: { fontSize: 12, fill: '#888' },
-      },
-      min: 0,
-      tickCount: 7,
-      title: { text: 'kWh', style: { fontSize: 14, fill: '#888' } },
-      grid: { line: { style: { stroke: '#eee', lineDash: [4, 0] } } },
-    },
-    animation: false,
-    padding: [20, 20, 20, 40],
-    color: ['#FF6B6B', '#4ECDC4'],
-  };
+// Helper to process energy/consumption data for recharts
+const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
+  // Merge by period
+  const periodFormat = (period) =>
+    selectedPeriod === 'lifetime'
+      ? moment(period).format('YYYY')
+      : selectedPeriod === 'monthly'
+      ? moment(period).format('MM/DD')
+      : selectedPeriod === 'yearly'
+      ? moment(period).format('MM/YYYY')
+      : selectedPeriod === 'daily'
+      ? moment(period).format('HH:mm')
+      : period;
+  const energyMap = (energyData || []).reduce((acc, item) => {
+    const key = periodFormat(item.period);
+    acc[key] = {
+      ...(acc[key] || {}),
+      period: key,
+      inverter_power: item.inverter_power,
+    };
+    return acc;
+  }, {});
+  (consumptionData || []).forEach(item => {
+    const key = periodFormat(item.period);
+    if (!energyMap[key]) energyMap[key] = { period: key };
+    energyMap[key] = {
+      ...energyMap[key],
+      total_consumption: item.total_consumption,
+      from_pv: item.from_pv,
+    };
+  });
+  return Object.values(energyMap);
 };
 
 const PlantMonitoringView = (props) => {
@@ -185,6 +149,14 @@ const PlantMonitoringView = (props) => {
       }
     }
   }, [selectedPeriodRevenue, selectedDateRevenue, plantNameToUse]);
+
+  const energyChartData = getEnergyChartData(
+    props.plantEnergyData?.energy?.detailData ?? [],
+    props.plantEnergyData?.consumption?.detailData ?? [],
+    selectedPeriod
+  );
+
+  const revenueChartData = getRevenueChartData(props.plantRevenue, selectedPeriodRevenue);
 
   return (
     <div className="plant-monitoring-container">
@@ -302,19 +274,45 @@ const PlantMonitoringView = (props) => {
                     style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
                   >
                     <div
+                      className="responsive-chart-container"
                       style={{
-                        minWidth: Math.max(
-                          500,
-                          (props.plantEnergyData?.energy?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
-                        ),
-                        width: 'fit-content',
+                        minWidth: Math.max(500, energyChartData.length * 60),
+                        width: '100%',
                       }}
                     >
-                      <Line {...renderCombinedLineConfig(
-                        props.plantEnergyData?.energy?.detailData ?? [],
-                        props.plantEnergyData?.consumption?.detailData ?? [],
-                        selectedPeriod
-                      )} />
+                      {selectedPeriod !== 'daily' ? (
+                        <ResponsiveContainer width="100%" height={220}>
+                          <BarChart
+                            data={energyChartData}
+                            margin={{ top: 20, right: 10, left: 10, bottom: 20 }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="period" />
+                            <YAxis />
+                            <RechartsTooltip />
+                            <Legend />
+                            <Bar dataKey="inverter_power" name="Inverter Power" fill="#2C3E50" />
+                            <Bar dataKey="total_consumption" name="Total Consumption" fill="#2980B9" />
+                            <Bar dataKey="from_pv" name="From PV" fill="#7F8C8D" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      ) : (
+                        <ResponsiveContainer width="100%" height={220}>
+                          <LineChart
+                            data={energyChartData}
+                            margin={{ top: 20, right: 10, left: 10, bottom: 20 }}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="period" />
+                            <YAxis />
+                            <RechartsTooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="inverter_power" name="Inverter Power" stroke="#2C3E50" />
+                            <Line type="monotone" dataKey="total_consumption" name="Total Consumption" stroke="#2980B9" />
+                            <Line type="monotone" dataKey="from_pv" name="From PV" stroke="#7F8C8D" />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -355,24 +353,25 @@ const PlantMonitoringView = (props) => {
                     style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}
                   >
                     <div
+                      className="responsive-chart-container"
                       style={{
-                        minWidth: Math.max(
-                          500,
-                          (props.plantRevenue?.detailData?.length || 0) * (typeof window !== 'undefined' && window.innerWidth < 600 ? 100 : 80)
-                        ),
-                        width: 'fit-content',
+                        minWidth: Math.max(500, revenueChartData.length * 60),
+                        width: '100%',
                       }}
                     >
-                      <Line {...renderRevenueLineConfig(
-                        selectedPeriodRevenue === 'lifetime' 
-                          ? [
-                            {
-                              period: "From the beginning",
-                              power_profit: props.plantRevenue.sumData?.[0]?.total??0
-                            }
-                          ]
-                          : props.plantRevenue.detailData, 
-                          selectedPeriodRevenue)} />
+                      <ResponsiveContainer width="100%" height={220}>
+                        <BarChart
+                          data={revenueChartData}
+                          margin={{ top: 20, right: 10, left: 10, bottom: 20 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="period" />
+                          <YAxis />
+                          <RechartsTooltip />
+                          <Legend />
+                          <Bar dataKey="power_profit" name="Power Profit" fill="#34495E" />
+                        </BarChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
                 </div>
