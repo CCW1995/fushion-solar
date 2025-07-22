@@ -17,7 +17,6 @@ import LoadingOverlay from 'components/Indicator/LoadingOverlay';
 const renderRevenueLineConfig = (graphData, period) => ({
   data: _.map(graphData, item => ({
     period: (
-      period === 'lifetime' ? moment(item.period).format('YYYY') :
       period === 'monthly' ? moment(item.period).format('MM/DD') :
       period === 'yearly' ? moment(item.period).format('MM/YYYY') :
       item.period
@@ -364,7 +363,16 @@ const PlantMonitoringView = (props) => {
                         width: 'fit-content',
                       }}
                     >
-                      <Line {...renderRevenueLineConfig(props.plantRevenue.detailData, selectedPeriodRevenue)} />
+                      <Line {...renderRevenueLineConfig(
+                        selectedPeriodRevenue === 'lifetime' 
+                          ? [
+                            {
+                              period: "From the beginning",
+                              power_profit: props.plantRevenue.sumData?.[0]?.total??0
+                            }
+                          ]
+                          : props.plantRevenue.detailData, 
+                          selectedPeriodRevenue)} />
                     </div>
                   </div>
                 </div>
