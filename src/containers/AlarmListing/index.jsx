@@ -1,21 +1,15 @@
 import {
   CloseOutlined,
-  DownOutlined,
-  InfoCircleOutlined,
-  RightOutlined,
-  UpOutlined
+  InfoCircleOutlined
 } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
 import { Button, Checkbox, Col, Row, Space, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import DashboardWidget from '../../components/DashboardWidget';
-import GraphContent from './GraphContent';
+import { useHistory } from 'react-router-dom';
 import TableContent from './TableContent';
 import HOC from './actions';
 import {
   allParameters,
-  getPlantTableColumns,
-  renderKpi
+  getPlantTableColumns
 } from './assets.jsx';
 import './index.scss';
 
@@ -118,10 +112,6 @@ const HuaweiStyleDashboard = (props) => {
     ]);
   };
 
-  const handleAlarmClick = () => {
-    history.push('/dashboard/alarm-listing');
-  };
-
   // Parameter Selection Content for Popover
   const parameterSelectionContent = (
     <div className="parameter-selection-content">
@@ -206,14 +196,6 @@ const HuaweiStyleDashboard = (props) => {
     }
   };
 
-  const handleColumnSelect = (columnKey) => {
-    if (selectedColumns.includes(columnKey)) {
-      setSelectedColumns(selectedColumns.filter(key => key !== columnKey));
-    } else {
-      setSelectedColumns([...selectedColumns, columnKey]);
-    }
-  };
-
   // Modified plantTableColumns to only include selected columns
   const visibleColumns = plantTableColumns.filter(column => 
     selectedColumns.includes(column.key || column.dataIndex)
@@ -223,115 +205,11 @@ const HuaweiStyleDashboard = (props) => {
     <>
       <div className="home">
         <div className="dashboard-controls">
-          {/* <div className="nav-button">
-            <i className="anticon">
-              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-              </svg>
-            </i>
-          </div> */}
-          {/* <div 
-            className={`nav-button ${viewMode === 'table' ? 'active' : ''}`}
-            onClick={() => toggleViewMode('table')}
-          >
-            <i className="anticon">
-              <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
-                <path d="M3 17h18v2H3v-2zm0-7h18v2H3v-2zm0-7h18v2H3V3z"/>
-              </svg>
-            </i>
-          </div>
-          <div 
-            className={`nav-button ${viewMode === 'graph' ? 'active' : ''}`}
-            onClick={() => toggleViewMode('graph')}
-          >
-            <BarChartOutlined />
-          </div> */}
-          {/* <button 
-            className="collapse-toggle" 
-            onClick={toggleDashboard}
-            aria-label={dashboardCollapsed ? "Expand Dashboard" : "Collapse Dashboard"}
-          >
-            {dashboardCollapsed ? <DownOutlined /> : <UpOutlined />}
-          </button> */}
         </div>
         
         <div className={`dashboard-widgets ${dashboardCollapsed ? 'collapsed' : ''}`}>
           <Row gutter={[16, 16]}>
-            <Col xs={24} md={8}>
-              <div className="dashboard-panel plant-kpi-panel transparent-panel">
-                <div className="panel-header">
-                  <div className="title-with-settings">
-                    <Title level={4}>Plant KPIs</Title>
-                    {/* <Popover
-                      content={parameterSelectionContent}
-                      trigger="click"
-                      visible={popoverVisible}
-                      onVisibleChange={setPopoverVisible}
-                      placement="bottomLeft"
-                      overlayClassName="parameter-popover"
-                    >
-                      <SettingOutlined className="settings-icon" />
-                    </Popover> */}
-                  </div>
-                </div>
-                <div className="panel-content">
-                  <Row gutter={[16, 12]}>
-                    {renderKpi().map((item, index) => (
-                      <Col xs={24} md={12} key={index}>
-                        <div className="kpi-item">
-                          <div className="kpi-icon">
-                            {item.icon}
-                          </div>
-                          <div className="kpi-data">
-                            <div className="kpi-value">
-                              {props.kpiData[item.id] || 0} <span className="kpi-unit">{item.unit}</span>
-                            </div>
-                            <div className="kpi-label">{item.label}</div>
-                          </div>
-                        </div>
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
-              </div>
-            </Col>
-            <Col xs={24} md={8}>
-              <DashboardWidget
-                title="Plant Status"
-                chartData={props.deviceStatusData}
-                chartColors={['#52c41a', '#ff4d4f', '#d9d9d9']}
-                chartInnerContent={
-                  <>
-                    <Title level={2}>{props.deviceStatusTotal}</Title>
-                    <div className="chart-label">Total plants</div>
-                  </>
-                }
-                items={props.deviceStatusData}
-                onViewMore={() => {}}
-                transparent={true}
-                rightIcon={<RightOutlined/>}
-              />
-            </Col>
-            
-            <Col xs={24} md={8}>
-              <DashboardWidget
-                title="Active Alarms"
-                chartData={props.deviceAlarmData}
-                chartColors={['#f5222d', '#fa8c16', '#faad14', '#1890ff']}
-                chartInnerContent={
-                  <>
-                    <Title level={2}>{props.deviceAlarmTotal}</Title>
-                    <div className="chart-label">Total alarms</div>
-                  </>
-                }
-                items={props.deviceAlarmData}
-                onViewMore={() => {}}
-                transparent={true}
-                rightIcon={<RightOutlined  style={{ cursor: 'pointer' }} onClick={handleAlarmClick}/>}
-              />
-            </Col>
             <Col xs={24} md={24}>
-            {viewMode === 'table' ? (
               <TableContent 
                 selectedColumns={selectedColumns}
                 handleColumnSelectAll={handleColumnSelectAll}
@@ -349,15 +227,6 @@ const HuaweiStyleDashboard = (props) => {
                 stationListMeta={props.stationListMeta}
                 plantTableColumns={plantTableColumns}
               />
-            ) : (
-              <GraphContent
-                setSelectedPeriod={setSelectedPeriod}
-                selectedPeriod={selectedPeriod}
-                selectedDate={selectedDate}
-                handleColumnSelect={handleColumnSelect}
-                setSelectedDate={setSelectedDate}
-              />
-            )}
             </Col>
           </Row>
         </div>

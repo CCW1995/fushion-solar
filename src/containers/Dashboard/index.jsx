@@ -12,6 +12,7 @@ import { getItem } from "utils/tokenStore"
 // Import your dashboard components here
 import HuaweiStyleDashboard from '../HuaweiStyleDashboard'
 import PlantView from '../PlantView'
+import AlarmListing from '../AlarmListing'
 import HOC from './action'
 
 const meta = {
@@ -53,6 +54,7 @@ class Dashboard extends Component {
                     <Switch>
                 <Route exact path="/dashboard/home" component={HuaweiStyleDashboard} />
                 <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
+                <Route exact path="/dashboard/alarm-listing" component={AlarmListing} />
                 <Redirect exact from="/dashboard" to="/dashboard/home" />
                       <Route component={NotFound} />
                     </Switch>
