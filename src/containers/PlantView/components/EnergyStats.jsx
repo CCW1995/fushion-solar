@@ -30,14 +30,7 @@ const stats = [
     icon: <ThunderboltFilled className="stat-svg-icon" />,
     unit: 'kWh',
     info: true,
-  },
-  {
-    key: 'capacity',
-    label: 'Capacity',
-    icon: <BarChartOutlined className="stat-svg-icon" />,
-    unit: 'MWp',
-    info: false,
-  },
+  }
 ];
 
 const EnergyStats = ({ plantInfo, planInfoBasic, deviceRealTime }) => {

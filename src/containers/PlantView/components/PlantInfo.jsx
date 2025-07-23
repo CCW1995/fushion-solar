@@ -89,7 +89,7 @@ const PlantInfo = ({ plantInfo, alarmCount, envBenefit }) => {
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Total string capacity</Text>
-          <Text className="detail-value">{plantInfo?.capacity} MWp</Text>
+          <Text className="detail-value">{plantInfo?.capacity} kWP</Text>
         </div>
         <div className="plant-detail-item">
           <Text className="detail-label">Grid connection date</Text>
