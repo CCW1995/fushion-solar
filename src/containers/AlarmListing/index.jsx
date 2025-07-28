@@ -184,7 +184,7 @@ const HuaweiStyleDashboard = (props) => {
   };
 
   useEffect(() => {
-    searchName && props.getStationList(searchName, 1, pageSize);
+    //searchName && props.getStationList(searchName, 1, pageSize);
   }, [searchName]);
 
   // Columns selection handler
