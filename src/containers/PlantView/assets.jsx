@@ -1,6 +1,6 @@
-// Mock data for PlantView components
-export const plantName = "Sample Plant";
+// Configuration data for PlantView components
 
+// Weather data configuration
 export const weatherData = {
   temperature: '24~32',
   status: 'Moderate rain',
@@ -11,13 +11,15 @@ export const weatherData = {
   ]
 };
 
+// Tab data configuration for different time periods
 export const tabData = [
-  {day:'daily'},
-  {month:'monthly'},
-  {year:'yearly'},
-  {lifetime:'lifetime'},
-]
+  { day: 'daily' },
+  { month: 'monthly' },
+  { year: 'yearly' },
+  { lifetime: 'lifetime' }
+];
 
+// Sample plant data structure for reference
 export const samplePlantData = {
   stationInfo: [
     {

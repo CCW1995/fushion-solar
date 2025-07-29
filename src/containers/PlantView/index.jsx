@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
-import './index.scss';
 import { Card, Row, Col, Tooltip } from 'antd';
 import { useLocation, useHistory } from 'react-router-dom';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import {
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, 
+  Tooltip as RechartsTooltip, Legend, ResponsiveContainer
+} from 'recharts';
+
+// Components
 import PlantHeader from './components/PlantHeader';
 import EnergyStats from './components/EnergyStats';
 import PlantFlow from './components/PlantFlow';
 import PlantInfo from './components/PlantInfo';
 import YieldStatisticsPanel from '../../components/YieldStatisticsPanel';
-import { InfoCircleOutlined } from '@ant-design/icons';
-import WithPlantView from './action';
 import LoadingOverlay from 'components/Indicator/LoadingOverlay';
-import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer
-} from 'recharts';
+import WithPlantView from './action';
 
-// Helper to process revenue data for recharts
+// Styles
+import './index.scss';
+
+// Helper functions for data processing
 const getRevenueChartData = (plantRevenue, selectedPeriodRevenue) => {
   if (selectedPeriodRevenue === 'lifetime') {
     return [
@@ -37,7 +42,6 @@ const getRevenueChartData = (plantRevenue, selectedPeriodRevenue) => {
   }));
 };
 
-// Helper to process energy/consumption data for recharts
 const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
   // Merge by period
   const periodFormat = (period) =>
@@ -50,6 +54,7 @@ const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
       : selectedPeriod === 'daily'
       ? moment(period).format('HH:mm')
       : period;
+  
   const energyMap = (energyData || []).reduce((acc, item) => {
     const key = periodFormat(item.period);
     acc[key] = {
@@ -59,6 +64,7 @@ const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
     };
     return acc;
   }, {});
+  
   (consumptionData || []).forEach(item => {
     const key = periodFormat(item.period);
     if (!energyMap[key]) energyMap[key] = { period: key };
@@ -68,26 +74,27 @@ const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
       from_pv: item.from_pv,
     };
   });
+  
   return Object.values(energyMap);
 };
 
 const PlantMonitoringView = (props) => {
+  const location = useLocation();
+  const history = useHistory();
+  const { plantData } = props;
+  
+  // State management
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
   const [selectedPeriodRevenue, setSelectedPeriodRevenue] = useState('monthly');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDateRevenue, setSelectedDateRevenue] = useState(new Date());
 
-  const {plantData} = props;
-  const location = useLocation();
-  const history = useHistory();
-  
-  // Extract plantName from URL parameters
+  // Utility functions
   const getPlantNameFromURL = () => {
     const searchParams = new URLSearchParams(location.search);
     return searchParams.get('plantName');
   };
 
-  // Determine which plant name to use based on user role
   const getPlantNameToUse = () => {
     const userProfile = props.data.ProfileReducer.profile;
     const isAdmin = userProfile?.role?.name === 'Admin';
@@ -104,12 +111,13 @@ const PlantMonitoringView = (props) => {
 
   const plantNameToUse = getPlantNameToUse();
 
-  // Redirect admin users back to dashboard if no plantName in URL
+  // Effects for data fetching and state management
   useEffect(() => {
     const userProfile = props.data.ProfileReducer.profile;
     const isAdmin = userProfile?.role?.name === 'Admin';
     const plantNameFromURL = getPlantNameFromURL();
     
+    // Redirect admin users back to dashboard if no plantName in URL
     if (isAdmin && !plantNameFromURL) {
       history.push('/dashboard/home');
     }
@@ -117,11 +125,11 @@ const PlantMonitoringView = (props) => {
 
   useEffect(() => {
     setSelectedDate(new Date());
-  }, [selectedPeriod])
+  }, [selectedPeriod]);
 
   useEffect(() => {
     setSelectedDateRevenue(new Date());
-  }, [selectedPeriodRevenue])
+  }, [selectedPeriodRevenue]);
 
   useEffect(() => {
     if (plantNameToUse) {
@@ -150,6 +158,7 @@ const PlantMonitoringView = (props) => {
     }
   }, [selectedPeriodRevenue, selectedDateRevenue, plantNameToUse]);
 
+  // Process chart data
   const energyChartData = getEnergyChartData(
     props.plantEnergyData?.energy?.detailData ?? [],
     props.plantEnergyData?.consumption?.detailData ?? [],
@@ -160,42 +169,52 @@ const PlantMonitoringView = (props) => {
 
   return (
     <div className="plant-monitoring-container">
-      {/* Header */}
-      <PlantHeader plantName={plantData?.stationInfo?.[0]?.station_name} realtimeInfo={plantData?.realtimeInfo?.[0]??{}}/>
-
-      <EnergyStats 
-        plantInfo={plantData.realtimeInfo?.[0]??{}} 
-        planInfoBasic={plantData?.basicInfo?.[0]??{}}
-        deviceRealTime={props.deviceRealTime?.active_power??'0'}
+      {/* Plant Header Section */}
+      <PlantHeader 
+        plantName={plantData?.stationInfo?.[0]?.station_name} 
+        realtimeInfo={plantData?.realtimeInfo?.[0] ?? {}} 
       />
-      {/* Main Section: Flow (left) + Info (right) */}
+
+      {/* Energy Statistics Section */}
+      <EnergyStats 
+        plantInfo={plantData.realtimeInfo?.[0] ?? {}} 
+        planInfoBasic={plantData?.basicInfo?.[0] ?? {}}
+        deviceRealTime={props.deviceRealTime?.active_power ?? '0'}
+      />
+
+      {/* Main Content Section: Plant Flow + Plant Info */}
       <div className="main-section-card">
         <Row gutter={[0, 0]} className="main-section">
           <Col xs={24} md={24} lg={6} xl={6} className="main-section-left">
-            <PlantFlow 
-              energyData={plantData.energyData} 
-            />
+            <PlantFlow energyData={plantData.energyData} />
           </Col> 
           <Col xs={24} md={24} lg={18} xl={18} className="main-section-right">
             <PlantInfo 
-              plantInfo={plantData?.basicInfo?.[0]??{}}
-              alarmCount={plantData?.alarmCount?.[0]??{}}
-              envBenefit={plantData?.envBenefit?.[0]??[]}
+              plantInfo={plantData?.basicInfo?.[0] ?? {}}
+              alarmCount={plantData?.alarmCount?.[0] ?? {}}
+              envBenefit={plantData?.envBenefit?.[0] ?? []}
             />
           </Col>
         </Row>
-        {/* Energy Management Panel in Card, Col span=12 */}
       </div>
+
+      {/* Energy Management Section */}
       <Row gutter={[24, 24]}>
         <Col span={24}>
           <Card 
-            style={{ background: '#fff', borderRadius: 16, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
-            >
+            style={{ 
+              background: '#fff', 
+              borderRadius: 16, 
+              boxShadow: '0 1px 2px rgba(0,0,0,0.04)' 
+            }}
+          >
             <YieldStatisticsPanel
               title={
                 <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   Energy Management
-                  <Tooltip title="Info about energy management."><InfoCircleOutlined style={{ color: '#b0b0b0', marginLeft: 4 }} /></Tooltip>
+                  <Tooltip title="Info about energy management.">
+                    <InfoCircleOutlined style={{ color: '#b0b0b0', marginLeft: 4 }} />
+                  </Tooltip>
                 </span>
               }
               selectedPeriod={selectedPeriod}

@@ -4,8 +4,8 @@ import Moment from "moment"
 import { setPath } from "actions/path";
 import { Get } from "utils/axios";
 import { requestError } from "utils/requestHandler";
-import { samplePlantData } from "./assets";
 
+// Helper function to get date format based on period
 function getDateFormat(period) {
   switch (period) {
     case 'daily':
@@ -20,10 +20,8 @@ function getDateFormat(period) {
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
-      deviceRealTime: "0",
       loading: false,
-      showPassword: false,
-      errorMessage: "",
+      deviceRealTime: "0",
       plantData: {
         stationInfo: [],
         alarmCount: [],
@@ -35,49 +33,65 @@ const HOC = (WrappedComponent) => {
 
     onChangeHOC = (val, context) => this.setState({ [context]: val });
 
-    load = val => this.setState({ loading: val })
+    load = (val) => this.setState({ loading: val })
 
-    getPlantView = name => {
+    // Plant overview data
+    getPlantView = (name) => {
       Get(
         `/station/overview?stationName=${name}`,
         this.getPlantViewSuccess,
         this.getPlantViewError,
         this.load
       )
-      //this.getPlantViewSuccess()
     }
-    getPlantViewSuccess = payload => {
+
+    getPlantViewSuccess = (payload) => {
       this.setState({
-      plantData: payload
-    })}
+        plantData: payload
+      })
+    }
+
     getPlantViewError = (error) => requestError(error, "Error")
 
+    // Plant energy data
     getPlantEnergyData = (name, period, date) => {
+      const dateParam = date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : '';
       Get(
-        `/station/energy?stationName=${name}&period=${period}${date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : ''}`,
+        `/station/energy?stationName=${name}&period=${period}${dateParam}`,
         this.getPlantEnergyDataSuccess,
         this.getPlantEnergyDataError,
         this.load
       )
     }
-    getPlantEnergyDataSuccess = payload => this.setState({
-      plantEnergyData: payload
-    })
+
+    getPlantEnergyDataSuccess = (payload) => {
+      this.setState({
+        plantEnergyData: payload
+      })
+    }
+
     getPlantEnergyDataError = (error) => requestError(error, "Error")
 
-    getPlantRevenue= (name, period, date) => {
+    // Plant revenue data
+    getPlantRevenue = (name, period, date) => {
+      const dateParam = date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : '';
       Get(
-        `/station/revenue?stationName=${name}&period=${period}${date ? `&date=${Moment(new Date(date)).format(getDateFormat(period))}` : ''}`,
+        `/station/revenue?stationName=${name}&period=${period}${dateParam}`,
         this.getPlantRevenueSuccess,
         this.getPlantRevenueError,
         this.load
       )
     }
-    getPlantRevenueSuccess = payload => this.setState({
-      plantRevenue: payload
-    })
+
+    getPlantRevenueSuccess = (payload) => {
+      this.setState({
+        plantRevenue: payload
+      })
+    }
+
     getPlantRevenueError = (error) => requestError(error, "Error")
 
+    // Device real-time data
     getdeviceRealTime = (name) => {
       Get(
         `/device/realtime?userName=${name}`,
@@ -86,9 +100,13 @@ const HOC = (WrappedComponent) => {
         this.load
       )
     }
-    getdeviceRealTimeSuccess = payload => this.setState({
-      deviceRealTime: payload?.[0]??"0"
-    })
+
+    getdeviceRealTimeSuccess = (payload) => {
+      this.setState({
+        deviceRealTime: payload?.[0] ?? "0"
+      })
+    }
+
     getdeviceRealTimeError = (error) => requestError(error, "Error")
 
     render = () => {
@@ -98,10 +116,10 @@ const HOC = (WrappedComponent) => {
           {...this.state}
           onLoadPlantView={this.state.loading}
           onChangeHOC={this.onChangeHOC}
-          getdeviceRealTime={this.getdeviceRealTime}
           getPlantView={this.getPlantView}
           getPlantEnergyData={this.getPlantEnergyData}
           getPlantRevenue={this.getPlantRevenue}
+          getdeviceRealTime={this.getdeviceRealTime}
         />
       );
     };
