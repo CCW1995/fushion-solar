@@ -6,23 +6,11 @@ import { withRouter } from "react-router-dom";
 import { setStationInfo } from "reducers/station";
 import { Get } from "utils/axios";
 
-function toTwoDecimalNumber(value) {
-  const num = Number(value);
-  return isNaN(num) ? 0 : Number(num.toFixed(2));
-}
-
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
       loading: false,
-      showPassword: false,
-      errorMessage: "",
-      kpiData: {},
-      deviceAlarmData: [],  
-      deviceStatusData: [],
-      deviceStatusTotal: 0,
-      stationListData: [],
-      stationListMeta: {},
+      deviceAlarmData: [],
       deviceAlarmTotal: 0,
     };
 
@@ -30,30 +18,18 @@ const HOC = (WrappedComponent) => {
 
     load = (val) => this.setState({ loading: val })
 
-    getKpi = () => {
-      Get(
-        `/station/kpi`, 
-        this.getKpiSuccess, 
-        this.getKpiError, 
-        this.load
-      )
-    }
-    getKpiSuccess = payload => {
-      this.setState({ kpiData: {
-        current_power: toTwoDecimalNumber(payload?.[0]?.current_power),
-        today_power: toTwoDecimalNumber(payload?.[0]?.today_power),
-        total_power	: toTwoDecimalNumber(payload?.[0]?.total_power	),
-        today_income	: toTwoDecimalNumber(payload?.[0]?.today_income	),
-      }})
-    }
-    getKpiError = (error) => requestError(error, "Error")
-
     getDeviceAlarm = (params = {}) => {
       const {
         order = 'ASC',
         page = 1,
         limit = 10,
-        stationName
+        stationName = '',
+        inverterBrand = '',
+        deviceSn = '',
+        alarmId = '',
+        alarmName = '',
+        alarmStartTime = null,
+        alarmEndTime = null
       } = params;
 
       // Build query string only with filled values
@@ -61,7 +37,13 @@ const HOC = (WrappedComponent) => {
         `order=${order}`,
         `page=${page}`,
         `limit=${limit}`,
-        stationName ? `stationName=${encodeURIComponent(stationName)}` : null
+        stationName ? `stationName=${encodeURIComponent(stationName)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
+        deviceSn ? `deviceSn=${encodeURIComponent(deviceSn)}` : null,
+        alarmId ? `alarmId=${encodeURIComponent(alarmId)}` : null,
+        alarmName ? `alarmName=${encodeURIComponent(alarmName)}` : null,
+        alarmStartTime ? `alarmStartTime=${encodeURIComponent(alarmStartTime.format('YYYY-MM-DD HH:mm:ss'))}` : null,
+        alarmEndTime ? `alarmEndTime=${encodeURIComponent(alarmEndTime.format('YYYY-MM-DD HH:mm:ss'))}` : null
       ].filter(Boolean).join('&');
 
       Get(
@@ -71,98 +53,22 @@ const HOC = (WrappedComponent) => {
         this.load
       );
     }
-
     
     getDeviceAlarmSuccess = payload => {
-      this.setState({ deviceAlarmData: [
-        {
-          type: 'Critical',
-          label: 'Critical',
-          value: Number(payload?.[0]?.critical),
-          icon: <span className="status-dot normal" style={{ backgroundColor: '#147df5' }} />  
-        },
-        {
-          type: 'Major',
-          label: 'Major',
-          value: Number(payload?.[0]?.major),
-          icon: <span className="status-dot faulty" style={{ backgroundColor: '#00c0c2' }} /> 
-        },
-        {
-          type: 'Minor',
-          label: 'Minor',
-          value: Number(payload?.[0]?.minor),
-          icon: <span className="status-dot disconnected" style={{ backgroundColor: '#e5824e' }} /> 
-        },
-        {
-          type: 'Warning',
-          label: 'Warning',
-          value: Number(payload?.[0]?.warning),
-          icon: <span className="status-dot disconnected" style={{ backgroundColor: '#ca7bf5' }} /> 
-        }
-      ], deviceAlarmTotal: Number(payload?.[0]?.total) })
-    }
-    getDeviceAlarmError = (error) => requestError(error, "Error")
-
-    getDeviceStatus = () => {
-      Get(
-        `/station/status/overview`, 
-        this.getDeviceStatusSuccess, 
-        this.getDeviceStatusError, 
-        this.load
-      )
-    }
-    getDeviceStatusSuccess = payload => {
-      this.setState({ deviceStatusData: [
-        { 
-          type: 'Online',
-          label: 'Online',
-          value: Number(payload?.[0]?.online), 
-          icon: <span className="status-dot normal" style={{ backgroundColor: '#147df5' }} />  
-        },
-        { 
-          type: 'Offline', 
-          label: 'Offline',
-          value: Number(payload?.[0]?.offline) , 
-          icon: <span className="status-dot faulty" style={{ backgroundColor: '#00c0c2' }} /> 
-        },
-        { 
-          type: 'Alarm', 
-          label: 'Alarm',
-          value: Number(payload?.[0]?.alarm), 
-          icon: <span className="status-dot disconnected" style={{ backgroundColor: '#e5824e' }} /> 
-        },
-      ], 
-      deviceStatusTotal: Number(payload?.[0]?.total)
-    })}
-    getDeviceStatusError = (error) => requestError(error, "Error")
-
-    getStationList = (name, pageIndex, pageSize = 10) => {
-      Get(
-        `/station/list?page=${pageIndex}&limit=${pageSize}${name ? `&stationName=${name}` : ''}`, 
-        this.getStationListSuccess, 
-        this.getStationListError, 
-        this.load
-      )
-    }
-    getStationListSuccess = payload => {
       this.setState({ 
-        stationListData: payload.data,
-        stationListMeta: payload.pageMeta
+        deviceAlarmData: payload.data || [], 
+        deviceAlarmTotal: payload.pageMeta?.itemCount || 0 
       })
     }
-    getStationListError = (error) => requestError(error, "Error")
+    getDeviceAlarmError = (error) => requestError(error, "Error")
 
     render = () => {
       return (
         <WrappedComponent
           {...this.props}
           {...this.state}
-          onLoadDashboard={this.state.loading}
           onChangeHOC={this.onChangeHOC}
-          getKpi={this.getKpi}
-          getDeviceStatus={this.getDeviceStatus}
           getDeviceAlarm={this.getDeviceAlarm}
-          getStationList={this.getStationList}
         />
       );
     };
