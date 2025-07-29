@@ -53,6 +53,32 @@
       }
     }
     
+    .widget-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .ant-select {
+        .ant-select-selector {
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #fff;
+          
+          &:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+          }
+        }
+        
+        .ant-select-selection-item {
+          color: #fff;
+        }
+        
+        .ant-select-arrow {
+          color: rgba(255, 255, 255, 0.65);
+        }
+      }
+    }
+    
     .widget-action {
       cursor: pointer;
       color: rgba(255, 255, 255, 0.65);

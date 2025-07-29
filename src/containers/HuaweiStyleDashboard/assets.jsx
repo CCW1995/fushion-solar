@@ -20,6 +20,10 @@ export const getPlantTableColumns = (navigate) => [
     )
   },
   {
+    title: 'Inverter Brand',
+    dataIndex: 'schema_name'
+  },
+  {
     title: 'Station Name',
     dataIndex: 'station_name',
     key: 'name',

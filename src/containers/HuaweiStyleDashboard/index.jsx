@@ -48,9 +48,21 @@ const HuaweiStyleDashboard = (props) => {
   const [searchName, setSearchName] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [inverterBrand, setInverterBrand] = useState('');
+  const [inverterBrandStatus, setInverterBrandStatus] = useState('');
   
   // Get the plant table columns with navigation function
   const plantTableColumns = getPlantTableColumns(history.push);
+  
+  // Inverter brand options for Plant Status widget
+  const inverterBrandOptions = [
+    { value: '', label: '--' },
+    { value: 'fusionsolar', label: 'fusionsolar' },
+    { value: 'soliscloud', label: 'soliscloud' },
+    { value: 'sungrow', label: 'sungrow' },
+    { value: 'goodwe', label: 'goodwe' },
+    { value: 'growatt', label: 'growatt' }
+  ];
   
   useEffect(() => {
     const userProfile = props.data.ProfileReducer.profile;
@@ -190,7 +202,7 @@ const HuaweiStyleDashboard = (props) => {
     setPageSize(newPageSize);
     
     // Call API with new page, page size, and current search name
-    props.getStationList(searchName, newPage, newPageSize);
+    props.getStationList(searchName, newPage, newPageSize, inverterBrand);
   };
 
   useEffect(() => {
@@ -310,6 +322,14 @@ const HuaweiStyleDashboard = (props) => {
                 onViewMore={() => {}}
                 transparent={true}
                 rightIcon={<RightOutlined/>}
+                showFilter={true}
+                filterOptions={inverterBrandOptions}
+                filterValue={inverterBrandStatus}
+                onFilterChange={(value) => {
+                  setInverterBrandStatus(value);
+                  props.getDeviceStatus(value);
+                }}
+                filterPlaceholder="Select brand"
               />
             </Col>
             
@@ -348,6 +368,8 @@ const HuaweiStyleDashboard = (props) => {
                 stationListData={props.stationListData}
                 stationListMeta={props.stationListMeta}
                 plantTableColumns={plantTableColumns}
+                inverterBrand={inverterBrand}
+                setInverterBrand={setInverterBrand}
               />
             ) : (
               <GraphContent

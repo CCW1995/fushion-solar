@@ -88,9 +88,15 @@ const HOC = (WrappedComponent) => {
     }
     getDeviceAlarmError = (error) => requestError(error, "Error")
 
-    getDeviceStatus = () => {
+    getDeviceStatus = (inverterBrand = '') => {
+      const queryParams = [
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null
+      ].filter(Boolean).join('&');
+
+      const url = queryParams ? `/station/status/overview?${queryParams}` : `/station/status/overview`;
+      
       Get(
-        `/station/status/overview`, 
+        url, 
         this.getDeviceStatusSuccess, 
         this.getDeviceStatusError, 
         this.load
@@ -121,9 +127,16 @@ const HOC = (WrappedComponent) => {
     })}
     getDeviceStatusError = (error) => requestError(error, "Error")
 
-    getStationList = (name, pageIndex, pageSize = 10) => {
+    getStationList = (name, pageIndex, pageSize = 10, inverterBrand = '') => {
+      const queryParams = [
+        `page=${pageIndex}`,
+        `limit=${pageSize}`,
+        name ? `stationName=${encodeURIComponent(name)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null
+      ].filter(Boolean).join('&');
+
       Get(
-        `/station/list?page=${pageIndex}&limit=${pageSize}${name ? `&stationName=${name}` : ''}`, 
+        `/station/list?${queryParams}`, 
         this.getStationListSuccess, 
         this.getStationListError, 
         this.load

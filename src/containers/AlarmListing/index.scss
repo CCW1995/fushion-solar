@@ -577,10 +577,9 @@
     justify-content: space-between;
     
     .search-filters {
-
-      @media (min-width: 768px) {
-        display: flex;
-      }
+      gap: 10px;
+      display: flex;
+      flex-direction: column;
       flex-wrap: wrap;
       align-items: center;
       flex: 1;

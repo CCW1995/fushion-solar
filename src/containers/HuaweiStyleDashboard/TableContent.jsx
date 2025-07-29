@@ -26,8 +26,20 @@ function TableContent({
   setSearchName,
   getStationList,
   stationListMeta,
-  plantTableColumns
+  plantTableColumns,
+  inverterBrand,
+  setInverterBrand
 }) {
+
+  // Inverter brand options
+  const inverterBrandOptions = [
+    { value: '', label: '--' },
+    { value: 'fusionsolar', label: 'fusionsolar' },
+    { value: 'soliscloud', label: 'soliscloud' },
+    { value: 'sungrow', label: 'sungrow' },
+    { value: 'goodwe', label: 'goodwe' },
+    { value: 'growatt', label: 'growatt' }
+  ];
 
   // Column selection content for Popover
   const columnSelectionContent = (
@@ -93,6 +105,21 @@ function TableContent({
                         onChange={(e) => setSearchName(e.target.value)}
                       />
                     </div>
+                    <div className="filter-item">
+                      <label>Inverter Brand</label>
+                      <Select
+                        style={{ width: '100%' }}
+                        value={inverterBrand}
+                        onChange={setInverterBrand}
+                        placeholder="Select Inverter Brand"
+                      >
+                        {inverterBrandOptions.map(option => (
+                          <Option key={option.value} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
                     {/* <div className="filter-item">
                       <label>Country/Region</label>
                       <Input placeholder="Country/Region" />
@@ -119,8 +146,11 @@ function TableContent({
                 </div>
                 
                 <div className="search-actions">
-                  <Button type="primary" onClick={() => getStationList(searchName, 1)}>Search</Button>
-                  <Button onClick={() => setSearchName('')}>Reset</Button>
+                  <Button type="primary" onClick={() => getStationList(searchName, 1, 10, inverterBrand)}>Search</Button>
+                  <Button onClick={() => {
+                    setSearchName('');
+                    setInverterBrand('');
+                  }}>Reset</Button>
                   {/* <div className="settings-button">
                     <Popover
                       content={columnSelectionContent}

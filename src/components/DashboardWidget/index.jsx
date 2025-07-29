@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Card, Typography, Space, Tooltip } from 'antd';
+import { Card, Typography, Space, Tooltip, Select } from 'antd';
 import { RightOutlined } from '@ant-design/icons';
 import { Pie } from '@ant-design/plots';
 import './DashboardWidget.scss';
 
 const { Title, Text } = Typography;
+const { Option } = Select;
 
 // Chart component using Pie from @ant-design/plots
 const PieChart = ({ data, colors, innerContent }) => {
@@ -86,7 +87,12 @@ const DashboardWidget = ({
   chartInnerContent,
   onViewMore,
   transparent = false,
-  rightIcon
+  rightIcon,
+  showFilter,
+  filterOptions,
+  filterValue,
+  onFilterChange,
+  filterPlaceholder
 }) => {
   return (
     <Card className={`dashboard-widget ${transparent ? 'transparent-widget' : ''}`}>
@@ -95,8 +101,25 @@ const DashboardWidget = ({
           <Title level={5}>{title}</Title>
           {infoIcon && <span className="info-icon">{infoIcon}</span>}
         </div>
-        <div className="widget-action" onClick={onViewMore}>
-          {rightIcon || (onViewMore && <RightOutlined />)}
+        <div className="widget-actions">
+          {showFilter && (
+            <Select
+              placeholder={filterPlaceholder || "Select brand"}
+              style={{ width: 120, marginRight: 8 }}
+              value={filterValue}
+              onChange={onFilterChange}
+              allowClear
+            >
+              {filterOptions?.map(option => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          )}
+          <div className="widget-action" onClick={onViewMore}>
+            {rightIcon || (onViewMore && <RightOutlined />)}
+          </div>
         </div>
       </div>
       
@@ -144,4 +167,4 @@ const DashboardWidget = ({
   );
 };
 
-export default DashboardWidget; 
+export default DashboardWidget;
