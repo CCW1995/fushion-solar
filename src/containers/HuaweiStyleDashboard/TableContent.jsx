@@ -1,6 +1,5 @@
 import {
   CloseOutlined,
-  PlusOutlined,
   SettingFilled
 } from '@ant-design/icons';
 import { Button, Checkbox, Col, Input, Popover, Row, Select, Space, Table, Typography } from 'antd';

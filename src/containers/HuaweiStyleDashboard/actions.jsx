@@ -15,8 +15,6 @@ const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
     state = {
       loading: false,
-      showPassword: false,
-      errorMessage: "",
       kpiData: {},
       deviceAlarmData: [],  
       deviceStatusData: [],

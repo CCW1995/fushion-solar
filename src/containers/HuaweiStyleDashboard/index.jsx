@@ -1,9 +1,7 @@
 import {
   CloseOutlined,
-  DownOutlined,
   InfoCircleOutlined,
-  RightOutlined,
-  UpOutlined
+  RightOutlined
 } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import { Button, Checkbox, Col, Row, Space, Typography } from 'antd';
@@ -23,7 +21,19 @@ const { Title, Text } = Typography;
 
 const HuaweiStyleDashboard = (props) => {
   const history = useHistory();
-  const [popoverVisible, setPopoverVisible] = useState(false);
+  
+  // Dashboard state
+  const [dashboardCollapsed, setDashboardCollapsed] = useState(false);
+  const [viewMode, setViewMode] = useState('table');
+  
+  // Filter and search state
+  const [searchName, setSearchName] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [inverterBrand, setInverterBrand] = useState('');
+  const [inverterBrandStatus, setInverterBrandStatus] = useState('');
+  
+  // Column selection state
   const [columnSelectorVisible, setColumnSelectorVisible] = useState(false);
   const [selectedColumns, setSelectedColumns] = useState([
     'status',
@@ -38,6 +48,9 @@ const HuaweiStyleDashboard = (props) => {
     'yieldToday',
     'totalYield'
   ]);
+  
+  // Parameter selection state
+  const [popoverVisible, setPopoverVisible] = useState(false);
   const [selectedParameters, setSelectedParameters] = useState([
     'current_power',
     'yield_today',
@@ -45,11 +58,10 @@ const HuaweiStyleDashboard = (props) => {
     'total_yield',
     'inverter_rated_power'
   ]);
-  const [searchName, setSearchName] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [inverterBrand, setInverterBrand] = useState('');
-  const [inverterBrandStatus, setInverterBrandStatus] = useState('');
+  
+  // Date and period state
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('day');
   
   // Get the plant table columns with navigation function
   const plantTableColumns = getPlantTableColumns(history.push);
@@ -77,42 +89,30 @@ const HuaweiStyleDashboard = (props) => {
       history.push('/dashboard/plant-monitoring');
     }
   }, []);
-  // State for dashboard panels collapsed state
-  const [dashboardCollapsed, setDashboardCollapsed] = useState(false);
   
-  // State for view mode (table or graph)
-  const [viewMode, setViewMode] = useState('table');
-
-  // Add this state for the date picker
-  const [selectedDate, setSelectedDate] = useState(null);
-
-  // Add state for selected period
-  const [selectedPeriod, setSelectedPeriod] = useState('day');
-
-  // Toggle dashboard collapsed state
+  // Dashboard control handlers
   const toggleDashboard = () => {
     setDashboardCollapsed(!dashboardCollapsed);
   };
   
-  // Toggle view mode
   const toggleViewMode = (mode) => {
     setViewMode(mode);
   };
 
+  const handleAlarmClick = () => {
+    history.push('/dashboard/alarm-listing');
+  };
+
+  // Parameter selection handlers
   const handleParameterChange = (paramId) => {
     if (selectedParameters.includes(paramId)) {
-      // If already selected, remove it
       setSelectedParameters(selectedParameters.filter(id => id !== paramId));
-    } else {
-      // If not selected and we have less than 6 parameters, add it
-      if (selectedParameters.length < 6) {
-        setSelectedParameters([...selectedParameters, paramId]);
-      }
+    } else if (selectedParameters.length < 6) {
+      setSelectedParameters([...selectedParameters, paramId]);
     }
   };
 
   const handleConfirm = () => {
-    // Add logic to apply the parameter changes
     setPopoverVisible(false);
   };
 
@@ -130,9 +130,37 @@ const HuaweiStyleDashboard = (props) => {
     ]);
   };
 
-  const handleAlarmClick = () => {
-    history.push('/dashboard/alarm-listing');
+  // Table handlers
+  const handleTableChange = (pagination, filters, sorter) => {
+    const newPage = pagination.current;
+    const newPageSize = pagination.pageSize;
+    
+    setCurrentPage(newPage);
+    setPageSize(newPageSize);
+    
+    props.getStationList(searchName, newPage, newPageSize, inverterBrand);
   };
+
+  const handleColumnSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedColumns(plantTableColumns.map(col => col.key || col.dataIndex));
+    } else {
+      setSelectedColumns([]);
+    }
+  };
+
+  const handleColumnSelect = (columnKey) => {
+    if (selectedColumns.includes(columnKey)) {
+      setSelectedColumns(selectedColumns.filter(key => key !== columnKey));
+    } else {
+      setSelectedColumns([...selectedColumns, columnKey]);
+    }
+  };
+
+  // Modified plantTableColumns to only include selected columns
+  const visibleColumns = plantTableColumns.filter(column => 
+    selectedColumns.includes(column.key || column.dataIndex)
+  );
 
   // Parameter Selection Content for Popover
   const parameterSelectionContent = (
@@ -192,44 +220,9 @@ const HuaweiStyleDashboard = (props) => {
     </div>
   );
 
-  
-  const handleTableChange = (pagination, filters, sorter) => {
-    const newPage = pagination.current;
-    const newPageSize = pagination.pageSize;
-    
-    // Update state
-    setCurrentPage(newPage);
-    setPageSize(newPageSize);
-    
-    // Call API with new page, page size, and current search name
-    props.getStationList(searchName, newPage, newPageSize, inverterBrand);
-  };
-
   useEffect(() => {
     //searchName && props.getStationList(searchName, 1, pageSize);
   }, [searchName]);
-
-  // Columns selection handler
-  const handleColumnSelectAll = (e) => {
-    if (e.target.checked) {
-      setSelectedColumns(plantTableColumns.map(col => col.key || col.dataIndex));
-    } else {
-      setSelectedColumns([]);
-    }
-  };
-
-  const handleColumnSelect = (columnKey) => {
-    if (selectedColumns.includes(columnKey)) {
-      setSelectedColumns(selectedColumns.filter(key => key !== columnKey));
-    } else {
-      setSelectedColumns([...selectedColumns, columnKey]);
-    }
-  };
-
-  // Modified plantTableColumns to only include selected columns
-  const visibleColumns = plantTableColumns.filter(column => 
-    selectedColumns.includes(column.key || column.dataIndex)
-  );
 
   return (
     <>
