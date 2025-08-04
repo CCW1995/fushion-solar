@@ -17,6 +17,7 @@ function TableContent({
   setColumnSelectorVisible,
   visibleColumns,
   currentPage,
+  setCurrentPage,
   pageSize,
   stationListData,
   handleColumnSelect,
@@ -149,6 +150,8 @@ function TableContent({
                   <Button onClick={() => {
                     setSearchName('');
                     setInverterBrand('');
+                    setCurrentPage(1)
+                    getStationList('', 1, 10, '')
                   }}>Reset</Button>
                   {/* <div className="settings-button">
                     <Popover

@@ -18,6 +18,7 @@ function TableContent({
   inverterBrand,
   setInverterBrand,
   deviceSn,
+  setCurrentPage,
   setDeviceSn,
   alarmId,
   setAlarmId,
@@ -196,6 +197,18 @@ function TableContent({
                       setAlarmName('');
                       setAlarmStartTime(null);
                       setAlarmEndTime(null);
+                      getDeviceAlarm({
+                        stationName: '',
+                        page: 1,
+                        limit: 10,
+                        inverterBrand: '',
+                        deviceSn: '',
+                        alarmId: '',
+                        alarmName: '',
+                        alarmStartTime: null,
+                        alarmEndTime: null
+                      })
+                      setCurrentPage(1)
                     }}>Reset</Button>
                   </Col>
                 </Row>

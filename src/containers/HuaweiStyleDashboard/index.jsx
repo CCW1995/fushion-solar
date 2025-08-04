@@ -347,6 +347,7 @@ const HuaweiStyleDashboard = (props) => {
             {viewMode === 'table' ? (
               <TableContent 
                 selectedColumns={selectedColumns}
+                setCurrentPage={setCurrentPage}
                 handleColumnSelectAll={handleColumnSelectAll}
                 setSelectedColumns={setSelectedColumns}
                 columnSelectorVisible={columnSelectorVisible}

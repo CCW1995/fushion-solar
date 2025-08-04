@@ -58,6 +58,7 @@ const AlarmListing = (props) => {
         <div className="dashboard-widgets">
           <TableContent 
             currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
             pageSize={pageSize}
             handleTableChange={handleTableChange}
             searchName={searchName}
