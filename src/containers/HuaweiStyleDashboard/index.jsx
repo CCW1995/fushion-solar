@@ -314,7 +314,7 @@ const HuaweiStyleDashboard = (props) => {
                 items={props.deviceStatusData}
                 onViewMore={() => {}}
                 transparent={true}
-                rightIcon={<RightOutlined/>}
+                rightIcon={<></>}
                 showFilter={true}
                 filterOptions={inverterBrandOptions}
                 filterValue={inverterBrandStatus}
