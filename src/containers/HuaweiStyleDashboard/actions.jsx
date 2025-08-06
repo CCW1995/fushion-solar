@@ -137,7 +137,7 @@ const HOC = (WrappedComponent) => {
         `limit=${pageSize}`,
         name ? `stationName=${encodeURIComponent(name)}` : null,
         inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
-        purchaseType ? `purchaseType=${encodeURIComponent(purchaseType)}` : null
+        purchaseType ? `purchaseTypes=${encodeURIComponent(purchaseType)}` : null
       ].filter(Boolean).join('&');
 
       Get(
