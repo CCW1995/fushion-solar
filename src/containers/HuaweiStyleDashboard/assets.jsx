@@ -38,6 +38,11 @@ export const getPlantTableColumns = (navigate) => [
     )
   },
   {
+    title: 'Purchase Type',
+    dataIndex: 'purchase_type',
+    key: 'purchase_type',
+  },
+  {
     title: 'Station Code',
     dataIndex: 'station_code',
     key: 'station_code',

@@ -28,7 +28,9 @@ function TableContent({
   stationListMeta,
   plantTableColumns,
   inverterBrand,
-  setInverterBrand
+  setInverterBrand,
+  purchaseType,
+  setPurchaseType
 }) {
 
   // Inverter brand options
@@ -39,6 +41,13 @@ function TableContent({
     { value: 'sungrow', label: 'sungrow' },
     { value: 'goodwe', label: 'goodwe' },
     { value: 'growatt', label: 'growatt' }
+  ];
+
+  // Purchase type options
+  const purchaseTypeOptions = [
+    { value: '', label: '--' },
+    { value: 'rto', label: 'RTO' },
+    { value: 'op', label: 'OP' }
   ];
 
   // Column selection content for Popover
@@ -120,6 +129,21 @@ function TableContent({
                         ))}
                       </Select>
                     </div>
+                    <div className="filter-item">
+                      <label>Purchase Type</label>
+                      <Select
+                        style={{ width: '100%' }}
+                        value={purchaseType}
+                        onChange={setPurchaseType}
+                        placeholder="Select Purchase Type"
+                      >
+                        {purchaseTypeOptions.map(option => (
+                          <Option key={option.value} value={option.value}>
+                            {option.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </div>
                     {/* <div className="filter-item">
                       <label>Country/Region</label>
                       <Input placeholder="Country/Region" />
@@ -146,12 +170,13 @@ function TableContent({
                 </div>
                 
                 <div className="search-actions">
-                  <Button type="primary" onClick={() => getStationList(searchName, 1, 10, inverterBrand)}>Search</Button>
+                  <Button type="primary" onClick={() => getStationList(searchName, 1, 10, inverterBrand, purchaseType)}>Search</Button>
                   <Button onClick={() => {
                     setSearchName('');
                     setInverterBrand('');
+                    setPurchaseType('');
                     setCurrentPage(1)
-                    getStationList('', 1, 10, '')
+                    getStationList('', 1, 10, '', '')
                   }}>Reset</Button>
                   {/* <div className="settings-button">
                     <Popover

@@ -32,6 +32,8 @@ const HuaweiStyleDashboard = (props) => {
   const [pageSize, setPageSize] = useState(10);
   const [inverterBrand, setInverterBrand] = useState('');
   const [inverterBrandStatus, setInverterBrandStatus] = useState('');
+  const [inverterBrandAlarm, setInverterBrandAlarm] = useState('');
+  const [purchaseType, setPurchaseType] = useState('');
   
   // Column selection state
   const [columnSelectorVisible, setColumnSelectorVisible] = useState(false);
@@ -82,9 +84,9 @@ const HuaweiStyleDashboard = (props) => {
     
     if (isAdmin) {
       props.getKpi();
-      props.getDeviceAlarm();
-      props.getDeviceStatus();
-      props.getStationList('', 1);  
+      props.getDeviceAlarm(inverterBrandAlarm);
+      props.getDeviceStatus(inverterBrandStatus);
+      props.getStationList('', 1, 10, '', purchaseType);  
     } else {
       history.push('/dashboard/plant-monitoring');
     }
@@ -138,7 +140,7 @@ const HuaweiStyleDashboard = (props) => {
     setCurrentPage(newPage);
     setPageSize(newPageSize);
     
-    props.getStationList(searchName, newPage, newPageSize, inverterBrand);
+    props.getStationList(searchName, newPage, newPageSize, inverterBrand, purchaseType);
   };
 
   const handleColumnSelectAll = (e) => {
@@ -341,6 +343,14 @@ const HuaweiStyleDashboard = (props) => {
                 onViewMore={() => {}}
                 transparent={true}
                 rightIcon={<RightOutlined  style={{ cursor: 'pointer' }} onClick={handleAlarmClick}/>}
+                showFilter={true}
+                filterOptions={inverterBrandOptions}
+                filterValue={inverterBrandAlarm}
+                onFilterChange={(value) => {
+                  setInverterBrandAlarm(value);
+                  props.getDeviceAlarm(value);
+                }}
+                filterPlaceholder="Select brand"
               />
             </Col>
             <Col xs={24} md={24}>
@@ -364,6 +374,8 @@ const HuaweiStyleDashboard = (props) => {
                 plantTableColumns={plantTableColumns}
                 inverterBrand={inverterBrand}
                 setInverterBrand={setInverterBrand}
+                purchaseType={purchaseType}
+                setPurchaseType={setPurchaseType}
               />
             ) : (
               <GraphContent

@@ -46,9 +46,15 @@ const HOC = (WrappedComponent) => {
     }
     getKpiError = (error) => requestError(error, "Error")
 
-    getDeviceAlarm = () => {
+    getDeviceAlarm = (inverterBrand = '') => {
+      const queryParams = [
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null
+      ].filter(Boolean).join('&');
+
+      const url = queryParams ? `/device/alarm/overview?${queryParams}` : `/device/alarm/overview`;
+      
       Get(
-        `/device/alarm/overview`, 
+        url, 
         this.getDeviceAlarmSuccess, 
         this.getDeviceAlarmError, 
         this.load
@@ -125,12 +131,13 @@ const HOC = (WrappedComponent) => {
     })}
     getDeviceStatusError = (error) => requestError(error, "Error")
 
-    getStationList = (name, pageIndex, pageSize = 10, inverterBrand = '') => {
+    getStationList = (name, pageIndex, pageSize = 10, inverterBrand = '', purchaseType = '') => {
       const queryParams = [
         `page=${pageIndex}`,
         `limit=${pageSize}`,
         name ? `stationName=${encodeURIComponent(name)}` : null,
-        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
+        purchaseType ? `purchaseType=${encodeURIComponent(purchaseType)}` : null
       ].filter(Boolean).join('&');
 
       Get(
