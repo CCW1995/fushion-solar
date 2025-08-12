@@ -42,8 +42,8 @@ const getRevenueChartData = (plantRevenue, selectedPeriodRevenue) => {
   }));
 };
 
-const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
-  // Merge by period
+const getEnergyChartData = (detailData, _, selectedPeriod) => {
+  // Process detail data with new structure
   const periodFormat = (period) =>
     selectedPeriod === 'lifetime'
       ? moment(period).format('YYYY')
@@ -55,27 +55,12 @@ const getEnergyChartData = (energyData, consumptionData, selectedPeriod) => {
       ? moment(period).format('HH:mm')
       : period;
   
-  const energyMap = (energyData || []).reduce((acc, item) => {
-    const key = periodFormat(item.period);
-    acc[key] = {
-      ...(acc[key] || {}),
-      period: key,
-      inverter_power: item.inverter_power,
-    };
-    return acc;
-  }, {});
-  
-  (consumptionData || []).forEach(item => {
-    const key = periodFormat(item.period);
-    if (!energyMap[key]) energyMap[key] = { period: key };
-    energyMap[key] = {
-      ...energyMap[key],
-      total_consumption: item.total_consumption,
-      from_pv: item.from_pv,
-    };
-  });
-  
-  return Object.values(energyMap);
+  return (detailData || []).map(item => ({
+    period: periodFormat(item.period),
+    pv_yield: item.pv_yield,
+    pv_consumption: item.pv_consumption,
+    total_consumption: item.total_consumption,
+  }));
 };
 
 const PlantMonitoringView = (props) => {
@@ -160,8 +145,8 @@ const PlantMonitoringView = (props) => {
 
   // Process chart data
   const energyChartData = getEnergyChartData(
-    props.plantEnergyData?.energy?.detailData ?? [],
-    props.plantEnergyData?.consumption?.detailData ?? [],
+    props.plantEnergyData?.detailData ?? [],
+    props.plantEnergyData?.detailData ?? [],
     selectedPeriod
   );
 
@@ -227,26 +212,26 @@ const PlantMonitoringView = (props) => {
                   {/* Yield (left) */}
                   <div className="ems-summary-col ems-consumption-col">
                     <div className="d-flex">
-                      <div className="ems-title">Yield: {(props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
+                      <div className="ems-title">Yield: {(props.plantEnergyData?.yieldData?.[0]?.pv_yield || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
                     </div>
                     <div className="d-flex justify-content-between">
                       <div className="ems-sub-row">
-                        <span className="ems-sub ems-green">{(props.plantEnergyData?.energy?.sumData?.[0]?.consumed || 0).toFixed(2)}</span>
+                        <span className="ems-sub ems-green">{(props.plantEnergyData?.yieldData?.[0]?.consumed || 0).toFixed(2)}</span>
                         <span className="ems-sub-label">From PV (kWh)</span>
                       </div>
                       <div className="ems-sub-row" style={{ textAlign: 'right' }}>
-                        <span className="ems-sub ems-light">{(props.plantEnergyData?.energy?.sumData?.[0]?.feed_to_grid || 0).toFixed(2)}</span>
+                        <span className="ems-sub ems-light">{(props.plantEnergyData?.yieldData?.[0]?.feed_to_grid || 0).toFixed(2)}</span>
                         <span className="ems-sub-label">From grid (kWh)</span>
                       </div>
                     </div>
                     {
-                      props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield && props.plantEnergyData?.energy?.sumData?.[0]?.feed_to_grid && (
+                      props.plantEnergyData?.yieldData?.[0]?.pv_yield && props.plantEnergyData?.yieldData?.[0]?.feed_to_grid && (
                         <div className="ems-progress-group">
-                          <div className="ems-progress-bar ems-progress-green" style={{ width: `${(props.plantEnergyData?.energy?.sumData?.[0]?.consumed / (props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
-                            <span>{(props.plantEnergyData?.energy?.sumData?.[0]?.consumed / (props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
+                          <div className="ems-progress-bar ems-progress-green" style={{ width: `${(props.plantEnergyData?.yieldData?.[0]?.consumed / (props.plantEnergyData?.yieldData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
+                            <span>{(props.plantEnergyData?.yieldData?.[0]?.consumed / (props.plantEnergyData?.yieldData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
                           </div>
-                          <div className="ems-progress-bar ems-progress-light" style={{ width: `${(props.plantEnergyData?.energy?.sumData?.[0]?.feed_to_grid / (props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
-                            <span>{(props.plantEnergyData?.energy?.sumData?.[0]?.feed_to_grid / (props.plantEnergyData?.energy?.sumData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
+                          <div className="ems-progress-bar ems-progress-light" style={{ width: `${(props.plantEnergyData?.yieldData?.[0]?.feed_to_grid / (props.plantEnergyData?.yieldData?.[0]?.pv_yield) * 100).toFixed(2)}%` }}>
+                            <span>{(props.plantEnergyData?.yieldData?.[0]?.feed_to_grid / (props.plantEnergyData?.yieldData?.[0]?.pv_yield) * 100).toFixed(2)}%</span>
                           </div>
                         </div>
                       )
@@ -255,30 +240,30 @@ const PlantMonitoringView = (props) => {
                   
                   {/* Consumption (right) */}
                   {
-                    props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption && (
+                    props.plantEnergyData?.consumptionData?.[0]?.total_consumption && (
                       <div className="ems-summary-col ems-consumption-col">
                         <div className="d-flex">
-                          <div className="ems-title">Consumption: {(props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
+                          <div className="ems-title">Consumption: {(props.plantEnergyData?.consumptionData?.[0]?.total_consumption || 0).toFixed(2)} <span className="ems-main-unit">kWh</span></div>
                         </div>
                         <div className="d-flex justify-content-between">
                           <div className="ems-sub-row">
-                            <span className="ems-sub ems-orange">{(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv || 0).toFixed(2)}</span>
+                            <span className="ems-sub ems-orange">{(props.plantEnergyData?.consumptionData?.[0]?.from_pv || 0).toFixed(2)}</span>
                             <span className="ems-sub-label">From PV (kWh)</span>
                           </div>
                           <div className="ems-sub-row" style={{ textAlign: 'right' }}>
-                            <span className="ems-sub ems-yellow">{(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid || 0).toFixed(2)}</span>
+                            <span className="ems-sub ems-yellow">{(props.plantEnergyData?.consumptionData?.[0]?.from_grid || 0).toFixed(2)}</span>
                             <span className="ems-sub-label">From grid (kWh)</span>
                           </div>
                         </div>
                         <div className="ems-progress-group ems-progress-group-segmented">
-                          <div className="ems-progress-bar ems-progress-orange" style={{ width: `${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
+                          <div className="ems-progress-bar ems-progress-orange" style={{ width: `${(props.plantEnergyData?.consumptionData?.[0]?.from_pv / props.plantEnergyData?.consumptionData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
                             <span>
-                              {`${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_pv / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%`}
+                              {`${(props.plantEnergyData?.consumptionData?.[0]?.from_pv / props.plantEnergyData?.consumptionData?.[0]?.total_consumption * 100).toFixed(2)}%`}
                             </span>
                           </div>
-                          <div className="ems-progress-bar ems-progress-yellow" style={{ width: `${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
+                          <div className="ems-progress-bar ems-progress-yellow" style={{ width: `${(props.plantEnergyData?.consumptionData?.[0]?.from_grid / props.plantEnergyData?.consumptionData?.[0]?.total_consumption * 100).toFixed(2)}%` }}>
                             <span>
-                              {`${(props.plantEnergyData?.consumption?.sumData?.[0]?.from_grid / props.plantEnergyData?.consumption?.sumData?.[0]?.total_consumption * 100).toFixed(2)}%`}
+                              {`${(props.plantEnergyData?.consumptionData?.[0]?.from_grid / props.plantEnergyData?.consumptionData?.[0]?.total_consumption * 100).toFixed(2)}%`}
                             </span>
                           </div>
                         </div>
@@ -310,9 +295,9 @@ const PlantMonitoringView = (props) => {
                             <YAxis />
                             <RechartsTooltip />
                             <Legend />
-                            <Bar dataKey="inverter_power" name="Inverter Power" fill="#2C3E50" />
+                            <Bar dataKey="pv_yield" name="PV Yield" fill="#2C3E50" />
                             <Bar dataKey="total_consumption" name="Total Consumption" fill="#2980B9" />
-                            <Bar dataKey="from_pv" name="From PV" fill="#7F8C8D" />
+                            <Bar dataKey="pv_consumption" name="PV Consumption" fill="#7F8C8D" />
                           </BarChart>
                         </ResponsiveContainer>
                       ) : (
@@ -326,9 +311,9 @@ const PlantMonitoringView = (props) => {
                             <YAxis />
                             <RechartsTooltip />
                             <Legend />
-                            <Line type="monotone" dataKey="inverter_power" name="Inverter Power" stroke="#2C3E50" />
+                            <Line type="monotone" dataKey="pv_yield" name="PV Yield" stroke="#2C3E50" />
                             <Line type="monotone" dataKey="total_consumption" name="Total Consumption" stroke="#2980B9" />
-                            <Line type="monotone" dataKey="from_pv" name="From PV" stroke="#7F8C8D" />
+                            <Line type="monotone" dataKey="pv_consumption" name="PV Consumption" stroke="#7F8C8D" />
                           </LineChart>
                         </ResponsiveContainer>
                       )}
