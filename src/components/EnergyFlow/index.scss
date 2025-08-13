@@ -1,0 +1,457 @@
+.energy-flow-diagram {
+  //width: 100%;
+  height: 300px;
+  min-width: 500px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 16px;
+  padding: 24px;
+  //box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  //border: 1px solid #e9ecef;
+
+  .energy-flow-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .energy-node {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+
+    .node-icon {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .node-value {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 3px;
+    }
+
+    .node-label {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .pv-node {
+    top: 0px; /* Reduced from 30px to fit better in 300px height */
+    left: 50%;
+
+    @media screen and (max-width: 768px) {
+      top: 37px; 
+    }
+    transform: translateX(-50%);
+    border: 3px solid #f39c12;
+    box-shadow: 0 0 25px rgba(243, 156, 18, 0.2);
+
+    .node-icon {
+      color: #f39c12;
+    }
+  }
+
+  .load-node {
+    bottom: 0px; /* Reduced from 80px to fit better in 300px height */
+    left: 20%;
+    border: 3px solid #3498db;
+    box-shadow: 0 0 25px rgba(52, 152, 219, 0.2);
+
+    .node-icon {
+      color: #3498db;
+    }
+    @media screen and (max-width: 768px) {
+      bottom: 30px;
+    }
+  }
+
+  .grid-node {
+    bottom: 0px; /* Reduced from 80px to fit better in 300px height */
+    right: 20%;
+    border: 3px solid #9b59b6;
+    box-shadow: 0 0 25px rgba(155, 89, 182, 0.2);
+
+    .node-icon {
+      color: #9b59b6;
+    }
+
+    @media screen and (max-width: 768px) {
+      bottom: 30px;
+    }
+  }
+
+  .connection-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .connection-line {
+    position: absolute;
+    border-radius: 2px;
+    opacity: 0.6;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: inherit;
+    }
+  }
+
+  .pv-line {
+    top: 180px;
+    left: 50%;
+    width: 3px;
+    height: 160px;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, #bdc3c7, transparent);
+
+    .pv-arrow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid #bdc3c7;
+    }
+  }
+
+  .load-line {
+    bottom: 180px;
+    left: 25%;
+    width: 160px;
+    height: 3px;
+    background: linear-gradient(to right, #3498db, transparent);
+
+    .load-arrow {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 6px solid #3498db;
+    }
+  }
+
+  .grid-line {
+    bottom: 180px;
+    right: 25%;
+    width: 160px;
+    height: 3px;
+    background: linear-gradient(to left, #9b59b6, transparent);
+
+    .grid-arrow {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 6px solid #9b59b6;
+    }
+  }
+
+  .pv-line {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    width: 3px;
+    height: 100px;
+    background: linear-gradient(to bottom, #bdc3c7, transparent);
+    transform: translateX(-50%);
+
+    &::after {
+      content: '✕';
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #bdc3c7;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  .load-grid-line {
+    position: absolute;
+    bottom: 30px; /* Adjusted from 110px to match new node positioning */
+    left: 50%;
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(to right, #9b59b6, #3498db);
+    transform: translateX(-50%);
+    overflow: hidden; /* Hide overflow for the flowing effect */
+
+    @media screen and (max-width: 768px) {
+      bottom: 60px;
+    }
+
+    /* Animated energy flow effect */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: energyFlow 2s ease-in-out infinite;
+    }
+
+    .load-grid-arrow {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 6px solid #3498db;
+    }
+  }
+
+  /* PV to Load curved connection box */
+  .pv-to-grid-connection,
+  .pv-to-load-connection {
+    position: absolute;
+    top: 70px; /* Start below PV node */
+    left: 36%;
+    width: 120px; /* Width of the connection box */
+    height: 140px; /* Height of the connection box - reduced for 300px height */
+    transform: translateX(-50%);
+    background: transparent; /* Transparent background */
+    border-radius: 0 0 30px 0; /* Curved bottom right corner */
+    transition: all 0.3s ease;
+    opacity: 0.8;
+    border-bottom: 3px solid #3498db;
+    border-right: 3px solid #f39c12;
+    overflow: hidden; /* Hide overflow for the flowing effect */
+
+    @media screen and (max-width: 768px) {
+      width: 120px;
+      height: 110px;
+      top: 90px; /* Start below PV node */
+    }
+
+    /* Animated energy flow effect */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      right: -1.5px;
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: energyFlowVertical 2.5s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5px;
+      left: -100%;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: energyFlowHorizontal 2s ease-in-out infinite;
+    }
+
+    &:hover {
+      opacity: 1;
+      box-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
+    }
+  }
+
+  .pv-to-grid-connection {
+    left: 64% !important;
+    border-right: none;
+    transform: translateX(-50%) !important;
+    border-left: 3px solid #f39c12 !important;
+    border-bottom: 3px solid #9b59b6 !important; /* Changed from border-right to border-left for mirror effect */
+    border-radius: 0 0 0 30px !important; /* Mirrored border-radius for left side */
+    
+    /* Mirrored energy flow effects */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -1.5px; /* Positioned on the left side for mirror effect */
+      width: 3px;
+      height: 100%;
+      background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.6), transparent);
+      animation: energyFlowVertical 2.5s ease-in-out infinite;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5px;
+      right: -100%; /* Flows from right to left for mirror effect */
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.6), transparent); /* Reversed gradient direction */
+      animation: energyFlowHorizontalMirrored 2s ease-in-out infinite;
+    }
+  }
+
+
+  /* Energy flow animation keyframes */
+  @keyframes energyFlow {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  /* Vertical energy flow animation */
+  @keyframes energyFlowVertical {
+    0% {
+      top: -100%;
+    }
+    100% {
+      top: 100%;
+    }
+  }
+
+  /* Horizontal energy flow animation */
+  @keyframes energyFlowHorizontal {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  /* Mirrored horizontal energy flow animation (right to left) */
+  @keyframes energyFlowHorizontalMirrored {
+    0% {
+      right: -100%;
+    }
+    100% {
+      right: 100%;
+    }
+  }
+
+  /* Curved energy flow animation keyframes */
+  @keyframes energyFlowCurved {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .energy-flow-diagram {
+    height: 320px;
+    padding: 20px;
+
+    .energy-node {
+      width: 80px;
+      height: 80px;
+      background: white;
+      z-index: 1 !important;
+
+      .node-icon {
+        font-size: 1.4rem;
+      }
+
+      .node-value {
+        font-size: 0.65rem;
+      }
+
+      .node-label {
+        font-size: 0.55rem;
+      }
+    }
+
+    .load-node {
+      left: 20%;
+    }
+
+    .grid-node {
+      right: 20%;
+    }
+
+    .load-grid-line {
+      width: 180px;
+    }
+
+    /* Responsive PV to Load connection */
+    .pv-to-load-vertical {
+      &::before {
+        animation-duration: 1.8s; /* Even faster animation on small mobile */
+      }
+    }
+
+    .pv-to-load-connection {
+      width: 90px;
+      height: 90px;
+
+      @media screen and (max-width: 768px) {
+        width: 120px;
+        height: 110px;
+      }
+      border-radius: 0 0 45px 0;
+
+      &::before {
+        animation-duration: 2s; /* Even faster animation on small mobile */
+      }
+    }
+
+    .load-grid-line {
+      width: 160px;
+
+      &::before {
+        animation-duration: 1.6s; /* Even faster animation on small mobile */
+      }
+    }
+  }
+}

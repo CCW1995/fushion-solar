@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography } from 'antd';
-import plantFlow from 'assets/Images/plant-flow.png';
+import EnergyFlow from '../../../components/EnergyFlow';
 
 const { Title } = Typography;
 
-const PlantFlow = () => {
+const PlantFlow = ({
+  powerData
+}) => {
+  console.log(powerData)
+
   return (
     <div className="plant-flow-card" style={{ display: 'grid', placeItems: 'center' }}>
-      <img 
-        src={plantFlow} 
-        alt="Plant Flow" 
-        style={{ width: '100%' }}
+      <EnergyFlow 
+        pvPower={powerData?.pv ?? 0}
+        loadPower={powerData?.load ?? 0}
+        gridPower={powerData?.grid ?? 0}
       />
     </div>
   );

@@ -171,7 +171,7 @@ const PlantMonitoringView = (props) => {
       <div className="main-section-card">
         <Row gutter={[0, 0]} className="main-section">
           <Col xs={24} md={24} lg={6} xl={6} className="main-section-left">
-            <PlantFlow energyData={plantData.energyData} />
+            <PlantFlow energyData={plantData.energyData} powerData={plantData?.realtimeInfo?.powerData?.[0]??{}}/>
           </Col> 
           <Col xs={24} md={24} lg={18} xl={18} className="main-section-right">
             <PlantInfo 
