@@ -160,9 +160,8 @@ const PlantMonitoringView = (props) => {
         realtimeInfo={plantData?.realtimeInfo?.[0] ?? {}} 
       />
 
-      {/* Energy Statistics Section */}
       <EnergyStats 
-        plantInfo={plantData.realtimeInfo?.[0] ?? {}} 
+        plantInfo={plantData.realtimeInfo?.realtimeData?.[0] ?? {}} 
         planInfoBasic={plantData?.basicInfo?.[0] ?? {}}
         deviceRealTime={props.deviceRealTime?.active_power ?? '0'}
       />
