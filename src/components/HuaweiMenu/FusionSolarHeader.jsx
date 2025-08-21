@@ -9,6 +9,7 @@ import {
   GlobalOutlined,
   QuestionCircleOutlined,
   MenuOutlined,
+  BarChartOutlined,
 } from '@ant-design/icons';
 import { clearItem } from 'utils/tokenStore';
 import { Link } from 'react-router-dom';
@@ -32,6 +33,21 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
       <Menu.Divider /> */}
       <Menu.Item key="logout" onClick={handleLogout}>
         Logout
+      </Menu.Item>
+    </Menu>
+  );
+
+  const reportsMenu = (
+    <Menu>
+      <Menu.Item key="inverter-report">
+        <Link to="/dashboard/inverter-report">
+          <span><strong>Inverter Report</strong></span>
+        </Link>
+      </Menu.Item>
+      <Menu.Item key="plant-report">
+        <Link to="/dashboard/plant-report">
+          <span><strong>Plant Report</strong></span>
+        </Link>
       </Menu.Item>
     </Menu>
   );
@@ -71,6 +87,14 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
   return (
     <Header className="fusion-header">
       <div className="header-left">
+         <Dropdown 
+          overlay={reportsMenu} 
+          trigger={['click']}
+          placement="bottomRight"
+          arrow
+        >
+          <h5 style={{ color: 'white', cursor: 'pointer' }}><strong>Reports</strong></h5>
+        </Dropdown>
         {/* {isMobile ? (
           <Button
             type="text"
