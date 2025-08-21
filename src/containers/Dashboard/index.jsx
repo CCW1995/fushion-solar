@@ -10,7 +10,7 @@ import NotFound from "containers/NotFound"
 import { getItem } from "utils/tokenStore"
 
 // Import your dashboard components here
-import HuaweiStyleDashboard from '../HuaweiStyleDashboard'
+import AdminHome from '../AdminHome'
 import PlantView from '../PlantView'
 import AlarmListing from '../AlarmListing'
 import HOC from './action'
@@ -52,7 +52,7 @@ class Dashboard extends Component {
           <FusionSolarLayout>
                   <SuspenseWrapper key={"SuspenseWrapper"}>
                     <Switch>
-                <Route exact path="/dashboard/home" component={HuaweiStyleDashboard} />
+                <Route exact path="/dashboard/home" component={AdminHome} />
                 <Route exact path="/dashboard/plant-monitoring" component={PlantView} />
                 <Route exact path="/dashboard/alarm-listing" component={AlarmListing} />
                 <Redirect exact from="/dashboard" to="/dashboard/home" />
