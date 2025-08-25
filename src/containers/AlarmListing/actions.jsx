@@ -34,7 +34,6 @@ const HOC = (WrappedComponent) => {
 
       // Build query string only with filled values
       const queryParams = [
-        `order=${order}`,
         `page=${page}`,
         `limit=${limit}`,
         stationName ? `stationName=${encodeURIComponent(stationName)}` : null,
