@@ -1,18 +1,11 @@
 import React from 'react';
-import { Layout, Button, Avatar, Dropdown, Badge, Menu } from 'antd';
+import { Layout, Button, Avatar, Dropdown, Menu } from 'antd';
 import { connect } from 'react-redux';
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  BellOutlined,
   UserOutlined,
-  GlobalOutlined,
-  QuestionCircleOutlined,
-  MenuOutlined,
-  BarChartOutlined,
 } from '@ant-design/icons';
 import { clearItem } from 'utils/tokenStore';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const { Header } = Layout;
 
@@ -36,22 +29,6 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
       </Menu.Item>
     </Menu>
   );
-
-  const reportsMenu = (
-    <Menu>
-      <Menu.Item key="inverter-report">
-        <Link to="/dashboard/inverter-report">
-          <span><strong>Inverter Report</strong></span>
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="plant-report">
-        <Link to="/dashboard/plant-report">
-          <span><strong>Plant Report</strong></span>
-        </Link>
-      </Menu.Item>
-    </Menu>
-  );
-
   const notificationMenu = (
     <Menu className="notification-dropdown">
       <Menu.Item key="notification-title" className="notification-title">
@@ -87,14 +64,24 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
   return (
     <Header className="fusion-header">
       <div className="header-left">
-         <Dropdown 
-          overlay={reportsMenu} 
-          trigger={['click']}
-          placement="bottomRight"
-          arrow
-        >
-          <h5 style={{ color: 'white', cursor: 'pointer' }}><strong>Reports</strong></h5>
-        </Dropdown>
+        <Menu mode="horizontal" className="header-menu">
+          <Menu.Item key="home">
+            <Link to="/dashboard/home">
+              Home
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="inverter-report">
+            <Link to="/dashboard/inverter-report">
+              Inverter Report
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="plant-report">
+            <Link to="/dashboard/plant-report">
+              Plant Report
+            </Link>
+          </Menu.Item>
+        </Menu>
+        
         {/* {isMobile ? (
           <Button
             type="text"

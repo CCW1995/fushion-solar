@@ -20,6 +20,29 @@
         .breadcrumb {
           color: #fff;
         }
+
+        .header-menu {
+          background: transparent !important;
+          border: none !important;
+          
+          .ant-menu-item {
+            color: rgba(255, 255, 255, 0.85) !important;
+            border-bottom: none !important;
+            padding: 0 16px !important;
+            height: 64px !important;
+            line-height: 64px !important;
+            
+            &:hover {
+              color: #fff !important;
+              background-color: rgba(255, 255, 255, 0.1) !important;
+            }
+            
+            &.ant-menu-item-selected {
+              color: #fff !important;
+              background-color: rgba(255, 255, 255, 0.1) !important;
+            }
+          }
+        }
       }
       
       .header-right {
@@ -125,6 +148,7 @@
     .header-left {
       display: flex;
       align-items: center;
+      gap: 20px;
       
       .trigger {
         font-size: 18px;

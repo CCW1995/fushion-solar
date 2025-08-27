@@ -43,6 +43,26 @@ export const getPlantTableColumns = (navigate) => [
     key: 'purchase_type',
   },
   {
+    title: 'System Capacity',
+    dataIndex: 'capacity',
+    key: 'capacity',
+  },
+  {
+    title: 'Longitude',
+    dataIndex: 'longitude',
+    key: 'longitude',
+  },
+  {
+    title: 'Latitude',
+    dataIndex: 'latitude',
+    key: 'latitude',
+  },
+  {
+    title: "Inverter ID/Serial Number",
+    dataIndex: 'device_sn',
+    key: 'device_sn'
+  },
+  {
     title: 'Station Code',
     dataIndex: 'station_code',
     key: 'station_code',
