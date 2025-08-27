@@ -43,11 +43,6 @@ export const getPlantTableColumns = (navigate) => [
     key: 'purchase_type',
   },
   {
-    title: 'System Capacity',
-    dataIndex: 'capacity',
-    key: 'capacity',
-  },
-  {
     title: 'Longitude',
     dataIndex: 'longitude',
     key: 'longitude',
