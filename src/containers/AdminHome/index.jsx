@@ -16,6 +16,9 @@ import {
   renderKpi
 } from './assets.jsx';
 import './index.scss';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
 
 const { Title, Text } = Typography;
 
@@ -33,6 +36,7 @@ const HuaweiStyleDashboard = (props) => {
   const [inverterBrand, setInverterBrand] = useState('');
   const [inverterBrandStatus, setInverterBrandStatus] = useState('');
   const [inverterBrandAlarm, setInverterBrandAlarm] = useState('');
+  const [inverterBrandEnergy, setInverterBrandEnergy] = useState('');
   const [purchaseType, setPurchaseType] = useState('');
   
   // Column selection state
@@ -65,6 +69,12 @@ const HuaweiStyleDashboard = (props) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('day');
   
+  // Today's date for energy API
+  const today = new Date().toISOString().slice(0, 7); // Format: YYYY-MM
+  
+  // Half annual energy date filter
+  const [energyDateFilter, setEnergyDateFilter] = useState(today);
+  
   // Get the plant table columns with navigation function
   const plantTableColumns = getPlantTableColumns(history.push);
   
@@ -86,6 +96,7 @@ const HuaweiStyleDashboard = (props) => {
       props.getKpi();
       props.getDeviceAlarm(inverterBrandAlarm);
       props.getDeviceStatus(inverterBrandStatus);
+      props.getHalfAnnualEnergy(energyDateFilter, inverterBrandEnergy);
       props.getStationList('', 1, 10, '', purchaseType);  
     } else {
       history.push('/dashboard/plant-monitoring');
@@ -302,6 +313,7 @@ const HuaweiStyleDashboard = (props) => {
                 </div>
               </div>
             </Col>
+
             <Col xs={24} md={8}>
               <DashboardWidget
                 title="Plant Status"
@@ -351,6 +363,59 @@ const HuaweiStyleDashboard = (props) => {
                   props.getDeviceAlarm(value);
                 }}
                 filterPlaceholder="Select brand"
+              />
+            </Col>
+            <Col xs={24} md={10} className='plant-kpi-panel'>
+              <DashboardWidget
+                title="Half Annual Energy"
+                items={props.halfAnnualEnergyData}
+                onViewMore={() => {}}
+                transparent={true}
+                render={() => (
+                  <Row>
+                    {
+                      props.halfAnnualEnergyData.map((item, index) => (
+                        <Col xs={24} md={12} key={item.id}>
+                          <div className="kpi-item">
+                            <div className="kpi-data">
+                              <div className="kpi-value">
+                                {item.total_yield} kWh
+                              </div>
+                              <div className="kpi-label">
+                              {item.startdate} - {item.enddate}
+                              </div>
+                            </div>
+                          </div>
+                        </Col>
+                      ))
+                    }
+                  </Row>
+                )}
+                rightIcon={<></>}
+                showFilter={true}
+                filterOptions={inverterBrandOptions}
+                filterValue={inverterBrandEnergy}
+                onFilterChange={(value) => {
+                  setInverterBrandEnergy(value);
+                  props.getHalfAnnualEnergy(energyDateFilter, value);
+                }}
+                filterPlaceholder="Select brand"
+                extraFilters={
+                  <DatePicker
+                    className={'form-control'}
+                    selected={energyDateFilter ? moment(energyDateFilter, 'YYYY-MM').toDate() : null}
+                    onChange={(date) => {
+                      const dateString = date.toISOString().slice(0, 7);
+                      setEnergyDateFilter(dateString);
+                      props.getHalfAnnualEnergy(dateString, inverterBrandEnergy);
+                    }}
+                    showMonthYearPicker
+                    dateFormat="yyyy-MM"
+                    placeholderText="Select month"
+                    style={{ width: '100%', color: 'black' }}
+                    //className="custom-datepicker"
+                  />
+                }
               />
             </Col>
             <Col xs={24} md={24}>
