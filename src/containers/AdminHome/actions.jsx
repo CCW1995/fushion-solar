@@ -5,6 +5,7 @@ import { setPath } from "actions/path";
 import { withRouter } from "react-router-dom";
 import { setStationInfo } from "reducers/station";
 import { Get } from "utils/axios";
+import { requestError } from "utils/requestHandler";
 
 function toTwoDecimalNumber(value) {
   const num = Number(value);
@@ -22,6 +23,7 @@ const HOC = (WrappedComponent) => {
       stationListData: [],
       stationListMeta: {},
       deviceAlarmTotal: 0,
+      halfAnnualEnergyData: [],
     };
 
     onChangeHOC = (val, context) => this.setState({ [context]: val });
@@ -131,6 +133,28 @@ const HOC = (WrappedComponent) => {
     })}
     getDeviceStatusError = (error) => requestError(error, "Error")
 
+    getHalfAnnualEnergy = (date, inverterBrand = '') => {
+      const queryParams = [
+        `date=${date}`,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null
+      ].filter(Boolean).join('&');
+
+      Get(
+        `/station/energy/halfAnnual?${queryParams}`, 
+        this.getHalfAnnualEnergySuccess, 
+        this.getHalfAnnualEnergyError, 
+        this.load
+      )
+    }
+    
+    getHalfAnnualEnergySuccess = payload => {
+      this.setState({ 
+        halfAnnualEnergyData: payload
+      })
+    }
+    
+    getHalfAnnualEnergyError = (error) => requestError(error, "Error")
+
     getStationList = (name, pageIndex, pageSize = 10, inverterBrand = '', purchaseType = '') => {
       const queryParams = [
         `page=${pageIndex}`,
@@ -165,6 +189,7 @@ const HOC = (WrappedComponent) => {
           getKpi={this.getKpi}
           getDeviceStatus={this.getDeviceStatus}
           getDeviceAlarm={this.getDeviceAlarm}
+          getHalfAnnualEnergy={this.getHalfAnnualEnergy}
           getStationList={this.getStationList}
         />
       );

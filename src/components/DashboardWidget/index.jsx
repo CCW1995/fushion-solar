@@ -78,6 +78,7 @@ const PieChart = ({ data, colors, innerContent }) => {
 const DashboardWidget = ({ 
   title, 
   value, 
+  render,
   unit, 
   subtitle,
   infoIcon,
@@ -92,11 +93,12 @@ const DashboardWidget = ({
   filterOptions,
   filterValue,
   onFilterChange,
-  filterPlaceholder
+  filterPlaceholder,
+  extraFilters
 }) => {
   return (
     <Card className={`dashboard-widget ${transparent ? 'transparent-widget' : ''}`}>
-      <div className="widget-header">
+      <div className="widget-header flex-wrap">
         <div className="widget-title">
           <Title level={5}>{title}</Title>
           {infoIcon && <span className="info-icon">{infoIcon}</span>}
@@ -117,11 +119,21 @@ const DashboardWidget = ({
               ))}
             </Select>
           )}
+          {extraFilters && (
+            <div className="widget-extra-filters">
+              {extraFilters}
+            </div>
+          )}
           <div className="widget-action" onClick={onViewMore}>
             {rightIcon || (onViewMore && <RightOutlined />)}
           </div>
         </div>
       </div>
+
+
+      {
+        render && render()
+      }
       
       {!chartData && (
         <div className="widget-content">
