@@ -405,10 +405,10 @@ const HuaweiStyleDashboard = (props) => {
                     className={'form-control'}
                     selected={energyDateFilter ? moment(energyDateFilter, 'YYYY-MM').toDate() : null}
                     onChange={(date) => {
-                      const dateString = date.toISOString().slice(0, 7);
-                      setEnergyDateFilter(dateString);
-                      props.getHalfAnnualEnergy(dateString, inverterBrandEnergy);
-                    }}
+                       const dateString = moment(date).format('YYYY-MM');
+                       setEnergyDateFilter(dateString);
+                       props.getHalfAnnualEnergy(dateString, inverterBrandEnergy);
+                     }}
                     showMonthYearPicker
                     dateFormat="yyyy-MM"
                     placeholderText="Select month"
