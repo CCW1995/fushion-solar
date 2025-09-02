@@ -379,7 +379,7 @@ const HuaweiStyleDashboard = (props) => {
                           <div className="kpi-item">
                             <div className="kpi-data">
                               <div className="kpi-value">
-                                {item.total_yield} kWh
+                                {item.yield_mwh} MWh
                               </div>
                               <div className="kpi-label">
                               {item.startdate} - {item.enddate}
