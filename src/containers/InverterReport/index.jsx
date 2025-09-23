@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import dayjs from 'dayjs';
 import TableContent from './TableContent';
 import HOC from './actions';
 import './index.scss';
@@ -10,10 +11,9 @@ const InverterReport = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [brand, setBrand] = useState('');
-  const [plant, setPlant] = useState('');
-  const [dimension, setDimension] = useState('By plant');
-  const [timeGranularity, setTimeGranularity] = useState('Daily');
-  const [statisticalPeriod, setStatisticalPeriod] = useState(null);
+  const [deviceName, setDeviceName] = useState('');
+  const [statisticalPeriod, setStatisticalPeriod] = useState(new Date());
+  const [selectedPeriod, setSelectedPeriod] = useState('daily');
   
   useEffect(() => {
     const userProfile = props.data.ProfileReducer.profile;
@@ -22,7 +22,11 @@ const InverterReport = (props) => {
     if (isAdmin) {
       props.getInverterReport({
         page: 1,
-        limit: 10
+        limit: 10,
+        inverterbrand: '',
+        deviceName: '',
+        period: 'daily',
+        date: new Date().toISOString().slice(0, 10)
       });
     } else {
       history.push('/dashboard/plant-monitoring');
@@ -39,13 +43,12 @@ const InverterReport = (props) => {
     
     // Call API with new page, page size, and current filters
     props.getInverterReport({
-      brand,
-      plant,
-      dimension,
-      timeGranularity,
-      statisticalPeriod,
       page: newPage,
-      limit: newPageSize
+      limit: newPageSize,
+      inverterbrand: brand,
+      deviceName,
+      period: selectedPeriod.toLowerCase(),
+      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null
     });
   };
 
@@ -61,18 +64,17 @@ const InverterReport = (props) => {
             searchName={searchName}
             setSearchName={setSearchName}
             getInverterReport={props.getInverterReport}
+            exportInverterReport={props.exportInverterReport}
             inverterReportData={props.inverterReportData}
             inverterReportMeta={{ itemCount: props.inverterReportTotal }}
             brand={brand}
             setBrand={setBrand}
-            plant={plant}
-            setPlant={setPlant}
-            dimension={dimension}
-            setDimension={setDimension}
-            timeGranularity={timeGranularity}
-            setTimeGranularity={setTimeGranularity}
+            deviceName={deviceName}
+            setDeviceName={setDeviceName}
             statisticalPeriod={statisticalPeriod}
             setStatisticalPeriod={setStatisticalPeriod}
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
           />
         </div>
       </div>

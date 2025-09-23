@@ -20,29 +20,28 @@ const HOC = (WrappedComponent) => {
 
     getPlantReport = (params = {}) => {
       const {
-        order = 'ASC',
         page = 1,
         limit = 10,
-        brand = '',
-        plant = '',
-        dimension = 'By plant',
-        timeGranularity = 'Daily',
-        statisticalPeriod = null
+        dimension = 'station',
+        inverterbrand = '',
+        period = 'daily',
+        date = null,
+        stationName = ''
       } = params;
 
       // Build query string only with filled values
       const queryParams = [
         `page=${page}`,
         `limit=${limit}`,
-        brand ? `brand=${encodeURIComponent(brand)}` : null,
-        plant ? `plant=${encodeURIComponent(plant)}` : null,
         dimension ? `dimension=${encodeURIComponent(dimension)}` : null,
-        timeGranularity ? `timeGranularity=${encodeURIComponent(timeGranularity)}` : null,
-        statisticalPeriod ? `statisticalPeriod=${encodeURIComponent(statisticalPeriod.format('YYYY-MM-DD'))}` : null
+        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
+        period ? `period=${encodeURIComponent(period)}` : null,
+        date ? `date=${encodeURIComponent(date)}` : null,
+        stationName ? `stationName=${encodeURIComponent(stationName)}` : null
       ].filter(Boolean).join('&');
 
       Get(
-        `/plant/report?${queryParams}`,
+        `/report/station/list?${queryParams}`,
         this.getPlantReportSuccess,
         this.getPlantReportError,
         this.load
@@ -61,6 +60,50 @@ const HOC = (WrappedComponent) => {
       // You can add proper error handling here
     }
 
+    exportPlantReport = (params = {}) => {
+      const {
+        dimension = 'station',
+        period = 'daily',
+        date = null,
+        inverterbrand = '',
+        stationName = ''
+      } = params;
+
+      // Build query string only with filled values
+      const queryParams = [
+        dimension ? `dimension=${encodeURIComponent(dimension)}` : null,
+        period ? `period=${encodeURIComponent(period)}` : null,
+        date ? `date=${encodeURIComponent(date)}` : null,
+        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
+        stationName ? `stationName=${encodeURIComponent(stationName)}` : null
+      ].filter(Boolean).join('&');
+
+      // Make API call to export endpoint
+      Get(
+        `/report/station/export?${queryParams}`,
+        this.exportPlantReportSuccess,
+        this.exportPlantReportError,
+        this.load
+      );
+    }
+
+    exportPlantReportSuccess = (response) => {
+      // Create blob from CSV response and trigger download
+      const blob = new Blob([response], { type: 'text/csv;charset=utf-8;' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `station-report-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    }
+
+    exportPlantReportError = (error) => {
+      console.error('Error exporting plant report:', error);
+    }
+
     render = () => {
       return (
         <WrappedComponent
@@ -68,6 +111,7 @@ const HOC = (WrappedComponent) => {
           {...this.state}
           onChangeHOC={this.onChangeHOC}
           getPlantReport={this.getPlantReport}
+          exportPlantReport={this.exportPlantReport}
         />
       );
     };

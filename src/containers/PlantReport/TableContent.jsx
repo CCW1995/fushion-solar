@@ -1,5 +1,7 @@
-import { Button, Col, DatePicker, Input, Row, Select, Table } from 'antd';
+import { Button, Col, Input, Row, Select, Table } from 'antd';
 import dayjs from 'dayjs';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import './index.scss';
 
@@ -11,17 +13,18 @@ function TableContent({
   searchName,
   setSearchName,
   getPlantReport,
+  exportPlantReport,
   plantReportMeta,
   brand,
   setBrand,
-  plant,
-  setPlant,
+  stationName,
+  setStationName,
   dimension,
   setDimension,
-  timeGranularity,
-  setTimeGranularity,
   statisticalPeriod,
-  setStatisticalPeriod
+  setStatisticalPeriod,
+  selectedPeriod,
+  setSelectedPeriod
 }) {
 
   // Brand options
@@ -30,62 +33,68 @@ function TableContent({
     { value: 'fusionsolar', label: 'FusionSolar' },
     { value: 'soliscloud', label: 'SolisCloud' },
     { value: 'sungrow', label: 'Sungrow' },
-    { value: 'goodwe', label: 'GoodWe' },
     { value: 'growatt', label: 'Growatt' }
-  ];
-
-  // Plant options
-  const plantOptions = [
-    { value: '', label: 'All' },
-    { value: 'plant1', label: 'Plant 1' },
-    { value: 'plant2', label: 'Plant 2' }
   ];
 
   // Dimension options
   const dimensionOptions = [
-    { value: 'By plant', label: 'By plant' },
-    { value: 'By time', label: 'By time' }
+    { value: 'station', label: 'Station' },
+    { value: 'time', label: 'Time' }
   ];
 
-  // Time granularity options
-  const timeGranularityOptions = [
-    { value: 'Daily', label: 'Daily' },
-    { value: 'Weekly', label: 'Weekly' },
-    { value: 'Monthly', label: 'Monthly' },
-    { value: 'Yearly', label: 'Yearly' }
+  // Period options for date picker
+  const periodOptions = [
+    { value: 'daily', label: 'Daily' },
+    { value: 'monthly', label: 'Monthly' },
+    { value: 'yearly', label: 'Yearly' },
+    { value: 'lifetime', label: 'Lifetime' }
   ];
 
   // Table columns for plant report
   const plantReportColumns = [
     {
-      title: 'Plant Name',
-      dataIndex: 'plant_name',
-      key: 'plant_name',
+      title: 'Station Name',
+      dataIndex: 'station_name',
+      key: 'station_name',
       render: (text) => <span>{text}</span>,
       ellipsis: true,
       width: 200
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Station Address',
+      dataIndex: 'station_address',
+      key: 'station_address',
       render: (text) => <span>{text}</span>,
       ellipsis: true,
       width: 250
     },
     {
-      title: 'PV Yield (kWh)',
-      dataIndex: 'pv_yield',
-      key: 'pv_yield',
-      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
-      width: 150
-    },
-    {
-      title: 'Plant Yield (kWh)',
-      dataIndex: 'plant_yield',
-      key: 'plant_yield',
+      title: 'Inverter Yield (kWh)',
+      dataIndex: 'inverter_yield',
+      key: 'inverter_yield',
       render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
       width: 180
+    },
+    {
+      title: 'Self Consumption (kWh)',
+      dataIndex: 'self_consumption',
+      key: 'self_consumption',
+      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
+      width: 200
+    },
+    {
+      title: 'Revenue',
+      dataIndex: 'revenue',
+      key: 'revenue',
+      render: (text) => <span>{text ? parseFloat(text).toFixed(2) : '-'}</span>,
+      width: 120
+    },
+    {
+      title: 'Import (kWh)',
+      dataIndex: 'import',
+      key: 'import',
+      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
+      width: 150
     },
     {
       title: 'Export (kWh)',
@@ -100,13 +109,6 @@ function TableContent({
       key: 'specific_energy',
       render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
       width: 200
-    },
-    {
-      title: 'Consumption (kWh)',
-      dataIndex: 'consumption',
-      key: 'consumption',
-      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
-      width: 150
     }
   ];
 
@@ -129,15 +131,14 @@ function TableContent({
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
-                    <label>Plant</label>
-                    <Select
-                      placeholder="All"
+                    <label>User ID</label>
+                    <Input
+                      placeholder="Enter station name"
                       style={{ width: '100%' }}
-                      value={plant}
-                      onChange={setPlant}
-                      options={plantOptions}
+                      value={stationName}
+                      onChange={(e) => setStationName(e.target.value)}
                     />
-                  </Col>
+                    </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
                     <label>Dimension</label>
                     <Select
@@ -149,52 +150,102 @@ function TableContent({
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
-                    <label>Time granularity</label>
+                    <label>Period</label>
                     <Select
-                      placeholder="Select granularity"
+                      placeholder="Select period"
                       style={{ width: '100%' }}
-                      value={timeGranularity}
-                      onChange={setTimeGranularity}
-                      options={timeGranularityOptions}
+                      value={selectedPeriod}
+                      onChange={(value) => {
+                        setSelectedPeriod(value);
+                        if (value === 'daily') {
+                          setStatisticalPeriod(new Date());
+                        } else {
+                          setStatisticalPeriod(null);
+                        }
+                      }}
+                      options={periodOptions}
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
-                    <label>Statistical period</label>
-                    <DatePicker
-                      placeholder="Select date"
-                      style={{ width: '100%' }}
-                      value={statisticalPeriod}
-                      onChange={setStatisticalPeriod}
-                      format="YYYY-MM-DD"
-                    />
+                    <label>Date</label>
+                    {selectedPeriod === 'yearly' && (
+                      <DatePicker
+                        selected={statisticalPeriod}
+                        onChange={date => setStatisticalPeriod(date)}
+                        showYearPicker
+                        dateFormat="yyyy"
+                        className="form-control"
+                        maxDate={new Date()}
+                        placeholderText="Select year"
+                        style={{ width: '100%' }}
+                      />
+                    )}
+                    {selectedPeriod === 'monthly' && (
+                      <DatePicker
+                        selected={statisticalPeriod}
+                        onChange={date => setStatisticalPeriod(date)}
+                        showMonthYearPicker
+                        dateFormat="MM/yyyy"
+                        className="form-control"
+                        maxDate={new Date()}
+                        placeholderText="Select month"
+                        style={{ width: '100%' }}
+                      />
+                    )}
+                    {selectedPeriod === 'daily' && (
+                      <DatePicker
+                        selected={statisticalPeriod}
+                        onChange={date => setStatisticalPeriod(date)}
+                        dateFormat="yyyy-MM-dd"
+                        className="form-control"
+                        maxDate={new Date()}
+                        placeholderText="Select date"
+                        style={{ width: '100%' }}
+                      />
+                    )}
+                    {selectedPeriod === 'lifetime' && (
+                      <Input
+                        placeholder="All time data"
+                        style={{ width: '100%' }}
+                        disabled
+                        value="All time"
+                      />
+                    )}
                   </Col>
                   <Col span={24} style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
                     <Button type="primary" onClick={() => getPlantReport({
-                      brand,
-                      plant,
-                      dimension,
-                      timeGranularity,
-                      statisticalPeriod,
                       page: 1,
-                      limit: 10
+                      limit: 10,
+                      dimension,
+                      inverterbrand: brand,
+                      period: selectedPeriod,
+                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
+                      stationName
                     })}>Search</Button>
                     <Button onClick={() => {
                       setBrand('');
-                      setPlant('');
-                      setDimension('By plant');
-                      setTimeGranularity('Daily');
-                      setStatisticalPeriod(null);
+                      setStationName('');
+                      setDimension('station');
+                      setStatisticalPeriod(new Date());
+                      setSelectedPeriod('daily');
                       getPlantReport({
-                        brand: '',
-                        plant: '',
-                        dimension: 'By plant',
-                        timeGranularity: 'Daily',
-                        statisticalPeriod: null,
                         page: 1,
-                        limit: 10
+                        limit: 10,
+                        dimension: 'station',
+                        inverterbrand: '',
+                        period: 'daily',
+                        date: new Date().toISOString().slice(0, 10),
+                        stationName: ''
                       })
                       setCurrentPage(1)
                     }}>Reset</Button>
+                    <Button type="default" onClick={() => exportPlantReport({
+                      dimension,
+                      period: selectedPeriod,
+                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
+                      inverterbrand: brand,
+                      stationName
+                    })}>Export</Button>
                   </Col>
                 </Row>
               </div>

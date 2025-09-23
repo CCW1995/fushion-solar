@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import dayjs from 'dayjs';
 import TableContent from './TableContent';
 import HOC from './actions';
 import './index.scss';
@@ -10,10 +11,10 @@ const PlantReport = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [brand, setBrand] = useState('');
-  const [plant, setPlant] = useState('');
-  const [dimension, setDimension] = useState('By plant');
-  const [timeGranularity, setTimeGranularity] = useState('Daily');
-  const [statisticalPeriod, setStatisticalPeriod] = useState(null);
+  const [stationName, setStationName] = useState('');
+  const [dimension, setDimension] = useState('station');
+  const [statisticalPeriod, setStatisticalPeriod] = useState(new Date());
+  const [selectedPeriod, setSelectedPeriod] = useState('daily');
   
   useEffect(() => {
     const userProfile = props.data.ProfileReducer.profile;
@@ -22,7 +23,12 @@ const PlantReport = (props) => {
     if (isAdmin) {
       props.getPlantReport({
         page: 1,
-        limit: 10
+        limit: 10,
+        dimension: 'station',
+        inverterbrand: '',
+        period: 'daily',
+        date: new Date().toISOString().slice(0, 10),
+        stationName: ''
       });
     } else {
       history.push('/dashboard/plant-monitoring');
@@ -39,13 +45,13 @@ const PlantReport = (props) => {
     
     // Call API with new page, page size, and current filters
     props.getPlantReport({
-      brand,
-      plant,
-      dimension,
-      timeGranularity,
-      statisticalPeriod,
       page: newPage,
-      limit: newPageSize
+      limit: newPageSize,
+      dimension,
+      inverterbrand: brand,
+      period: selectedPeriod,
+      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
+      stationName
     });
   };
 
@@ -61,18 +67,19 @@ const PlantReport = (props) => {
             searchName={searchName}
             setSearchName={setSearchName}
             getPlantReport={props.getPlantReport}
+            exportPlantReport={props.exportPlantReport}
             plantReportData={props.plantReportData}
             plantReportMeta={{ itemCount: props.plantReportTotal }}
             brand={brand}
             setBrand={setBrand}
-            plant={plant}
-            setPlant={setPlant}
+            stationName={stationName}
+            setStationName={setStationName}
             dimension={dimension}
             setDimension={setDimension}
-            timeGranularity={timeGranularity}
-            setTimeGranularity={setTimeGranularity}
             statisticalPeriod={statisticalPeriod}
             setStatisticalPeriod={setStatisticalPeriod}
+            selectedPeriod={selectedPeriod}
+            setSelectedPeriod={setSelectedPeriod}
           />
         </div>
       </div>
