@@ -5,6 +5,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import './index.scss';
 
+// Helper function to format date based on period
+const formatDateByPeriod = (date, period) => {
+  if (!date) return null;
+  
+  switch (period) {
+    case 'daily':
+      return dayjs(date).format('YYYY-MM-DD');
+    case 'monthly':
+      return dayjs(date).format('YYYY-MM');
+    case 'yearly':
+      return dayjs(date).format('YYYY');
+    case 'lifetime':
+      return dayjs(date).format('YYYY'); // Year format for lifetime
+    default:
+      return dayjs(date).format('YYYY-MM-DD');
+  }
+};
+
 function TableContent({
   currentPage,
   pageSize,
@@ -44,6 +62,14 @@ function TableContent({
   // Table columns for inverter report
   const inverterReportColumns = [
     {
+      title: 'Scheme Name',
+      dataIndex: 'schema_name',
+      key: 'schema_name',
+      render: (text) => <span>{text}</span>,
+      ellipsis: true,
+      width: 200
+    },
+    {
       title: 'Station Name',
       dataIndex: 'station_name',
       key: 'station_name',
@@ -52,40 +78,33 @@ function TableContent({
       width: 200
     },
     {
-      title: 'ESN Code',
-      dataIndex: 'esn_code',
-      key: 'esn_code',
+      title: 'Device SN',
+      dataIndex: 'device_sn',
+      key: 'device_sn',
       render: (text) => <span>{text}</span>,
       ellipsis: true,
       width: 150
     },
     {
-      title: 'Installed Capacity (kW)',
-      dataIndex: 'installed_capacity',
-      key: 'installed_capacity',
-      render: (text) => <span>{text ? parseFloat(text).toFixed(2) : '-'}</span>,
-      width: 180
-    },
-    {
-      title: 'Product Power (kW)',
-      dataIndex: 'product_power',
-      key: 'product_power',
-      render: (text) => <span>{text ? parseFloat(text).toFixed(2) : '-'}</span>,
-      width: 150
-    },
-    {
-      title: 'Per Power Ratio',
-      dataIndex: 'perpower_ratio',
-      key: 'perpower_ratio',
+      title: 'Capacity (kW)',
+      dataIndex: 'capacity',
+      key: 'capacity',
       render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
-      width: 150
+      width: 200
     },
     {
-      title: 'Collect Time',
-      dataIndex: 'collect_time',
-      key: 'collect_time',
-      render: (text) => <span>{text ? dayjs(text).format('YYYY-MM-DD HH:mm:ss') : '-'}</span>,
-      width: 180
+      title: 'Yield (kWh)',
+      dataIndex: 'yield',
+      key: 'yield',
+      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
+      width: 200
+    },
+    {
+      title: 'Specific Energy (kWh/kWp)',
+      dataIndex: 'specific_energy',
+      key: 'specific_energy',
+      render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
+      width: 200
     }
   ];
 
@@ -108,7 +127,7 @@ function TableContent({
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
-                    <label>Device name</label>
+                    <label>Station Name</label>
                     <Input
                       placeholder="Enter device name"
                       style={{ width: '100%' }}
@@ -171,11 +190,16 @@ function TableContent({
                       />
                     )}
                     {selectedPeriod === 'lifetime' && (
-                      <Input
-                        placeholder="All time data"
+                      <DatePicker
+                        selected={statisticalPeriod}
+                        onChange={date => setStatisticalPeriod(date)}
+                        dateFormat="yyyy"
+                        showYearPicker
+                        yearItemNumber={12}
+                        className="form-control"
+                        maxDate={new Date()}
+                        placeholderText="Select year"
                         style={{ width: '100%' }}
-                        disabled
-                        value="All time"
                       />
                     )}
                   </Col>
@@ -183,10 +207,10 @@ function TableContent({
                     <Button type="primary" onClick={() => getInverterReport({
                       page: 1,
                       limit: 10,
-                      inverterbrand: brand,
+                      inverterBrand: brand,
                       deviceName,
                       period: selectedPeriod.toLowerCase(),
-                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null
+                      date: formatDateByPeriod(statisticalPeriod, selectedPeriod.toLowerCase())
                     })}>Search</Button>
                     <Button onClick={() => {
                       setBrand('');
@@ -196,7 +220,7 @@ function TableContent({
                       getInverterReport({
                         page: 1,
                         limit: 10,
-                        inverterbrand: '',
+                        inverterBrand: '',
                         deviceName: '',
                         period: 'daily',
                         date: new Date().toISOString().slice(0, 10)
@@ -204,10 +228,10 @@ function TableContent({
                       setCurrentPage(1)
                     }}>Reset</Button>
                     <Button type="default" onClick={() => exportInverterReport({
-                      inverterbrand: brand,
+                      inverterBrand: brand,
                       deviceName,
                       period: selectedPeriod.toLowerCase(),
-                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null
+                      date: formatDateByPeriod(statisticalPeriod, selectedPeriod.toLowerCase())
                     })}>Export</Button>
                   </Col>
                 </Row>

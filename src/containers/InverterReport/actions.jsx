@@ -5,6 +5,25 @@ import { setPath } from "actions/path";
 import { withRouter } from "react-router-dom";
 import { setStationInfo } from "reducers/station";
 import { Get } from "utils/axios";
+import dayjs from 'dayjs';
+
+// Helper function to format date based on period
+const formatDateByPeriod = (date, period) => {
+  if (!date) return null;
+  
+  switch (period) {
+    case 'daily':
+      return dayjs(date).format('YYYY-MM-DD');
+    case 'monthly':
+      return dayjs(date).format('YYYY-MM');
+    case 'yearly':
+      return dayjs(date).format('YYYY');
+    case 'lifetime':
+      return dayjs(date).format('YYYY'); // Year format for lifetime
+    default:
+      return dayjs(date).format('YYYY-MM-DD');
+  }
+};
 
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
@@ -22,20 +41,23 @@ const HOC = (WrappedComponent) => {
       const {
         page = 1,
         limit = 10,
-        inverterbrand = '',
+        inverterBrand = '',
         deviceName = '',
         period = 'daily',
         date = null
       } = params;
 
+      // Format date based on period
+      const formattedDate = formatDateByPeriod(date, period);
+
       // Build query string only with filled values
       const queryParams = [
         `page=${page}`,
         `limit=${limit}`,
-        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
-        deviceName ? `deviceName=${encodeURIComponent(deviceName)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
+        deviceName ? `stationName=${encodeURIComponent(deviceName)}` : null,
         period ? `period=${encodeURIComponent(period)}` : null,
-        date ? `date=${encodeURIComponent(date)}` : null
+        formattedDate ? `date=${encodeURIComponent(formattedDate)}` : null
       ].filter(Boolean).join('&');
 
       Get(
@@ -60,18 +82,21 @@ const HOC = (WrappedComponent) => {
 
     exportInverterReport = (params = {}) => {
       const {
-        inverterbrand = '',
+        inverterBrand = '',
         deviceName = '',
         period = 'daily',
         date = null
       } = params;
 
+      // Format date based on period
+      const formattedDate = formatDateByPeriod(date, period);
+
       // Build query string only with filled values
       const queryParams = [
-        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
         deviceName ? `deviceName=${encodeURIComponent(deviceName)}` : null,
         period ? `period=${encodeURIComponent(period)}` : null,
-        date ? `date=${encodeURIComponent(date)}` : null
+        formattedDate ? `date=${encodeURIComponent(formattedDate)}` : null
       ].filter(Boolean).join('&');
 
       // Make API call to export endpoint

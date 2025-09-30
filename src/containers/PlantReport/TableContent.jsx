@@ -5,6 +5,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react';
 import './index.scss';
 
+// Helper function to format date based on period
+const formatDateByPeriod = (date, period) => {
+  if (!date) return null;
+  
+  switch (period) {
+    case 'daily':
+      return dayjs(date).format('YYYY-MM-DD');
+    case 'monthly':
+      return dayjs(date).format('YYYY-MM');
+    case 'yearly':
+      return dayjs(date).format('YYYY');
+    case 'lifetime':
+      return dayjs(date).format('YYYY'); // Year format for lifetime
+    default:
+      return dayjs(date).format('YYYY-MM-DD');
+  }
+};
+
 function TableContent({
   currentPage,
   pageSize,
@@ -53,6 +71,14 @@ function TableContent({
   // Table columns for plant report
   const plantReportColumns = [
     {
+      title: 'Scheme Name',
+      dataIndex: 'schema_name',
+      key: 'schema_name',
+      render: (text) => <span>{text}</span>,
+      ellipsis: true,
+      width: 200
+    },
+    {
       title: 'Station Name',
       dataIndex: 'station_name',
       key: 'station_name',
@@ -76,7 +102,7 @@ function TableContent({
       width: 180
     },
     {
-      title: 'Self Consumption (kWh)',
+      title: 'Consumption (kWh)',
       dataIndex: 'self_consumption',
       key: 'self_consumption',
       render: (text) => <span>{text ? parseFloat(text).toFixed(3) : '-'}</span>,
@@ -131,7 +157,7 @@ function TableContent({
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6} className="filter-item">
-                    <label>User ID</label>
+                    <label>Station Name</label>
                     <Input
                       placeholder="Enter station name"
                       style={{ width: '100%' }}
@@ -204,11 +230,16 @@ function TableContent({
                       />
                     )}
                     {selectedPeriod === 'lifetime' && (
-                      <Input
-                        placeholder="All time data"
+                      <DatePicker
+                        selected={statisticalPeriod}
+                        onChange={date => setStatisticalPeriod(date)}
+                        dateFormat="yyyy"
+                        showYearPicker
+                        yearItemNumber={12}
+                        className="form-control"
+                        maxDate={new Date()}
+                        placeholderText="Select year"
                         style={{ width: '100%' }}
-                        disabled
-                        value="All time"
                       />
                     )}
                   </Col>
@@ -217,9 +248,9 @@ function TableContent({
                       page: 1,
                       limit: 10,
                       dimension,
-                      inverterbrand: brand,
+                      inverterBrand: brand,
                       period: selectedPeriod,
-                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
+                      date: formatDateByPeriod(statisticalPeriod, selectedPeriod.toLowerCase()),
                       stationName
                     })}>Search</Button>
                     <Button onClick={() => {
@@ -232,7 +263,7 @@ function TableContent({
                         page: 1,
                         limit: 10,
                         dimension: 'station',
-                        inverterbrand: '',
+                        inverterBrand: '',
                         period: 'daily',
                         date: new Date().toISOString().slice(0, 10),
                         stationName: ''
@@ -242,8 +273,8 @@ function TableContent({
                     <Button type="default" onClick={() => exportPlantReport({
                       dimension,
                       period: selectedPeriod,
-                      date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
-                      inverterbrand: brand,
+                      date: formatDateByPeriod(statisticalPeriod, selectedPeriod.toLowerCase()),
+                      inverterBrand: brand,
                       stationName
                     })}>Export</Button>
                   </Col>

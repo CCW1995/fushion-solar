@@ -23,7 +23,7 @@ const InverterReport = (props) => {
       props.getInverterReport({
         page: 1,
         limit: 10,
-        inverterbrand: '',
+        inverterBrand: '',
         deviceName: '',
         period: 'daily',
         date: new Date().toISOString().slice(0, 10)
@@ -45,7 +45,7 @@ const InverterReport = (props) => {
     props.getInverterReport({
       page: newPage,
       limit: newPageSize,
-      inverterbrand: brand,
+      inverterBrand: brand,
       deviceName,
       period: selectedPeriod.toLowerCase(),
       date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null

@@ -25,7 +25,7 @@ const PlantReport = (props) => {
         page: 1,
         limit: 10,
         dimension: 'station',
-        inverterbrand: '',
+        inverterBrand: '',
         period: 'daily',
         date: new Date().toISOString().slice(0, 10),
         stationName: ''
@@ -48,7 +48,7 @@ const PlantReport = (props) => {
       page: newPage,
       limit: newPageSize,
       dimension,
-      inverterbrand: brand,
+      inverterBrand: brand,
       period: selectedPeriod,
       date: statisticalPeriod ? dayjs(statisticalPeriod).format('YYYY-MM-DD') : null,
       stationName

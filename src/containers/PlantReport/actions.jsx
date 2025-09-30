@@ -5,6 +5,25 @@ import { setPath } from "actions/path";
 import { withRouter } from "react-router-dom";
 import { setStationInfo } from "reducers/station";
 import { Get } from "utils/axios";
+import dayjs from 'dayjs';
+
+// Helper function to format date based on period
+const formatDateByPeriod = (date, period) => {
+  if (!date) return null;
+  
+  switch (period) {
+    case 'daily':
+      return dayjs(date).format('YYYY-MM-DD');
+    case 'monthly':
+      return dayjs(date).format('YYYY-MM');
+    case 'yearly':
+      return dayjs(date).format('YYYY');
+    case 'lifetime':
+      return dayjs(date).format('YYYY'); // Year format for lifetime
+    default:
+      return dayjs(date).format('YYYY-MM-DD');
+  }
+};
 
 const HOC = (WrappedComponent) => {
   class WithHOC extends Component {
@@ -23,20 +42,23 @@ const HOC = (WrappedComponent) => {
         page = 1,
         limit = 10,
         dimension = 'station',
-        inverterbrand = '',
+        inverterBrand = '',
         period = 'daily',
         date = null,
         stationName = ''
       } = params;
+
+      // Format date based on period
+      const formattedDate = formatDateByPeriod(date, period);
 
       // Build query string only with filled values
       const queryParams = [
         `page=${page}`,
         `limit=${limit}`,
         dimension ? `dimension=${encodeURIComponent(dimension)}` : null,
-        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
         period ? `period=${encodeURIComponent(period)}` : null,
-        date ? `date=${encodeURIComponent(date)}` : null,
+        formattedDate ? `date=${encodeURIComponent(formattedDate)}` : null,
         stationName ? `stationName=${encodeURIComponent(stationName)}` : null
       ].filter(Boolean).join('&');
 
@@ -65,16 +87,19 @@ const HOC = (WrappedComponent) => {
         dimension = 'station',
         period = 'daily',
         date = null,
-        inverterbrand = '',
+        inverterBrand = '',
         stationName = ''
       } = params;
+
+      // Format date based on period
+      const formattedDate = formatDateByPeriod(date, period);
 
       // Build query string only with filled values
       const queryParams = [
         dimension ? `dimension=${encodeURIComponent(dimension)}` : null,
         period ? `period=${encodeURIComponent(period)}` : null,
-        date ? `date=${encodeURIComponent(date)}` : null,
-        inverterbrand ? `inverterbrand=${encodeURIComponent(inverterbrand)}` : null,
+        formattedDate ? `date=${encodeURIComponent(formattedDate)}` : null,
+        inverterBrand ? `inverterBrand=${encodeURIComponent(inverterBrand)}` : null,
         stationName ? `stationName=${encodeURIComponent(stationName)}` : null
       ].filter(Boolean).join('&');
 
