@@ -64,7 +64,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
   return (
     <Header className="fusion-header">
       <div className="header-left">
-        <Menu mode="horizontal" className="header-menu">
+        <Menu mode="horizontal" className="header-menu" overflowedIndicator={null}>
           <Menu.Item key="home">
             <Link to="/dashboard/home">
               Home
@@ -78,6 +78,11 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
           <Menu.Item key="plant-report">
             <Link to="/dashboard/plant-report">
               Plant Report
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="psh-report">
+            <Link to="/dashboard/psh-report">
+              PSH Report
             </Link>
           </Menu.Item>
         </Menu>

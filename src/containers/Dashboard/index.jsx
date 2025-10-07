@@ -15,6 +15,7 @@ import PlantView from '../PlantView'
 import AlarmListing from '../AlarmListing'
 import InverterReport from "../InverterReport"
 import PlantReport from "../PlantReport"
+import PSHReport from "../PSHReport"
 import HOC from './action'
 
 const meta = {
@@ -59,6 +60,7 @@ class Dashboard extends Component {
                 <Route exact path="/dashboard/alarm-listing" component={AlarmListing} />
                 <Route exact path="/dashboard/inverter-report" component={InverterReport} />
                 <Route exact path="/dashboard/plant-report" component={PlantReport} />
+                <Route exact path="/dashboard/psh-report" component={PSHReport} />
                 <Redirect exact from="/dashboard" to="/dashboard/home" />
                       <Route component={NotFound} />
                     </Switch>
