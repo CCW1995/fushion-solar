@@ -334,11 +334,11 @@ function TableContent({
                       <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                       <XAxis 
                         dataKey="day" 
-                        label={{ value: 'Day of Month', position: 'insideBottom', offset: -5 }}
+                        label={{ value: 'Day', position: 'insideBottom', offset: -5 }}
                         stroke="#666"
                       />
                       <YAxis 
-                        label={{ value: 'PSH (kWh/kWp)', angle: -90, position: 'insideLeft' }}
+                        label={{ value: 'PSH', angle: -90, position: 'insideLeft' }}
                         stroke="#666"
                       />
                       <Tooltip 
