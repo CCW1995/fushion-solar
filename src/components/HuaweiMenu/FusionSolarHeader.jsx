@@ -82,7 +82,7 @@ const FusionSolarHeader = ({ collapsed, setCollapsed, isMobile, onMenuClick, dat
           </Menu.Item>
           <Menu.Item key="psh-report">
             <Link to="/dashboard/psh-report">
-              PSH Report
+              Peak Sun Hour Report
             </Link>
           </Menu.Item>
         </Menu>
