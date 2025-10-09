@@ -189,7 +189,7 @@ function TableContent({
 					<div className="psh-report-panel">
 						<div className="psh-report-header">
 							<div className="search-filters">
-								<Row gutter={[16, 16]} align="bottom">
+								<Row gutter={[16, 16]} align="bottom" style={{ zIndex: 'unset'}}>
 									<Col xs={24} sm={12} md={8} lg={6} className="filter-item">
 										<label>Brand</label>
 										<Select
